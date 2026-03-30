@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valand'art Créations | Bijouterie d'Art</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cream: #F2E7D3;
+            --anthracite: #333232;
+            --gold: #C5A059;
+            --white: #FFFFFF;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--cream); color: var(--anthracite); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+
+        /* NAVIGATION */
+        nav {
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            padding: 15px 5%; position: sticky; top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+        }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--anthracite); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+        .logo-nav { height: 45px; cursor: pointer; }
+
+        /* BOUTONS & PRODUITS */
+        .btn-buy { background: var(--anthracite); color: var(--white); border: none; padding: 15px; width: 100%; font-weight: 700; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; transition: var(--transition); }
+        .btn-buy:hover { background: var(--gold); }
+        .btn-desc { background: none; border: none; color: var(--gold); text-decoration: underline; cursor: pointer; font-size: 0.75rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 700; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; padding: 60px 5%; max-width: 1400px; margin: 0 auto; }
+        .product-card { background: var(--white); padding: 15px; border-radius: 2px; transition: var(--transition); }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        
+        .img-box { height: 420px; overflow: hidden; position: relative; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.6s ease; }
+        .product-img.secondary { position: absolute; top: 0; left: 0; opacity: 0; }
+        .product-card:hover .product-img.main { opacity: 0; }
+        .product-card:hover .product-img.secondary { opacity: 1; }
+
+        /* MODALES */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--white); max-width: 600px; width: 100%; padding: 40px; position: relative; border-radius: 4px; max-height: 90vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; }
+
+        /* PANIER DRAWER */
+        .drawer { position: fixed; right: -500px; top: 0; width: 500px; height: 100vh; background: white; z-index: 2000; transition: 0.5s cubic-bezier(0.77,0,0.175,1); padding: 40px; display: flex; flex-direction: column; }
+        .drawer.open { right: 0; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); visibility: hidden; opacity: 0; z-index: 1500; transition: 0.4s; }
+        .overlay.active { visibility: visible; opacity: 1; }
+
+        /* TOAST */
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--anthracite); color: white; padding: 12px 30px; border-radius: 50px; font-size: 0.8rem; z-index: 4000; opacity: 0; transition: 0.3s ease; pointer-events: none; border-bottom: 2px solid var(--gold); }
+
+        /* SECTION INFORMATIONS & CGU (ACCORDEON) */
+        .info-section { background: var(--white); padding: 60px 5%; margin-top: 50px; }
+        .info-container { max-width: 1000px; margin: 0 auto; }
+        .info-block { border-bottom: 1px solid #eee; }
+        .info-header { padding: 20px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        .info-header:hover { color: var(--gold); }
+        .info-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; font-size: 0.9rem; line-height: 1.6; color: #666; }
+        .info-content.active { max-height: 2000px; padding-bottom: 30px; }
+        .info-content h4 { color: var(--anthracite); margin: 20px 0 10px 0; text-transform: uppercase; font-size: 0.8rem; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.8rem; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: var(--cream); }
+
+        footer { background: var(--anthracite); color: var(--white); padding: 40px 5%; text-align: center; font-size: 0.8rem; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#collection">Collection</a></li>
+            <li><a href="#infos">Infos & CGV</a></li>
+        </ul>
+        <img src="logo.png" class="logo-nav" onclick="window.scrollTo(0,0)">
+        <ul class="nav-links">
+            <li><a href="mailto:valandartcreations@gmail.com">Contact</a></li>
+            <li><a href="#" onclick="toggleCart()">Panier (<span id="count">0</span>)</a></li>
+        </ul>
+    </nav>
+
+    <div id="toast">Produit ajouté !</div>
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+    
+    <div class="drawer" id="drawer">
+        <h2 style="text-transform: uppercase; letter-spacing: 3px; margin-bottom: 30px;">Panier</h2>
+        <div id="cart-content" style="flex:1; overflow-y:auto;"></div>
+        <div style="padding-top: 20px; border-top: 2px solid var(--cream);">
+            <p style="display:flex; justify-content:space-between; margin-bottom: 20px;">TOTAL <span id="total">0 €</span></p>
+            <button class="btn-buy" onclick="startPayment()">Payer</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-desc" onclick="closeModal('modal-desc')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal('modal-desc')">&times;</span>
+            <h2 id="modal-title" style="color: var(--gold); margin-bottom: 20px; text-transform: uppercase;"></h2>
+            <p id="modal-text"></p>
+        </div>
+    </div>
+
+    <main id="collection">
+        <div class="product-grid" id="grid"></div>
+    </main>
+
+    <section class="info-section" id="infos">
+        <div class="info-container">
+            <h2 style="text-align: center; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 3px;">Informations Légales & Conseils</h2>
+            
+            <div class="info-block">
+                <div class="info-header" onclick="toggleInfo(this)">Prix & Fabrication <span>+</span></div>
+                <div class="info-content">
+                    <p>Mon exigence : vous proposer des bijoux de qualité à un prix raisonnable ! Un prix qui me permet de me rémunérer et de vous proposer un prix juste et raisonnable. Bijoux fabriqués en série limitée ou en modèle unique avec passion et soin dans mon atelier au nord de Toulouse. <strong>MADE IN FRANCE</strong></p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-header" onclick="toggleInfo(this)">Colisage & Entretien <span>+</span></div>
+                <div class="info-content">
+                    <h4>Colisage</h4>
+                    <p>Chaque bijou est emballé dans une pochette tissu pour garantir sa protection de l'atelier à votre domicile.</p>
+                    <h4>Entretien</h4>
+                    <p>Pour profiter longtemps de votre bijou, je vous conseille de le retirer lors de tout contact avec l'eau. Pas de contact avec les produits d'entretien et/ou chimiques.</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-header" onclick="toggleInfo(this)">Mentions Légales <span>+</span></div>
+                <div class="info-content">
+                    <p><strong>Propriétaire :</strong> Valérie LE GAC VLG OFFICE MANAGER</p>
+                    <p><strong>Siège social :</strong> 1 impasse des Bordes – 31620 Castelnau d’estretefonds</p>
+                    <p><strong>Siret :</strong> 493 703 573 00029</p>
+                    <p><strong>Créateur Site :</strong> MetaCore | Services informatiques (07 67 29 81 02)</p>
+                    <p><strong>Hébergeur :</strong> Meta Core - 7 rue du béarn 31270 Cugnaux</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-header" onclick="toggleInfo(this)">Conditions Générales d'Utilisation (CGU) <span>+</span></div>
+                <div class="info-content">
+                    <h4>Article 2 – Accès au site</h4>
+                    <p>L’accès au site est réservé à un usage strictement personnel. Interdiction d'utiliser les données à des fins commerciales ou publicitaires sans accord.</p>
+                    <h4>Article 3 – Contenu</h4>
+                    <p>Toutes les marques, photographies, textes et images sont protégés par la propriété intellectuelle. Propriété entière de l'éditeur.</p>
+                    <h4>Article 7 – Protection des données</h4>
+                    <p>Les données collectées (nom, email, téléphone) sont utilisées pour la gestion des commandes et de la relation client.</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-header" onclick="toggleInfo(this)">Conditions Générales de Vente (CGV) <span>+</span></div>
+                <div class="info-content">
+                    <h4>Article 3 - Prix et frais de livraison</h4>
+                    <p>Les prix sont indiqués en euros. Livraison gratuite dès 60€ en France métropolitaine.</p>
+                    <h4>Article 5 - Livraison</h4>
+                    <table>
+                        <tr><th>Poids</th><th>Lettre Suivie</th><th>Services Plus</th><th>Colissimo</th></tr>
+                        <tr><td>20g</td><td>2,02€</td><td>3,47€</td><td>5,49€</td></tr>
+                        <tr><td>100g</td><td>3,60€</td><td>4,57€</td><td>7,59€</td></tr>
+                    </table>
+                    <h4>Article 7 - Droit de rétractation</h4>
+                    <p>Vous disposez de 15 jours après réception pour exercer votre droit de rétractation via valandartcreations@gmail.com.</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-header" onclick="toggleInfo(this)">Politique de Cookies <span>+</span></div>
+                <div class="info-content">
+                    <p>Notre site utilise des cookies techniques nécessaires au panier d'achat et au bon fonctionnement du site. En naviguant, vous acceptez l'utilisation de ces outils pour améliorer votre expérience.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 VALAND'ART CRÉATIONS - Castelnau-d'Estrétefonds</p>
+    </footer>
+
+    <script>
+        const products = [
+            { id: 1, name: "Boucle D'Or", price: 35, file: "Boucle D'Or.jpeg", alt: "Boucle D'Or 2.jpeg", desc: "Façonnée à la main, une ode à la lumière avec sa structure martelée." },
+            { id: 2, name: "Boucle Verte", price: 30, file: "Boucle Verte.jpeg", alt: null, desc: "Éclat de l'or et profondeur d'un vert forêt. Noblesse naturelle." },
+            { id: 3, name: "Collier à Médaille", price: 45, file: "Collier a Médaille.jpeg", alt: null, desc: "Amulette moderne sur chaîne fine. Un intemporel Valand'art." },
+            { id: 4, name: "Fleur Perlée", price: 38, file: "Fleur Perlée.jpeg", alt: "Fleur Perlée 2.jpeg", desc: "Poésie florale et perles de culture pour un éclat doux." },
+            { id: 5, name: "Paillette à goutte", price: 32, file: "Paillette a goutte.jpeg", alt: null, desc: "Mouvement hypnotique entre paillette dorée et cristal." },
+            { id: 6, name: "Perle Disque", price: 35, file: "Perle Disque.jpeg", alt: "Perle Disque 2.jpeg", desc: "Contraste géométrique pur entre un disque d'or et une perle." }
+        ];
+
+        let cart = [];
+
+        function render() {
+            document.getElementById('grid').innerHTML = products.map(p => `
+                <div class="product-card">
+                    <div class="img-box">
+                        <img src="${p.file}" class="product-img main">
+                        ${p.alt ? `<img src="${p.alt}" class="product-img secondary">` : ''}
+                    </div>
+                    <div class="product-info" style="text-align:center; padding-top:20px">
+                        <h3>${p.name}</h3><p>${p.price} €</p>
+                        <button class="btn-desc" onclick="openDesc('${p.name.replace(/'/g, "\\'")}', '${p.desc.replace(/'/g, "\\")}')">Description</button>
+                        <button class="btn-buy" onclick="add(${p.id})">Ajouter au panier</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleInfo(header) {
+            const content = header.nextElementSibling;
+            const span = header.querySelector('span');
+            content.classList.toggle('active');
+            span.innerText = content.classList.contains('active') ? '-' : '+';
+        }
+
+        function openDesc(t, txt) {
+            document.getElementById('modal-title').innerText = t;
+            document.getElementById('modal-text').innerText = txt;
+            document.getElementById('modal-desc').classList.add('active');
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function add(id) {
+            const p = products.find(x => x.id === id);
+            cart.push(p); updateUI();
+            const t = document.getElementById('toast');
+            t.innerText = p.name + " ajouté !"; t.style.opacity = 1;
+            setTimeout(() => t.style.opacity = 0, 2000);
+        }
+
+        function updateUI() {
+            document.getElementById('count').innerText = cart.length;
+            document.getElementById('total').innerText = cart.reduce((s,i) => s + i.price, 0) + " €";
+            document.getElementById('cart-content').innerHTML = cart.map((item, idx) => `
+                <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee">
+                    <span>${item.name}</span><button onclick="remove(${idx})" style="border:none; background:none; cursor:pointer">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function remove(idx) { cart.splice(idx, 1); updateUI(); }
+        function toggleCart() { document.getElementById('drawer').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
+        function startPayment() { if(cart.length > 0) alert("Redirection vers paiement sécurisé..."); }
+
+        window.onload = render;
+    </script>
+</body>
+</html>
