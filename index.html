@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valand'art Créations | Bijouterie d'Art</title>
-    <link rel="icon" type="image/png" href="Photos/logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -49,19 +49,19 @@
         /* MODAL PAIEMENT CAWL */
         #payment-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; }
         .cawl-container { background: var(--white); width: 90%; max-width: 400px; padding: 30px; border-top: 5px solid var(--gold); }
-        .cawl-form input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; }
-        .btn-pay-custom { background: var(--anthracite); color: white; border: none; padding: 15px; width: 100%; font-weight: 700; cursor: pointer; }
+        .cawl-form input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; font-family: 'Montserrat'; }
+        .btn-pay-custom { background: var(--anthracite); color: white; border: none; padding: 15px; width: 100%; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
         /* INFOS PRATIQUES & CGU */
         .legal-section { background: var(--white); padding: 80px 5%; border-top: 1px solid #ddd; }
         .legal-container { max-width: 850px; margin: 0 auto; }
         .acc-item { border-bottom: 1px solid #eee; }
-        .acc-header { padding: 25px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
-        .acc-content { max-height: 0; overflow: hidden; transition: all 0.5s ease; font-size: 0.85rem; color: #555; line-height: 1.8; }
+        .acc-header { padding: 25px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .acc-content { max-height: 0; overflow: hidden; transition: all 0.5s ease; font-size: 0.85rem; color: #555; line-height: 1.8; white-space: pre-line; }
         .acc-content.active { max-height: 2000px; padding-bottom: 30px; }
 
         .pdf-box { margin-top: 40px; padding: 30px; background: var(--cream); text-align: center; border: 1px dashed var(--gold); }
-        .btn-pdf { display: inline-block; margin-top: 15px; padding: 12px 25px; background: var(--anthracite); color: white; text-decoration: none; font-weight: 700; }
+        .btn-pdf { display: inline-block; margin-top: 15px; padding: 12px 25px; background: var(--anthracite); color: white; text-decoration: none; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; }
 
         footer { background: var(--anthracite); color: white; padding: 40px; text-align: center; font-size: 0.75rem; letter-spacing: 1px; }
     </style>
@@ -79,7 +79,7 @@
             <li><a href="#collection">Collection</a></li>
             <li><a href="#legal">Infos & CGU</a></li>
         </ul>
-        <img src="Photos/logo.png" class="logo-nav" alt="Logo" onclick="window.scrollTo(0,0)">
+        <img src="logo.png" class="logo-nav" alt="Valand'Art Logo" onclick="window.scrollTo(0,0)">
         <ul class="nav-links">
             <li><a href="mailto:valandartcreations@gmail.com">Contact</a></li>
             <li><a href="#" onclick="openPayment(0)">Panier</a></li>
@@ -93,7 +93,7 @@
     <div id="payment-modal">
         <div class="cawl-container">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <span style="font-weight:700">PAIEMENT SÉCURISÉ CAWL</span>
+                <span style="font-weight:700; letter-spacing:1px;">PAIEMENT SÉCURISÉ CAWL</span>
                 <span style="cursor:pointer" onclick="closePayment()">✕</span>
             </div>
             <div class="cawl-form">
@@ -103,62 +103,67 @@
                     <input type="text" placeholder="MM/AA">
                     <input type="text" placeholder="CVV">
                 </div>
-                <button class="btn-pay-custom" onclick="alert('Simulation de paiement réussie !')">PAYER <span id="pay-amount">0</span> €</button>
+                <button class="btn-pay-custom" onclick="alert('Simulation de paiement réussie !')">VALIDER LE PAIEMENT (<span id="pay-amount">0</span> €)</button>
+                <p style="text-align:center; font-size:0.6rem; margin-top:10px; color:#999;">Solution certifiée par Crédit Agricole</p>
             </div>
         </div>
     </div>
 
     <section class="legal-section" id="legal">
         <div class="legal-container">
-            <h2 style="text-align:center; margin-bottom:50px; letter-spacing:3px;">INFOS PRATIQUES</h2>
+            <h2 style="text-align:center; margin-bottom:50px; letter-spacing:3px; text-transform:uppercase;">Informations & CGU</h2>
 
             <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">💎 NOTRE PHILOSOPHIE <span>+</span></div>
+                <div class="acc-header" onclick="toggleAcc(this)">💎 NOTRE PHILOSOPHIE & FABRICATION <span>+</span></div>
                 <div class="acc-content">
-                    Valand’Art Créations propose des bijoux artisanaux fabriqués en série limitée ou modèle unique dans mon atelier au nord de Toulouse. Mon exigence : la qualité au prix juste. Toutes les pièces sont <strong>MADE IN FRANCE</strong>.
+                    Valand’Art Créations propose des bijoux artisanaux fabriqués en série limitée ou modèle unique dans mon atelier au nord de Toulouse. Mon exigence : la qualité au prix juste. 
+                    Toutes les pièces sont conçues avec passion et soin. 
+                    <strong>MADE IN FRANCE</strong>.
                 </div>
             </div>
 
             <div class="acc-item">
                 <div class="acc-header" onclick="toggleAcc(this)">📦 LIVRAISON & RETOURS <span>+</span></div>
                 <div class="acc-content">
-                    • <strong>Expédition :</strong> Sous 1 à 2 jours ouvrés après paiement.<br>
-                    • <strong>Modes :</strong> Lettre suivie (3j), Services Plus (2j) ou Colissimo (48h).<br>
-                    • <strong>Frais :</strong> Offerts dès 60€ d'achat en France métropolitaine.<br>
-                    • <strong>Retours :</strong> Vous disposez de 15 jours pour exercer votre droit de rétractation. Les bijoux doivent être retournés neufs dans leur emballage d'origine.
+                    • <strong>Expédition :</strong> Sous 1 à 2 jours ouvrés après réception du paiement.
+                    • <strong>Modes :</strong> Lettre suivie (3j), Services Plus (2j) ou Colissimo (48h).
+                    • <strong>Frais :</strong> Livraison gratuite dès 60€ d'achat en France métropolitaine.
+                    • <strong>Rétractation :</strong> Vous disposez de 15 jours pour retourner le bijou s'il ne vous convient pas (frais de retour à votre charge). Le produit doit être neuf et dans son emballage d'origine.
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">⚖️ CONDITIONS GÉNÉRALES D'UTILISATION (CGU) <span>+</span></div>
+                <div class="acc-header" onclick="toggleAcc(this)">⚖️ CGU & MENTIONS LÉGALES <span>+</span></div>
                 <div class="acc-content">
-                    <strong>Accès au site :</strong> L'utilisation est réservée à un usage strictement personnel. Toute reproduction du contenu (photos, logos, textes) sans accord écrit est interdite (Art. 3).<br><br>
-                    <strong>Responsabilité :</strong> L'éditeur n'est pas responsable des pannes de réseau ou de matériel utilisateur empêchant l'accès au site.<br><br>
-                    <strong>Données Personnelles (RGPD) :</strong> Vos données (nom, email, téléphone) sont collectées uniquement pour la gestion des commandes. Vous disposez d'un droit d'accès et de rectification en nous contactant par email.
+                    <strong>Propriété Intellectuelle :</strong> Toutes les marques, photographies, textes et illustrations sur ce site sont la propriété exclusive de Valand'Art Créations. Toute reproduction est strictement interdite (Art. 3).
+                    
+                    <strong>Données Personnelles :</strong> Conformément au RGPD, vos données ne sont collectées que pour le traitement de vos commandes. Vous pouvez exercer votre droit d'accès et de rectification par email.
+                    
+                    <strong>Responsabilité :</strong> L'éditeur met tout en œuvre pour assurer l'accès au site mais ne peut être tenu responsable des interruptions de service ou des dommages liés à votre équipement informatique.
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">✨ ENTRETIEN DES BIOUX <span>+</span></div>
+                <div class="acc-header" onclick="toggleAcc(this)">✨ ENTRETIEN DES BIJOUX <span>+</span></div>
                 <div class="acc-content">
-                    Pour préserver la longévité de vos bijoux, évitez tout contact avec l'eau, les parfums et les produits d'entretien chimiques.
+                    Pour profiter longtemps de votre bijou, je vous conseille de le retirer lors de tout contact avec l’eau. Évitez également les produits chimiques, parfums et produits ménagers qui pourraient altérer l'éclat des matériaux.
                 </div>
             </div>
 
             <div class="pdf-box">
-                <p><strong>DOCUMENTATION JURIDIQUE COMPLÈTE</strong></p>
-                <p style="font-size: 0.8rem; margin-top: 5px;">Consultez l'intégralité de nos 19 pages de conditions générales.</p>
-                <a href="CGU.pdf" target="_blank" class="btn-pdf">VOIR LE CGU.PDF COMPLET</a>
+                <p><strong>BESOIN DE PLUS D'INFORMATIONS ?</strong></p>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Téléchargez l'intégralité de nos Conditions Générales d'Utilisation et de Vente (19 pages).</p>
+                <a href="CGU.pdf" target="_blank" class="btn-pdf">Télécharger le CGU.pdf complet</a>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>VALAND'ART CRÉATIONS &copy; 2026 - TOULOUSE, FRANCE</p>
+        <p>VALAND'ART CRÉATIONS &copy; 2026<br>SIRET : 493 703 573 00029 - Castelnau-d'Estrétefonds, France</p>
     </footer>
 
     <script>
-        // Correction des chemins : On ajoute "Photos/" devant le nom du fichier
+        // Images dans le dossier "Photos", logo à la racine
         const products = [
             { id: 1, name: "Boucle D'Or", price: 35, file: "Photos/Boucle D'Or.jpeg" },
             { id: 2, name: "Boucle Verte", price: 30, file: "Photos/Boucle Verte.jpeg" },
@@ -172,12 +177,12 @@
             document.getElementById('grid').innerHTML = products.map(p => `
                 <div class="product-card">
                     <div class="img-box">
-                        <img src="${p.file}" class="product-img">
+                        <img src="${p.file}" class="product-img" onerror="this.src='https://via.placeholder.com/300x380?text=Bijou'">
                     </div>
-                    <p style="font-size:0.6rem; letter-spacing:2px; color:#999; margin-bottom:5px;">BOUCLES / COLLIERS</p>
+                    <p style="font-size:0.6rem; letter-spacing:2px; color:#999; margin-bottom:5px;">ARTISANAT FRANÇAIS</p>
                     <h3 style="font-size:1rem; margin-bottom:10px;">${p.name}</h3>
-                    <p style="font-weight:700; margin-bottom:15px;">${p.price} €</p>
-                    <button class="btn-buy" onclick="openPayment(${p.price})">AJOUTER AU PANIER</button>
+                    <p style="font-weight:700; margin-bottom:15px; color:var(--gold);">${p.price} €</p>
+                    <button class="btn-buy" onclick="openPayment(${p.price})">Acheter</button>
                 </div>
             `).join('');
         }
