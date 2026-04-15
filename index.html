@@ -407,8 +407,8 @@
 
 <div class="category-bar">
     <button class="cat-btn active" onclick="filterCategory('all', this)">Tout voir</button>
-    <button class="cat-btn" onclick="filterCategory(&quot;Boucles d'Oreilles&quot;, this)">Boucles d'Oreilles</button>
-    <button class="cat-btn" onclick="filterCategory('Collier', this)">Colliers</button>
+    <button class="cat-btn" onclick="filterCategory('boucles', this)">Boucles d'Oreilles</button>
+    <button class="cat-btn" onclick="filterCategory('collier', this)">Colliers</button>
 </div>
 
 <main id="collection">
@@ -468,7 +468,6 @@
         <p class="cawl-secure" style="margin-top: 20px;">🔒 Solution certifiée Crédit Agricole CAWL</p>
     </div>
 </div>
-    
 <section class="legal-section" id="legal">
     <div class="image-with-text__text-item grid__item">
         <div id="ImageWithText--template--20204114968910__image_with_text_Rr8fhx" class="image-with-text__content image-with-text__content--bottom image-with-text__content--desktop-center image-with-text__content--mobile-center image-with-text__content--medium content-container gradient color-background-1">
@@ -683,10 +682,34 @@ function renderGrid(gridId, items) {
     grid.innerHTML = items.map((p, idx) => `<div class="product-card" style="animation-delay: ${idx * 0.07}s" onclick="openProductModal(${p.id})"><div class="prod-badge">${p.category}</div><div class="img-box"><img src="${p.photos[0]}" class="product-img" alt="${p.name}" onerror="this.src='https://placehold.co/400x380/F2E7D3/C5A059?text=${encodeURIComponent(p.name)}'"><div class="card-overlay"><button class="overlay-btn">Voir la fiche</button></div>${p.photos.length > 1 ? `<div class="img-dots">${p.photos.map((_, i) => `<div class="img-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : ''}</div><div class="prod-info"><p class="prod-label">Artisanat Français</p><h3 class="prod-name">${p.name}</h3>${p.tagline ? `<p style="font-size:0.72rem; font-style:italic; color:var(--gold); margin-bottom:6px;">${p.tagline}</p>` : ''}<p class="prod-desc">${p.specs[0]}</p><div class="prod-footer"><span class="prod-price">${p.price} €</span><button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button></div></div></div>`).join('');
 }
 
+// CORRECTION JAVASCRIPT : Conversion de 'boucles' en vrai nom
 function filterCategory(cat, btn) {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-    if (cat === 'all') { renderAll(); document.querySelectorAll('.section-title, .product-grid').forEach(el => el.style.display = ''); }
-    else { const sectionMap = { "Boucles d'Oreilles": { gridId: 'grid-boucles', titleId: 'boucles' }, "Collier": { gridId: 'grid-colliers', titleId: 'colliers' } }; Object.entries(sectionMap).forEach(([sectionCat, { gridId, titleId }]) => { const grid = document.getElementById(gridId), title = document.getElementById(titleId); if (sectionCat === cat) { grid && (grid.style.display = ''); title && (title.style.display = ''); renderGrid(gridId, products.filter(p => p.category === cat)); } else { grid && (grid.style.display = 'none'); title && (title.style.display = 'none'); } }); }
+    
+    let realCat = cat;
+    if (cat === 'boucles') realCat = "Boucles d'Oreilles";
+    if (cat === 'collier') realCat = "Collier";
+
+    if (cat === 'all') { 
+        renderAll(); 
+        document.querySelectorAll('.section-title, .product-grid').forEach(el => el.style.display = ''); 
+    } else { 
+        const sectionMap = { 
+            "Boucles d'Oreilles": { gridId: 'grid-boucles', titleId: 'boucles' }, 
+            "Collier": { gridId: 'grid-colliers', titleId: 'colliers' } 
+        }; 
+        Object.entries(sectionMap).forEach(([sectionCat, { gridId, titleId }]) => { 
+            const grid = document.getElementById(gridId), title = document.getElementById(titleId); 
+            if (sectionCat === realCat) { 
+                grid && (grid.style.display = ''); 
+                title && (title.style.display = ''); 
+                renderGrid(gridId, products.filter(p => p.category === realCat)); 
+            } else { 
+                grid && (grid.style.display = 'none'); 
+                title && (title.style.display = 'none'); 
+            } 
+        }); 
+    }
 }
 
 function openProductModal(productId) {
@@ -719,14 +742,12 @@ function openPayment(product, cartTotal = 0) {
 function closePayment() { document.getElementById('payment-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('payment-modal').addEventListener('click', function(e) { if (e.target === this) closePayment(); });
 
-// DÉBUT : VRAI PAIEMENT CAWL
 async function lancerPaiement(event) {
     if(event) event.preventDefault();
 
     const montantTexte = document.getElementById('pay-amount').textContent;
     const montantTotalEnCentimes = Math.round(parseFloat(montantTexte) * 100);
     
-    // On récupère l'email saisi par le client
     const emailClient = document.getElementById('client-email').value;
 
     if (!emailClient || !emailClient.includes('@')) {
@@ -753,7 +774,7 @@ async function lancerPaiement(event) {
         if (data.success && data.redirectUrl) {
             window.location.href = data.redirectUrl; 
         } else {
-            alert("Erreur lors de l'initialisation du paiement sécurisé.");
+            alert("Erreur lors de l'initialisation du paiement sécurisé.\n" + (data.message || ""));
             boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTexte + " €";
             boutonPaiement.disabled = false;
         }
@@ -765,7 +786,6 @@ async function lancerPaiement(event) {
         boutonPaiement.disabled = false;
     }
 }
-// FIN : VRAI PAIEMENT CAWL
 
 function toggleAcc(header) {
     const content = header.nextElementSibling, span = header.querySelector('span'), isOpen = content.classList.contains('active');
