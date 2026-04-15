@@ -52,7 +52,7 @@
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
             box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-            border-bottom: 1px solid rgba(197,160,89,0.15);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.15);
         }
 
         .nav-links { display: flex; gap: 35px; list-style: none; }
@@ -81,7 +81,7 @@
 
         .logo-nav {
             height: 90px; cursor: pointer; transition: var(--transition);
-            filter: drop-shadow(0 2px 8px rgba(197,160,89,0.2)); margin: 0 auto;
+            filter: drop-shadow(0 2px 8px rgba(197, 160, 89, 0.2)); margin: 0 auto;
         }
         .logo-nav:hover { transform: scale(1.03); }
 
@@ -108,7 +108,7 @@
         .contact-icon:hover { background: var(--gold); transform: scale(1.12) translateX(-3px); }
 
         /* ============================================
-           HERO BANNER (Modifié avec logofont.png)
+           HERO BANNER
         ============================================ */
         .hero {
             background: var(--anthracite);
@@ -119,22 +119,20 @@
             z-index: 1;
         }
 
-        /* Rayures de fond existantes */
         .hero::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(197,160,89,0.04) 40px, rgba(197,160,89,0.04) 41px);
+            background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(197, 160, 89, 0.04) 40px, rgba(197, 160, 89, 0.04) 41px);
             z-index: -2;
         }
 
-        /* Intégration du logofont en filigrane discret */
         .hero::after {
             content: '';
             position: absolute;
             inset: 0;
             background: url('logofont.png') center center / contain no-repeat;
-            opacity: 0.08; /* Opacité faible pour ne pas nuire à la lecture */
+            opacity: 0.08;
             pointer-events: none;
             z-index: -1;
             transform: scale(0.8);
@@ -142,7 +140,7 @@
 
         .hero-tagline, .hero-sub, .hero-divider {
             position: relative;
-            z-index: 2; /* Garde le texte au-dessus du filigrane */
+            z-index: 2;
         }
 
         .hero-tagline {
@@ -164,7 +162,7 @@
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ============================================
@@ -173,7 +171,7 @@
         .category-bar {
             display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
             padding: 35px 5% 20px; background: var(--cream); position: sticky;
-            top: 110px; z-index: 900; border-bottom: 1px solid rgba(197,160,89,0.2);
+            top: 110px; z-index: 900; border-bottom: 1px solid rgba(197, 160, 89, 0.2);
         }
 
         .cat-btn {
@@ -236,7 +234,6 @@
         /* ============================================
            MODALS & PANIER
         ============================================ */
-        /* Modal Fiche Produit */
         #product-modal { display: none; position: fixed; inset: 0; background: rgba(30,28,28,0.75); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
         #product-modal.open { display: flex; }
         .modal-inner { background: var(--white); width: 100%; max-width: 900px; max-height: 92vh; overflow-y: auto; border-radius: var(--radius); display: flex; flex-direction: column; animation: modalIn 0.35s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; }
@@ -296,7 +293,7 @@
         @keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); } }
 
-        /* Modal Paiement */
+        /* Modal Paiement Styles (Nettoyé) */
         #payment-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 6000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         #payment-modal.open { display: flex; }
         .cawl-container { background: var(--white); width: 90%; max-width: 420px; padding: 35px; border-top: 4px solid var(--gold); border-radius: var(--radius); animation: modalIn 0.3s ease; }
@@ -330,7 +327,7 @@
         .acc-content p { margin-bottom: 12px; }
         .acc-content strong { color: var(--anthracite); font-weight: 700; display: block; margin-top: 20px; margin-bottom: 8px; }
         .acc-content ul { padding-left: 20px; margin-bottom: 12px; }
-        
+
         /* ============================================
            FOOTER
         ============================================ */
@@ -349,7 +346,7 @@
         #scroll-top.visible { opacity: 1; transform: translateY(0); }
         #scroll-top:hover { background: var(--gold); }
 
-        @media (max-width: 768px) {
+        @media(max-width: 768px) {
             nav { grid-template-columns: auto 1fr auto; padding: 10px 4%; }
             .nav-links.left { display: none; }
             .logo-nav { height: 70px; margin: 0; }
@@ -446,34 +443,62 @@
 
 <div id="payment-modal">
     <div class="cawl-container">
-        <div class="cawl-header"><span class="cawl-title">Paiement sécurisé</span><button class="cawl-close-btn" onclick="closePayment()">✕</button></div>
-        <div class="cawl-product-recap" id="cawl-recap"><strong id="cawl-name">Commande globale</strong><span id="cawl-price">—</span></div>
-        <div class="cawl-form">
-            <input type="text" placeholder="Titulaire de la carte" autocomplete="cc-name">
-            <input type="text" placeholder="N° de carte (16 chiffres)" autocomplete="cc-number" maxlength="19">
-            <div class="cawl-row"><input type="text" placeholder="MM/AA" autocomplete="cc-exp" maxlength="5"><input type="text" placeholder="CVV" autocomplete="cc-csc" maxlength="4"></div>
-            <button class="btn-pay-custom" onclick="simulatePay()">Valider le paiement — <span id="pay-amount">0</span> €</button>
+        <div class="cawl-header">
+            <span class="cawl-title">Résumé de la commande</span>
+            <button class="cawl-close-btn" onclick="closePayment()">✕</button>
         </div>
-        <p class="cawl-secure">🔒 Solution certifiée Crédit Agricole CAWL</p>
+        <div class="cawl-product-recap" id="cawl-recap">
+            <strong id="cawl-name">Commande globale</strong>
+            <span id="cawl-price">—</span>
+        </div>
+        
+        <div class="cawl-form">
+            <p style="font-size: 0.8rem; color: #555; text-align: center; margin-bottom: 15px; line-height: 1.5;">
+                Pour recevoir la confirmation de commande, merci d'indiquer votre adresse email :
+            </p>
+            
+            <input type="email" id="client-email" placeholder="votre.email@exemple.com" required style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Montserrat', sans-serif;">
+
+            <p style="font-size: 0.8rem; color: #555; text-align: center; margin-bottom: 20px; line-height: 1.5;">
+                Vous allez être redirigé vers l'environnement sécurisé de notre banque pour le paiement.
+            </p>
+            <button class="btn-pay-custom" onclick="lancerPaiement(event)">Aller au paiement sécurisé — <span id="pay-amount">0</span> €</button>
+        </div>
+        <p class="cawl-secure" style="margin-top: 20px;">🔒 Solution certifiée Crédit Agricole CAWL</p>
     </div>
 </div>
-
 <section class="legal-section" id="legal">
-        <div class="image-with-text__text-item grid__item">
-          <div
-            id="ImageWithText--template--20204114968910__image_with_text_Rr8fhx"
-            class="image-with-text__content image-with-text__content--bottom image-with-text__content--desktop-center image-with-text__content--mobile-center image-with-text__content--medium content-container gradient color-background-1"
-          ><h2
-                    class="image-with-text__heading inline-richtext h1"
-                    
-                  >
-                    Qui  sommes-nous ?
-                  </h2><div class="image-with-text__text rte body" >
-                    <p>Valandartcréations, c'est l'histoire de Castelnaud.</p>
-                  </div></div>
+    <div class="image-with-text__text-item grid__item">
+        <div id="ImageWithText--template--20204114968910__image_with_text_Rr8fhx" class="image-with-text__content image-with-text__content--bottom image-with-text__content--desktop-center image-with-text__content--mobile-center image-with-text__content--medium content-container gradient color-background-1">
+            <h2 class="image-with-text__heading inline-richtext h1">Qui sommes-nous ?</h2>
+            <div class="image-with-text__text rte body">
+                <p>Valandartcréations, c'est l'histoire de Castelnaud.</p>
+            </div>
         </div>
+    </div>
+    
     <div class="legal-container">
         <h2 class="legal-title">Infos pratiques & Conditions</h2>
+
+        <section id="conseils-entretien" style="background-color: #f9f9f9; padding: 30px; border-radius: 10px; margin: 40px 0; font-family: sans-serif;">
+            <h2 style="color: #333; text-align: center; margin-bottom: 20px;">✨ Conseils d'entretien pour vos bijoux</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">Pour que vos créations Valandart conservent tout leur éclat au fil du temps, voici quelques gestes simples à adopter :</p>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around;">
+                <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <h3 style="color: #444; font-size: 1.1em;">💧 Attention à l'eau</h3>
+                    <p style="font-size: 0.9em; color: #555;">Évitez l'exposition prolongée à l'eau. Retirez vos bijoux avant de vous baigner (piscine, mer) ou de prendre une douche. Le chlore et le sel sont les ennemis de l'éclat !</p>
+                </div>
+                <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <h3 style="color: #444; font-size: 1.1em;">🧴 Parfums et Cosmétiques</h3>
+                    <p style="font-size: 0.9em; color: #555;">Appliquez vos crèmes et vaporisez votre parfum avant de mettre vos bijoux. Les produits chimiques peuvent ternir ou attaquer les matériaux.</p>
+                </div>
+                <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <h3 style="color: #444; font-size: 1.1em;">🌙 Repos nocturne</h3>
+                    <p style="font-size: 0.9em; color: #555;">Pensez à retirer vos créations pour dormir afin d'éviter de les accrocher ou de les déformer accidentellement durant la nuit.</p>
+                </div>
+            </div>
+        </section>
 
         <div class="acc-item">
             <div class="acc-header" onclick="toggleAcc(this)">📋 Mentions Légales <span>+</span></div>
@@ -484,7 +509,7 @@
                 <strong>Article 2 – Accès au site</strong>
                 <p>L’accès au site et son utilisation sont réservés à un usage strictement personnel. Vous vous engagez à ne pas utiliser ce site et les informations ou données qui y figurent à des fins commerciales, politiques, publicitaires et pour toute forme de sollicitation commerciale et notamment l’envoi de courriers électroniques non sollicités.</p>
                 <strong>Article 3 – Contenu du site</strong>
-                <p>Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sons, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site et plus généralement tous les éléments reproduits ou utilisés sur le site sont protégés par les lois en vigueur au titre de la propriété intellectuelle. Ils sont la propriété pleine et entière de l’éditeur ou de ses partenaires. Toute reproduction, représentation, utilisation ou adaptation, sous quelque forme que ce soit, de tout ou partie de ces éléments, y compris les applications informatiques, sans l’accord préalable et écrit de l’éditeur, sont strictement interdites. Le fait pour l’éditeur de ne pas engager de procédure dès la prise de connaissance de ces utilisations non autorisées ne vaut pas acceptation desdites utilisations et renonciation aux poursuites.</p>
+                <p>Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sounds, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site et plus généralement tous les éléments reproduits ou utilisés sur le site sont protégés par les lois en vigueur au titre de la propriété intellectuelle. Ils sont la propriété pleine et entière de l’éditeur ou de ses partenaires. Toute reproduction, représentation, utilisation ou adaptation, sous quelque forme que ce soit, de tout ou partie de ces éléments, y compris les applications informatiques, sans l’accord préalable et écrit de l’éditeur, sont strictement interdites. Le fait pour l’éditeur de ne pas engager de procédure dès la prise de connaissance de ces utilisations non autorisées ne vaut pas acceptation desdites utilisations et renonciation aux poursuites.</p>
                 <strong>Article 4 – Gestion du site</strong>
                 <p>Pour la bonne gestion du site, l’éditeur pourra à tout moment : suspendre, interrompre ou limiter l’accès à tout ou partie du site, réserver l’accès au site, ou à certaines parties du site, à une catégorie déterminée d’internautes : supprimer toute information pouvant en perturber le fonctionnement ou entrant en contravention avec les lois nationales ou internationales ; suspendre le site afin de procéder à des mises à jour.</p>
                 <strong>Article 5 – Responsabilités</strong>
@@ -494,13 +519,13 @@
                 <strong>Article 7 – Collecte et protection des données</strong>
                 <p>Vos données sont collectées par la société .... Une donnée à caractère personnel désigne toute information concernant une personne physique identifiée ou identifiable (personne concernée) ; est réputée identifiable une personne qui peut être identifiée, directement ou indirectement, notamment par référence à un nom, un numéro d’identification ou à un ou plusieurs éléments spécifiques, propres à son identité physique, physiologique, génétique, psychique, économique, culturelle ou sociale. Les informations personnelles pouvant être recueillies sur le site sont principalement utilisées par l’éditeur pour la gestion des relations avec vous, et le cas échéant pour le traitement de vos commandes. Les données personnelles collectées sont les suivantes : – nom et prénom – adresse mall – numéro de téléphone</p>
                 <strong>Article 8 – Droit d’accès, de rectification et de déréférencement de vos données</strong>
-                <p>En application de la réglementation applicable aux données à caractère personnel, les utilisateurs disposent des droits suivants : le droit d’accès : ils peuvent exercer leur droit d’accès, pour connaître les données personnelles les concernant, en écrivant à l’adresse électronique ci-dessous mentionnée. Dans ce cas, avant la mise en œuvre de ce droit, la Plateforme peut demander une preuve de l’identité de l’utilisateur afin d’en vérifier l’exactitude ; • le droit de rectification : si les données à caractère personnel détenues par la Plateforme sont inexactes, ils peuvent demander la mise à jour des informations ; le droit de suppression des données : les utilisateurs peuvent demander la suppression de leurs données à caractère personnel, conformément aux lois applicables en matière de protection des données ; le droit à la limitation du traitement : les utilisateurs peuvent de demander à la Plateforme de limiter le traitement des données personnelles conformément aux hypothèses prévues par le RGPD ; le droit de s’opposer au traitement des données : les utilisateurs peuvent s’opposer à ce que leurs données soient traitées conformément aux hypothèses prévues par le RGPD; • le droit à la portabilité : ils peuvent réclamer que la Plateforme leur remette les données personnelles qu’ils ont fournies pour les transmettre à une nouvelle Plateforme. Vous pouvez exercer ce droit en nous contactant, à l’adresse suivante : 7 rue du Béarn 31270 Cugnaux Ou par email, à l’adresse : metacorerepair@gmail.com . Toute demande doit être accompagnée de la photocopie d’un titre d’identité en cours de validité signé et faire mention de l’adresse à laquelle l’éditeur pourra contacter le demandeur. La réponse sera adressée dans le mois suivant la réception de la demande. Ce délai d’un mois peut être prolongé de deux mois si la complexité de la demande et/ou le nombre de demandes l’exigent. De plus, et depuis la loi n°2016-1321 du 7 octobre 2016, les personnes qui le souhaitent, ont la possibilité d’organiser le sort de leurs données après leur décès. Pour plus d’information sur le sujet, vous pouvez consulter le site Internet de la CNIL : https://www.cnil.fr/. Les utilisateurs peuvent aussi introduire une réclamation auprès de la CNIL sur le site de la CNIL : https://www.cnil.fr Nous vous recommandons de nous contacter dans un premier temps avant de déposer une réclamation auprès de la CNIL, car nous sommes à votre entière disposition pour régler votre problème.</p>
+                <p>En application de la réglementation applicable aux données à caractère personnel, les utilisateurs disposent des droits suivants : le droit d’accès : ils peuvent exercer leur droit d’accès, pour connaître les données personnelles les concernant, en écrivant à l’adresse électronique ci-dessous mentionnée. Dans ce cas, avant la mise en œuvre de ce droit, la Plateforme peut demander une preuve de l’identité de l’utilisateur afin d’en vérifier l’exactitude ; • le droit de rectification : si les données à caractère personnel détenues par la Plateforme sont inexactes, ils peuvent demander la mise à jour des informations ; le droit de suppression des données : les utilisateurs peuvent demander la suppression de leurs données à caractère personnel, conformément aux lois applicables en matière de protection des données ; le droit à la limitation du traitement : les utilisateurs peuvent de demander à la Plateforme de limiter le traitement des données personnelles conformément aux hypothèses prévues par le RGPD ; le droit de s’opposer au traitement des données : les utilisateurs peuvent s’opposer à ce que leurs données soient traitées conformément aux hypothèses prévues par le RGPD; • le droit à la portabilité : ils peuvent réclamer que la Plateforme leur remette les données personnelles qu’ils ont fournies pour les transmettre à une nouvelle Plateforme. Vous pouvez exercer ce droit en nous contactant, à l’adresse suivante : 7 rue du Béarn 31270 Cugnaux Ou par email, à l’adresse : metacorerepair@gmail.com. Toute demande doit être accompagnée de la photocopie d’un titre d’identité en cours de validité signé et faire mention de l’adresse à laquelle l’éditeur pourra contacter le demandeur. La réponse sera adressée dans le mois suivant la réception de la demande. Ce délai d’un mois peut être prolongé de deux mois si la complexité de la demande et/ou le nombre de demandes l’exigent. De plus, et depuis la loi n°2016-1321 du 7 octobre 2016, les personnes qui le souhaitent, ont la possibilité d’organiser le sort de leurs données après leur décès. Pour plus d’information sur le sujet, vous pouvez consulter le site Internet de la CNIL : https://www.cnil.fr/. Les utilisateurs peuvent aussi introduire une réclamation auprès de la CNIL sur le site de la CNIL : https://www.cnil.fr Nous vous recommandons de nous contacter dans un premier temps avant de déposer une réclamation auprès de la CNIL, car nous sommes à votre entière disposition pour régler votre problème.</p>
                 <strong>Article 9 – Utilisation des données</strong>
                 <p>Les données personnelles collectées auprès des utilisateurs ont pour objectif la mise à disposition des services de la Plateforme, leur amélioration et le maintien d’un environnement sécurisé. La base légale des traitements est l’exécution du contrat entre l’utilisateur et la Plateforme. Plus précisément, les utilisations sont les suivantes : – accès et utilisation de la Plateforme par l’utilisateur – gestion du fonctionnement et optimisation de la Plateforme ; – mise en œuvre d’une assistance utilisateurs : – vérification, identification et authentification des données transmises par l’utilisateur ; – personnalisation des services en affichant des publicités en fonction de l’historique de navigation de l’utilisateur, selon ses préférences ; – prévention et détection des fraudes, malwares (malicious softwares ou logiciels malveillants) et gestion des incidents de sécurité ; gestion des éventuels litiges avec les utilisateurs ; envoi d’informations commerciales et publicitaires, en fonction des préférences de l’utilisateur</p>
                 <strong>Article 10 – Politique de conservation des données</strong>
                 <p>La Plateforme conserve vos données pour la durée nécessaire pour vous fournir ses services ou son assistance. Dans la mesure raisonnablement nécessaire ou requise pour satisfaire aux obligations légales ou réglementaires, régler des litiges, empêcher les fraudes et abus ou appliquer nos modalités et conditions, nous pouvons également conserver certaines de vos informations si nécessaire, même après que vous ayez fermé votre compte ou que nous n’ayons plus besoin pour vous fournir nos services.</p>
                 <strong>Article 11-Partage des données personnelles avec des tiers</strong>
-                <p>Les données personnelles peuvent être partagées avec des sociétés tierces exclusivement dans l’Union européenne, dans les cas suivants : lorsque l’utilisateur publie, dans les zones de commentaires libres de la Plateforme, des informations accessibles au public ; quand l’utilisateur autorise le site web d’un tiers à accéder à ses données ; quand la Plateforme recourt aux services de prestataires pour fournir l’assistance utilisateurs, la publicité et les services de paiement. Ces prestataires disposent d’un accès limité aux données de l’utilisateur, dans le cadre de l’exécution de ces prestations, et ont l’obligation contractuelle de les utiliser en conformité avec les dispositions de la réglementation applicable en matière protection des données à caractère personnel ; si la loi l’exige, la Plateforme peut effectuer la transmission de données pour donner suite aux réclamations présentées contre la Plateforme et se conformer aux procédures administratives et judiciaires.</p>
+                <p>Les données personnelles peuvent être partagées avec des sociétés tierces exclusivement dans l’Union européenne, dans les cas suivants : lorsque l’utilisateur publie, dans les zones de commentaires libres de la Plateforme, des informations accessibles au public; quand l’utilisateur autorise le site web d’un tiers à accéder à ses données ; quand la Plateforme recourt aux services de prestataires pour fournir l’assistance utilisateurs, la publicité et les services de paiement. Ces prestataires disposent d’un accès limité aux données de l’utilisateur, dans le cadre de l’exécution de ces prestations, et ont l’obligation contractuelle de les utiliser en conformité avec les dispositions de la réglementation applicable en matière protection des données à caractère personnel ; si la loi l’exige, la Plateforme peut effectuer la transmission de données pour donner suite aux réclamations présentées contre la Plateforme et se conformer aux procédures administratives et judiciaires.</p>
                 <strong>Article 12 – Offres commerciales</strong>
                 <p>Vous êtes susceptible de recevoir des offres commerciales de l’éditeur. Si vous ne le souhaitez pas, veuillez cliquer sur le lien suivant : Vos données sont susceptibles d’être utilisées par les partenaires de l’éditeur à des fins de prospection commerciale, si vous ne le souhaitez pas, veuillez cliquer sur le lien suivant : Si, lors de la consultation du site, vous accédez à des données à caractère personnel, vous devez vous abstenir de toute collecte, de toute utilisation non autorisée et de tout acte pouvant constituer une atteinte à la vie privée ou à la réputation des personnes. L’éditeur décline toute responsabilité à cet égard. Les données sont conservées et utilisées pour une durée conforme à la législation en vigueur.</p>
                 <strong>Article 13- Photographies et représentation des produits</strong>
@@ -516,7 +541,7 @@
             <div class="acc-header" onclick="toggleAcc(this)">📦 Conditions Générales de Vente (CGV) & Colisage <span>+</span></div>
             <div class="acc-content">
                 <strong>Site INTERNET</strong>
-                <p>Note à Morgan : A positionner dans «  Informations & CGU »</p>
+                <p>Note à Morgan : A positionner dans « Informations & CGU »</p>
                 <strong>Colisage</strong>
                 <p>Toutes mes créations sont importantes pour moi de la création à la réception. Chaque bijou est emballé dans une pochette en tissu.</p>
                 <p>Note à Morgan : ne pas oublier … je t’envoi les docs dans un autre fichier</p>
@@ -552,7 +577,7 @@
             <div class="acc-header" onclick="toggleAcc(this)">🍪 Politique relative aux cookies <span>+</span></div>
             <div class="acc-content">
                 <p>Message pour Morgan : VOIR LE POINT 6. Cookies placés<br>ET VOIR LE LIEN POUR REAJUSTER LES TEXTES<br>https://cookiedatabase.org/legal/cookie-policy/</p>
-                <strong>Mentions légales :  Politique relative aux cookies</strong>
+                <strong>Mentions légales : Politique relative aux cookies</strong>
                 <p>Cette politique de cookies a été mise à jour pour la dernière fois le 8 mars 2023 et s’applique aux citoyens et aux résidents permanents légaux de l’Espace Économique Européen et de la Suisse.</p>
                 <strong>1. Introduction</strong>
                 <p>Notre site web, Valand'art Créations | Bijouterie d'Art (ci-après : « le site web ») utilise des cookies et autres technologies liées (par simplification, toutes ces technologies sont désignées par le terme « cookies »). Des cookies sont également placés par des tierces parties que nous avons engagées. Dans le document ci-dessous, nous vous informons de l’utilisation des cookies sur notre site web.</p>
@@ -566,9 +591,9 @@
                 <p>5.1 Cookies techniques ou fonctionnels<br>Certains cookies assurent le fonctionnement correct de certaines parties du site web et la prise en compte de vos préférences en tant qu’internaute. En plaçant des cookies fonctionnels, nous vous facilitons la visite de notre site web. Ainsi, vous n’avez pas besoin de saisir à plusieurs reprises les mêmes informations lors de la visite de notre site web et, par exemple, les éléments restent dans votre panier jusqu’à votre paiement. Nous pouvons déposer ces cookies sans votre consentement.</p>
                 <p>5.2 Cookies de marketing/suivi<br>Les cookies de marketing/suivi sont des cookies ou toute autre forme de stockage local, utilisés pour créer des profils d’utilisateurs afin d’afficher de la publicité ou de suivre l’utilisateur sur ce site web ou sur plusieurs sites web dans des finalités marketing similaires.</p>
                 <strong>6. Cookies placés</strong>
-                <p>Elementor<br>Statistiques (anonymes)<br>Consent to service elementor<br>Utilisation<br>Nous utilisons Elementor pour la création de contenu. En savoir plus sur Elementor<br>Partage de données<br>Ces données ne sont pas partagées avec des tierces parties.<br>Statistiques (anonymes)<br>Nom : elementor<br>Expiration : persistante<br>Fonction : Stocker les actions effectuées par les utilisateurs sur le site web</p>
-                <p>WordPress<br>Fonctionnel<br>Consent to service wordpress<br>Utilisation<br>Nous utilisons WordPress pour le développement du site web. En savoir plus sur WordPress<br>Partage de données<br>Ces données ne sont pas partagées avec des tierces parties.<br>Fonctionnel<br>Nom : wp-settings-*<br>Expiration : persistante<br>Fonction : Stocker les préférences des utilisateurs<br>Nom : wp-settings-time-*<br>Expiration : 1 an<br>Fonction : Stocker les préférences des utilisateurs<br>Nom : wordpress_test_cookie<br>Expiration : session<br>Fonction : Vérifier si des cookies peuvent être déposés<br>Nom : wordpress_logged_in_*<br>Expiration : persistante<br>Fonction : Garder les utilisateurs connectés</p>
-                <p>Divers<br>Finalité en attente d’enquête<br>Consent to service divers<br>Utilisation<br>Partage de données<br>Le partage des données est en cours d’enquête<br>Finalité en attente d’enquête<br>Nom : e_kit-elements-defaults<br>Expiration : Fonction :<br>Nom : isReturningVisitor*<br>Expiration : Fonction :<br>Nom : localTimeZone<br>Expiration : Fonction :<br>Nom : cmplz_consenttype<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_banner-status<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_consented_services<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_functional<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_marketing<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_policy_id<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_preferences<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_statistics<br>Expiration : 365 jours Fonction :<br>Nom : mp_a36067b00a263cce0299cfd960e26ecf_mixpanel<br>Expiration : Fonction :<br>Nom : SERVERID77446<br>Expiration : Fonction :<br>Nom : wpEmojiSettingsSupports<br>Expiration : Fonction :<br>Nom : wp_lang<br>Expiration : Fonction :</p>
+                <p>Elementor<br>Statistiques (anonymes)<br>Consent to service elementor<br>Utilisation<br>Nous utilisons Elementor pour la création de contenu. En savoir plus sur Elementor<br>Partage de données<br>Ces données ne sont pas partagées avec des tierces parties.<br>Statistiques (anonymes)<br>Nom : elementor<br> Expiration : persistante<br> Fonction : Stocker les actions effectuées par les utilisateurs sur le site web</p>
+                <p>WordPress<br>Fonctionnel<br>Consent to service wordpress<br>Utilisation<br>Nous utilisons WordPress pour le développement du site web. En savoir plus sur WordPress<br>Partage de données<br>Ces données ne sont pas partagées avec des tierces parties.<br>Fonctionnel<br>Nom : wp-settings-*<br> Expiration : persistante<br> Fonction : Stocker les préférences des utilisateurs<br>Nom : wp-settings-time-*<br> Expiration : 1 an<br> Fonction : Stocker les préférences des utilisateurs<br>Nom : wordpress_test_cookie<br> Expiration : session<br> Fonction : Vérifier si des cookies peuvent être déposés<br>Nom : wordpress_logged_in_*<br> Expiration : persistante<br> Fonction : Garder les utilisateurs connectés</p>
+                <p>Divers<br>Finalité en attente d’enquête<br>Consent to service divers<br>Utilisation<br>Partage de données<br>Le partage des données est en cours d’enquête<br>Finalité en attente d’enquête<br>Nom : e_kit-elements-defaults<br> Expiration : Fonction :<br> Nom : isReturningVisitor*<br> Expiration : Fonction :<br> Nom : localTimeZone<br> Expiration : Fonction :<br> Nom : cmplz_consenttype<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_banner-status<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_consented_services<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_functional<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_marketing<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_policy_id<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_preferences<br> Expiration : 365 jours Fonction :<br> Nom : cmplz_statistics<br> Expiration : 365 jours Fonction :<br> Nom : mp_a36067b00a263cce0299cfd960e26ecf_mixpanel<br> Expiration : Fonction :<br> Nom : SERVERID77446<br> Expiration : Fonction :<br> Nom : wpEmojiSettingsSupports<br> Expiration : Fonction :<br> Nom : wp_lang<br> Expiration : Fonction :</p>
                 <strong>7. Consentement</strong>
                 <p>Lorsque vous visitez notre site web pour la première fois, nous vous montrerons une fenêtre contextuelle avec une explication sur les cookies. Dès que vous cliquez sur « Enregistrer les préférences » vous nous autorisez à utiliser les catégories de cookies et d’extensions que vous avez sélectionnés dans la fenêtre contextuelle, comme décrit dans la présente politique de cookies. Vous pouvez désactiver l’utilisation des cookies via votre navigateur, mais veuillez noter que notre site web pourrait ne plus fonctionner correctement.</p>
                 <p>7.1 Gérez vos réglages de consentement<br>Fonctionnel<br>Toujours activé<br>Le stockage ou l’accès technique est strictement nécessaire dans la finalité d’intérêt légitime de permettre l’utilisation d’un service spécifique explicitement demandé par l’abonné ou l’utilisateur, ou dans le seul but d’effectuer la transmission d’une communication sur un réseau de communications électroniques.<br>Marketing<br>Le stockage ou l’accès technique est nécessaire pour créer des profils d’utilisateurs afin d’envoyer des publicités, ou pour suivre l’utilisateur sur un site web ou sur plusieurs sites web ayant des finalités marketing similaires.</p>
@@ -692,7 +717,53 @@ function openPayment(product, cartTotal = 0) {
 function closePayment() { document.getElementById('payment-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('payment-modal').addEventListener('click', function(e) { if (e.target === this) closePayment(); });
 
-function simulatePay() { closePayment(); cart = []; updateCartUI(); setTimeout(() => alert(`✅ Paiement validé !\n\nVous recevrez un email de confirmation à valandartcreations@gmail.com.\nMerci pour votre achat !`), 100); }
+// DÉBUT : VRAI PAIEMENT CAWL
+async function lancerPaiement(event) {
+    if(event) event.preventDefault();
+
+    const montantTexte = document.getElementById('pay-amount').textContent;
+    const montantTotalEnCentimes = Math.round(parseFloat(montantTexte) * 100);
+    
+    // On récupère l'email saisi par le client
+    const emailClient = document.getElementById('client-email').value;
+
+    if (!emailClient || !emailClient.includes('@')) {
+        alert("Veuillez entrer une adresse email valide pour recevoir votre confirmation.");
+        return;
+    }
+
+    const boutonPaiement = document.querySelector(".btn-pay-custom");
+    boutonPaiement.innerText = "Redirection sécurisée...";
+    boutonPaiement.disabled = true;
+
+    try {
+        const reponse = await fetch('/paiement', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: emailClient,
+                montant: montantTotalEnCentimes
+            })
+        });
+
+        const data = await reponse.json();
+
+        if (data.success && data.redirectUrl) {
+            window.location.href = data.redirectUrl; 
+        } else {
+            alert("Erreur lors de l'initialisation du paiement sécurisé.");
+            boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTexte + " €";
+            boutonPaiement.disabled = false;
+        }
+
+    } catch (erreur) {
+        console.error("Erreur :", erreur);
+        alert("Impossible de joindre le serveur. Vérifiez votre connexion.");
+        boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTexte + " €";
+        boutonPaiement.disabled = false;
+    }
+}
+// FIN : VRAI PAIEMENT CAWL
 
 function toggleAcc(header) {
     const content = header.nextElementSibling, span = header.querySelector('span'), isOpen = content.classList.contains('active');
