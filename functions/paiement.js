@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
       }
     };
 
-    const cawlResponse = await fetch("https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts", {
+    const cawlResponse = await fetch("https://api.cawl.fr/v1/merchant/CA131066056037/hostedcheckouts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
