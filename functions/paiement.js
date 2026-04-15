@@ -1,58 +1,62 @@
 // Fichier : functions/paiement.js
 
 export async function onRequestPost(context) {
-  // 1. On récupère les données envoyées par votre site web (ex: l'email du client, le montant)
-  const requestData = await context.request.json();
-  const montantEnCentimes = requestData.montant; // Toujours en centimes (ex: 5000 pour 50€)
-  const emailClient = requestData.email;
-
-  // 2. On prépare la demande secrète pour CAWL (Worldline)
-  // Remplacez l'URL par celle donnée dans votre documentation CAWL
-  const cawlApiUrl = "https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts"; 
-
-  const cawlPayload = {
-    order: {
-      amountOfMoney: {
-        currencyCode: "EUR",
-        amount: montantEnCentimes
-      },
-      customer: {
-        emailAddress: emailClient
-      }
-    },
-    hostedCheckoutSpecificInput: {
-      // C'est ICI la magie de la tokenisation : on demande à CAWL de créer un Token !
-      isRecurring: true, 
-      returnUrl: "https://valandartcreations.pages.dev" // Où renvoyer le client après le paiement
-    }
-  };
-
   try {
-    // 3. On appelle CAWL avec votre Clé Secrète (tirée du coffre-fort Cloudflare)
+    // 1. On récupère les données de votre site
+    const requestData = await context.request.json();
+    const montantEnCentimes = requestData.montant;
+    const emailClient = requestData.email;
+
+    // 2. L'URL CAWL avec votre ID
+    const cawlApiUrl = "https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts"; 
+
+    const cawlPayload = {
+      order: {
+        amountOfMoney: {
+          currencyCode: "EUR",
+          amount: montantEnCentimes
+        },
+        customer: {
+          emailAddress: emailClient
+        }
+      },
+      hostedCheckoutSpecificInput: {
+        isRecurring: true, 
+        returnUrl: "https://valandartcreations.pages.dev"
+      }
+    };
+
+    // 3. CORRECTION : On utilise votre vrai Identifiant de Clé API pour l'autorisation
+    const idCleApi = "8911BE754F77C9DAEB55";
+    const cleSecrete = context.env.CAWL_SECRET_KEY;
+
+    // 4. On appelle CAWL
     const cawlResponse = await fetch(cawlApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // On utilise la clé secrète configurée à l'étape 1 !
-        "Authorization": "Basic " + btoa("API_KEY:" + context.env.CAWL_SECRET_KEY) 
+        "Authorization": "Basic " + btoa(idCleApi + ":" + cleSecrete) 
       },
       body: JSON.stringify(cawlPayload)
     });
 
+    // Si CAWL refuse la connexion (ex: mauvaise clé ou mauvais lien), on le signale
+    if (!cawlResponse.ok) {
+       const erreurCawl = await cawlResponse.text();
+       return new Response(JSON.stringify({ success: false, message: "CAWL a refusé: " + erreurCawl }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
+
     const data = await cawlResponse.json();
 
-    // 4. CAWL nous répond avec un "hostedCheckoutId" (un ticket de session)
-    // On renvoie ce ticket à votre site web pour qu'il affiche la page de paiement
+    // 5. CAWL nous donne le feu vert et l'URL de la page sécurisée
     return new Response(JSON.stringify({ 
       success: true, 
       checkoutId: data.hostedCheckoutId,
-      redirectUrl: data.partialRedirectUrl // Le lien sécurisé vers la page CAWL
-    }), {
-      headers: { "Content-Type": "application/json" }
-    });
+      redirectUrl: data.partialRedirectUrl 
+    }), { headers: { "Content-Type": "application/json" } });
 
   } catch (error) {
-    // S'il y a un problème, on avertit le site
-    return new Response(JSON.stringify({ success: false, message: "Erreur avec CAWL" }), { status: 500 });
+    // S'il y a un gros bug, on l'attrape ici
+    return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 }
