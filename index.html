@@ -635,6 +635,7 @@ const products = [
 ];
 
 let currentProduct = null; let currentPhotoIndex = 0; let cart = [];
+let montantTotalCawl = 0; // MÉMOIRE SÉCURISÉE POUR LE PRIX
 
 function addToCart(productId) {
     const product = products.find(p => p.id === productId); if (!product) return;
@@ -676,40 +677,21 @@ function checkoutCart() {
 }
 
 function renderAll() { renderGrid('grid-boucles', products.filter(p => p.category === "Boucles d'Oreilles")); renderGrid('grid-colliers', products.filter(p => p.category === "Collier")); }
+
 function renderGrid(gridId, items) {
     const grid = document.getElementById(gridId); if (!grid) return;
     if (items.length === 0) { grid.innerHTML = `<div class="empty-state"><i class="far fa-gem"></i><p>Aucun bijou dans cette catégorie.</p></div>`; return; }
-    grid.innerHTML = items.map((p, idx) => `<div class="product-card" style="animation-delay: ${idx * 0.07}s" onclick="openProductModal(${p.id})"><div class="prod-badge">${p.category}</div><div class="img-box"><img src="${p.photos[0]}" class="product-img" alt="${p.name}" onerror="this.src='https://placehold.co/400x380/F2E7D3/C5A059?text=${encodeURIComponent(p.name)}'"><div class="card-overlay"><button class="overlay-btn">Voir la fiche</button></div>${p.photos.length > 1 ? `<div class="img-dots">${p.photos.map((_, i) => `<div class="img-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : ''}</div><div class="prod-info"><p class="prod-label">Artisanat Français</p><h3 class="prod-name">${p.name}</h3>${p.tagline ? `<p style="font-size:0.72rem; font-style:italic; color:var(--gold); margin-bottom:6px;">${p.tagline}</p>` : ''}<p class="prod-desc">${p.specs[0]}</p><div class="prod-footer"><span class="prod-price">${p.price} €</span><button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button></div></div></div>`).join('');
+    // CORRECTION MAJEURE: Suppression de l'erreur d'apostrophe
+    grid.innerHTML = items.map((p, idx) => `<div class="product-card" style="animation-delay: ${idx * 0.07}s" onclick="openProductModal(${p.id})"><div class="prod-badge">${p.category}</div><div class="img-box"><img src="${p.photos[0]}" class="product-img" alt="${p.name}"><div class="card-overlay"><button class="overlay-btn">Voir la fiche</button></div>${p.photos.length > 1 ? `<div class="img-dots">${p.photos.map((_, i) => `<div class="img-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : ''}</div><div class="prod-info"><p class="prod-label">Artisanat Français</p><h3 class="prod-name">${p.name}</h3>${p.tagline ? `<p style="font-size:0.72rem; font-style:italic; color:var(--gold); margin-bottom:6px;">${p.tagline}</p>` : ''}<p class="prod-desc">${p.specs[0]}</p><div class="prod-footer"><span class="prod-price">${p.price} €</span><button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button></div></div></div>`).join('');
 }
 
-// CORRECTION JAVASCRIPT : Conversion de 'boucles' en vrai nom
 function filterCategory(cat, btn) {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-    
     let realCat = cat;
     if (cat === 'boucles') realCat = "Boucles d'Oreilles";
     if (cat === 'collier') realCat = "Collier";
-
-    if (cat === 'all') { 
-        renderAll(); 
-        document.querySelectorAll('.section-title, .product-grid').forEach(el => el.style.display = ''); 
-    } else { 
-        const sectionMap = { 
-            "Boucles d'Oreilles": { gridId: 'grid-boucles', titleId: 'boucles' }, 
-            "Collier": { gridId: 'grid-colliers', titleId: 'colliers' } 
-        }; 
-        Object.entries(sectionMap).forEach(([sectionCat, { gridId, titleId }]) => { 
-            const grid = document.getElementById(gridId), title = document.getElementById(titleId); 
-            if (sectionCat === realCat) { 
-                grid && (grid.style.display = ''); 
-                title && (title.style.display = ''); 
-                renderGrid(gridId, products.filter(p => p.category === realCat)); 
-            } else { 
-                grid && (grid.style.display = 'none'); 
-                title && (title.style.display = 'none'); 
-            } 
-        }); 
-    }
+    if (cat === 'all') { renderAll(); document.querySelectorAll('.section-title, .product-grid').forEach(el => el.style.display = ''); }
+    else { const sectionMap = { "Boucles d'Oreilles": { gridId: 'grid-boucles', titleId: 'boucles' }, "Collier": { gridId: 'grid-colliers', titleId: 'colliers' } }; Object.entries(sectionMap).forEach(([sectionCat, { gridId, titleId }]) => { const grid = document.getElementById(gridId), title = document.getElementById(titleId); if (sectionCat === realCat) { grid && (grid.style.display = ''); title && (title.style.display = ''); renderGrid(gridId, products.filter(p => p.category === realCat)); } else { grid && (grid.style.display = 'none'); title && (title.style.display = 'none'); } }); }
 }
 
 function openProductModal(productId) {
@@ -735,9 +717,19 @@ function setGalleryPhoto(index) { currentPhotoIndex = index; updateGallery(); }
 document.addEventListener('keydown', (e) => { if (!document.getElementById('product-modal').classList.contains('open')) return; if (e.key === 'ArrowLeft') changeGalleryPhoto(-1); if (e.key === 'ArrowRight') changeGalleryPhoto(1); if (e.key === 'Escape') closeProductModal(); });
 
 function openPayment(product, cartTotal = 0) {
-    const name = product ? product.name : (cart.length > 1 ? 'Commande globale (' + cart.length + ' articles)' : cart[0].name); const price = product ? product.price : cartTotal;
-    document.getElementById('cawl-name').textContent = name; document.getElementById('cawl-price').textContent = price + ' €'; document.getElementById('pay-amount').textContent = price;
-    document.getElementById('payment-modal').classList.add('open'); document.body.style.overflow = 'hidden';
+    const name = product ? product.name : (cart.length > 1 ? 'Commande globale (' + cart.length + ' articles)' : cart[0].name); 
+    const price = product ? product.price : cartTotal;
+    
+    montantTotalCawl = price; // SAUVEGARDE EN MÉMOIRE
+    
+    document.getElementById('cawl-name').textContent = name; 
+    document.getElementById('cawl-price').textContent = price + ' €'; 
+    
+    const payAmountEl = document.getElementById('pay-amount');
+    if(payAmountEl) payAmountEl.textContent = price;
+    
+    document.getElementById('payment-modal').classList.add('open'); 
+    document.body.style.overflow = 'hidden';
 }
 function closePayment() { document.getElementById('payment-modal').classList.remove('open'); document.body.style.overflow = ''; }
 document.getElementById('payment-modal').addEventListener('click', function(e) { if (e.target === this) closePayment(); });
@@ -745,8 +737,8 @@ document.getElementById('payment-modal').addEventListener('click', function(e) {
 async function lancerPaiement(event) {
     if(event) event.preventDefault();
 
-    const montantTexte = document.getElementById('pay-amount').textContent;
-    const montantTotalEnCentimes = Math.round(parseFloat(montantTexte) * 100);
+    // UTILISATION DE LA MÉMOIRE AU LIEU DE LIRE L'ÉCRAN (Contournement total du bug)
+    const montantTotalEnCentimes = Math.round(montantTotalCawl * 100);
     
     const emailClient = document.getElementById('client-email').value;
 
@@ -775,14 +767,14 @@ async function lancerPaiement(event) {
             window.location.href = data.redirectUrl; 
         } else {
             alert("Erreur lors de l'initialisation du paiement sécurisé.\n" + (data.message || ""));
-            boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTexte + " €";
+            boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTotalCawl + " €";
             boutonPaiement.disabled = false;
         }
 
     } catch (erreur) {
         console.error("Erreur :", erreur);
         alert("Impossible de joindre le serveur. Vérifiez votre connexion.");
-        boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTexte + " €";
+        boutonPaiement.innerText = "Aller au paiement sécurisé — " + montantTotalCawl + " €";
         boutonPaiement.disabled = false;
     }
 }
