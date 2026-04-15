@@ -2,22 +2,23 @@ export async function onRequestPost(context) {
   try {
     const requestData = await context.request.json();
     
-    // SÉCURITÉ : On force le montant à devenir un vrai nombre entier mathématique.
-    // Et on vérifie qu'il est supérieur à 0 (la banque refuse les transactions à 0€).
-    const montantEnCentimes = parseInt(requestData.montant, 10);
+    // 1. FORÇAGE STRICT : On s'assure que le montant est un "Nombre Entier Absolu"
+    const montantEnCentimes = Math.floor(Number(requestData.montant));
     
-    if (!montantEnCentimes || montantEnCentimes <= 0) {
-        return new Response(JSON.stringify({ success: false, message: "Erreur : Le montant calculé est invalide ou égal à zéro." }), { status: 400 });
+    // Si c'est un texte invalide ou zéro, on bloque
+    if (isNaN(montantEnCentimes) || montantEnCentimes <= 0) {
+        return new Response(JSON.stringify({ success: false, message: "Erreur : Le montant calculé est invalide." }), { status: 400 });
     }
 
+    // 2. Préparation du colis
     const cawlPayload = {
       order: {
         amountOfMoney: { 
           currencyCode: "EUR", 
-          amount: montantEnCentimes // Ici, on est 100% sûr d'envoyer un nombre pur
+          amount: montantEnCentimes 
         },
         customer: { 
-          emailAddress: requestData.email 
+          emailAddress: requestData.email || "client@email.com"
         }
       },
       hostedCheckoutSpecificInput: {
@@ -25,6 +26,7 @@ export async function onRequestPost(context) {
       }
     };
 
+    // 3. Envoi à la banque
     const cawlResponse = await fetch("https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts", {
       method: "POST",
       headers: {
@@ -36,7 +38,13 @@ export async function onRequestPost(context) {
 
     if (!cawlResponse.ok) {
        const erreurTexte = await cawlResponse.text();
-       return new Response(JSON.stringify({ success: false, message: "Refus CAWL: " + erreurTexte }), { status: 400 });
+       
+       // 🚨 LE SCANNER : On renvoie l'erreur MAIS AUSSI le colis exact qu'on a envoyé !
+       return new Response(JSON.stringify({ 
+           success: false, 
+           message: "Refus CAWL: " + erreurTexte,
+           payloadEnvoye: cawlPayload // On affiche le colis pour le radiographier
+       }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
     const data = await cawlResponse.json();
