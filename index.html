@@ -5,539 +5,703 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valand'art Créations | Bijouterie d'Art</title>
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
+        /* ============================================
+           VARIABLES & RESET
+        ============================================ */
         :root {
             --cream: #F2E7D3;
+            --cream-dark: #E8D9BF;
             --anthracite: #333232;
+            --anthracite-light: #555454;
             --gold: #C5A059;
+            --gold-light: #D4B878;
+            --gold-pale: #F0E2C0;
             --white: #FFFFFF;
+            --shadow: 0 8px 40px rgba(51,50,50,0.10);
+            --shadow-hover: 0 20px 60px rgba(51,50,50,0.18);
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --radius: 2px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--cream); color: var(--anthracite); font-family: 'Montserrat', sans-serif; line-height: 1.6; }
+        html { scroll-behavior: smooth; }
 
-        /* NAVIGATION */
+        body {
+            background-color: var(--cream);
+            color: var(--anthracite);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           NAVIGATION
+        ============================================ */
         nav {
             background: var(--white);
-            padding: 15px 5%; position: sticky; top: 0; width: 100%; z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            padding: 10px 5%;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(197,160,89,0.15);
         }
-        .nav-links { display: flex; gap: 30px; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--anthracite); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
-        /* Logo agrandi selon la demande */
-        .logo-nav { height: 80px; cursor: pointer; transition: var(--transition); }
 
-        /* BARRE DE CONTACT FIXE */
-        .contact-bar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 999; }
-        .contact-icon { width: 45px; height: 45px; background: var(--anthracite); color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .contact-icon:hover { background: var(--gold); transform: scale(1.1); }
+        .nav-links { display: flex; gap: 35px; list-style: none; }
+        .nav-links.left { justify-content: flex-start; }
+        .nav-links.right { justify-content: flex-end; }
 
-        /* PRODUITS */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 40px 5%; max-width: 1400px; margin: 0 auto; }
-        .product-card { background: var(--white); padding: 15px; transition: var(--transition); text-align: center; }
-        .img-box { height: 380px; overflow: hidden; margin-bottom: 15px; background: #f9f9f9; }
-        .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .product-card:hover .product-img { transform: scale(1.05); }
-        
-        .btn-buy { background: var(--anthracite); color: var(--white); border: none; padding: 12px; width: 100%; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; transition: var(--transition); }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--anthracite);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 4px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 1px; background: var(--gold); transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--gold); }
+
+        .logo-nav {
+            height: 90px; cursor: pointer; transition: var(--transition);
+            filter: drop-shadow(0 2px 8px rgba(197,160,89,0.2)); margin: 0 auto;
+        }
+        .logo-nav:hover { transform: scale(1.03); }
+
+        .cart-badge {
+            background: var(--gold); color: var(--white); border-radius: 50%;
+            padding: 2px 6px; font-size: 0.6rem; position: absolute;
+            top: -10px; right: -15px; font-weight: bold; display: none;
+        }
+
+        /* ============================================
+           BARRE CONTACT FIXE
+        ============================================ */
+        .contact-bar {
+            position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 12px; z-index: 999;
+        }
+
+        .contact-icon {
+            width: 44px; height: 44px; background: var(--anthracite); color: white;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; text-decoration: none; transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25); font-size: 0.9rem;
+        }
+        .contact-icon:hover { background: var(--gold); transform: scale(1.12) translateX(-3px); }
+
+        /* ============================================
+           HERO BANNER (Modifié avec logofont.png)
+        ============================================ */
+        .hero {
+            background: var(--anthracite);
+            padding: 90px 5% 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Rayures de fond existantes */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(197,160,89,0.04) 40px, rgba(197,160,89,0.04) 41px);
+            z-index: -2;
+        }
+
+        /* Intégration du logofont en filigrane discret */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('logofont.png') center center / contain no-repeat;
+            opacity: 0.08; /* Opacité faible pour ne pas nuire à la lecture */
+            pointer-events: none;
+            z-index: -1;
+            transform: scale(0.8);
+        }
+
+        .hero-tagline, .hero-sub, .hero-divider {
+            position: relative;
+            z-index: 2; /* Garde le texte au-dessus du filigrane */
+        }
+
+        .hero-tagline {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-style: italic; color: var(--cream); letter-spacing: 1px;
+            line-height: 1.2; animation: fadeUp 0.8s ease both;
+        }
+        .hero-tagline span { color: var(--gold); font-style: normal; }
+
+        .hero-sub {
+            font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--gold-light); margin-top: 18px; animation: fadeUp 0.8s 0.2s ease both;
+        }
+
+        .hero-divider {
+            width: 60px; height: 1px; background: var(--gold);
+            margin: 22px auto 0; animation: fadeUp 0.8s 0.4s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           FILTRE CATÉGORIES & GRILLE
+        ============================================ */
+        .category-bar {
+            display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
+            padding: 35px 5% 20px; background: var(--cream); position: sticky;
+            top: 110px; z-index: 900; border-bottom: 1px solid rgba(197,160,89,0.2);
+        }
+
+        .cat-btn {
+            background: transparent; border: 1px solid var(--anthracite); color: var(--anthracite);
+            padding: 9px 22px; font-family: 'Montserrat', sans-serif; font-size: 0.65rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; transition: var(--transition); border-radius: var(--radius);
+        }
+        .cat-btn:hover, .cat-btn.active { background: var(--anthracite); color: var(--white); }
+        .cat-btn.active { border-color: var(--gold); background: var(--gold); }
+
+        .section-title { padding: 50px 5% 20px; max-width: 1400px; margin: 0 auto; }
+        .section-title h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 600; display: flex; align-items: center; gap: 18px; color: var(--anthracite); }
+        .section-title h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--gold), transparent); }
+        .section-title p { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--anthracite-light); margin-top: 5px; }
+
+        .product-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 28px; padding: 10px 5% 60px; max-width: 1400px; margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--white); transition: var(--transition); cursor: pointer;
+            position: relative; border-radius: var(--radius); overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04); animation: cardIn 0.5s ease both;
+            display: flex; flex-direction: column;
+        }
+        .product-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-6px); }
+
+        @keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        .prod-badge {
+            position: absolute; top: 14px; left: 14px; background: var(--anthracite);
+            color: var(--gold-light); font-size: 0.55rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; padding: 5px 10px; z-index: 2; border-radius: var(--radius);
+        }
+
+        .img-box { height: 360px; overflow: hidden; background: #f5f0ea; position: relative; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .product-card:hover .product-img { transform: scale(1.07); }
+
+        .img-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; }
+        .img-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.8); }
+        .img-dot.active { background: var(--white); width: 18px; border-radius: 3px; }
+
+        .card-overlay { position: absolute; inset: 0; background: rgba(51,50,50,0); display: flex; align-items: center; justify-content: center; transition: background 0.4s ease; z-index: 4; }
+        .product-card:hover .card-overlay { background: rgba(51,50,50,0.15); }
+        .overlay-btn { background: var(--white); color: var(--anthracite); border: none; padding: 12px 28px; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; opacity: 0; transform: translateY(10px); transition: var(--transition); }
+        .product-card:hover .overlay-btn { opacity: 1; transform: translateY(0); }
+
+        .prod-info { padding: 18px 20px 22px; display: flex; flex-direction: column; flex-grow: 1; }
+        .prod-label { font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; color: #aaa; margin-bottom: 4px; }
+        .prod-name { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; margin-bottom: 6px; line-height: 1.2; }
+        .prod-desc { font-size: 0.7rem; color: var(--anthracite-light); margin-bottom: 14px; line-height: 1.6; flex-grow: 1; }
+        .prod-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+        .prod-price { font-size: 1.2rem; font-weight: 700; color: var(--gold); font-family: 'Cormorant Garamond', serif; }
+        .btn-buy { background: var(--anthracite); color: var(--white); border: none; padding: 10px 22px; font-family: 'Montserrat', sans-serif; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.62rem; letter-spacing: 1.5px; transition: var(--transition); border-radius: var(--radius); }
         .btn-buy:hover { background: var(--gold); }
 
-        /* MODAL PAIEMENT CAWL */
-        #payment-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; }
-        .cawl-container { background: var(--white); width: 90%; max-width: 400px; padding: 30px; border-top: 5px solid var(--gold); }
-        .cawl-form input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; font-family: 'Montserrat'; }
-        .btn-pay-custom { background: var(--anthracite); color: white; border: none; padding: 15px; width: 100%; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        /* ============================================
+           MODALS & PANIER
+        ============================================ */
+        /* Modal Fiche Produit */
+        #product-modal { display: none; position: fixed; inset: 0; background: rgba(30,28,28,0.75); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+        #product-modal.open { display: flex; }
+        .modal-inner { background: var(--white); width: 100%; max-width: 900px; max-height: 92vh; overflow-y: auto; border-radius: var(--radius); display: flex; flex-direction: column; animation: modalIn 0.35s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; }
+        .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--anthracite); z-index: 10; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: var(--transition); border-radius: 50%; }
+        .modal-close:hover { background: var(--cream); color: var(--gold); }
+        .modal-body { display: grid; grid-template-columns: 1fr 1fr; }
+        .modal-gallery { background: var(--cream); position: relative; min-height: 420px; }
+        .modal-main-img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; display: block; transition: opacity 0.3s ease; }
+        .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); background: var(--white); border: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--anthracite); box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: var(--transition); z-index: 5; }
+        .gallery-nav:hover { background: var(--gold); color: white; }
+        .gallery-nav.prev { left: 12px; } .gallery-nav.next { right: 12px; } .gallery-nav.hidden { display: none; }
+        .modal-thumbs { display: flex; gap: 8px; padding: 10px 14px; background: rgba(242,231,211,0.6); overflow-x: auto; }
+        .modal-thumb { width: 55px; height: 55px; object-fit: cover; cursor: pointer; border: 2px solid transparent; flex-shrink: 0; transition: var(--transition); border-radius: var(--radius); }
+        .modal-thumb.active { border-color: var(--gold); } .modal-thumb:hover { border-color: var(--anthracite); }
+        .modal-details { padding: 40px 35px; display: flex; flex-direction: column; gap: 16px; }
+        .modal-badge { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+        .modal-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; line-height: 1.1; }
+        .modal-price { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--gold); font-weight: 600; }
+        .modal-sep { width: 50px; height: 1px; background: var(--gold); }
+        .modal-spec-title { font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; color: #aaa; margin-bottom: 6px; }
+        .modal-spec-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .modal-spec-list li { font-size: 0.78rem; color: var(--anthracite-light); display: flex; align-items: flex-start; gap: 8px; }
+        .modal-spec-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+        .modal-note { font-size: 0.68rem; color: #bbb; line-height: 1.6; border-top: 1px solid #eee; padding-top: 14px; }
+        .btn-buy-modal { background: var(--anthracite); color: var(--white); border: none; padding: 16px 30px; font-family: 'Montserrat', sans-serif; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 2px; transition: var(--transition); width: 100%; margin-top: auto; border-radius: var(--radius); }
+        .btn-buy-modal:hover { background: var(--gold); }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* INFOS PRATIQUES & CGU */
-        .legal-section { background: var(--white); padding: 80px 5%; border-top: 1px solid #ddd; }
-        .legal-container { max-width: 850px; margin: 0 auto; }
+        /* Panier Latéral */
+        .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 4500; opacity: 0; visibility: hidden; transition: var(--transition); }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+        .cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; background: var(--white); z-index: 5000; box-shadow: -5px 0 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .cart-drawer.open { right: 0; }
+        .cart-header { padding: 25px; border-bottom: 1px solid rgba(197,160,89,0.2); display: flex; justify-content: space-between; align-items: center; }
+        .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--anthracite); }
+        .cart-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--anthracite); transition: color 0.3s; }
+        .cart-close:hover { color: var(--gold); }
+        .cart-items { flex-grow: 1; overflow-y: auto; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+        .cart-item { display: flex; gap: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item-img { width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius); }
+        .cart-item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .cart-item-name { font-size: 0.85rem; font-weight: 700; color: var(--anthracite); }
+        .cart-item-price { font-size: 0.9rem; color: var(--gold); font-weight: 600; }
+        .cart-qty-ctrl { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { background: var(--cream); border: none; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; transition: var(--transition); }
+        .qty-btn:hover { background: var(--gold); color: white; }
+        .cart-qty { font-size: 0.8rem; font-weight: 600; }
+        .cart-item-remove { background: none; border: none; color: #d9534f; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; align-self: flex-start; }
+        .cart-empty-msg { text-align: center; color: var(--anthracite-light); margin-top: 40px; font-size: 0.9rem; }
+        .cart-footer { padding: 25px; border-top: 1px solid rgba(197,160,89,0.2); background: var(--cream); }
+        .cart-total-line { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; }
+        .btn-checkout { background: var(--anthracite); color: var(--white); border: none; padding: 15px; width: 100%; font-family: 'Montserrat', sans-serif; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; transition: var(--transition); border-radius: var(--radius); }
+        .btn-checkout:hover { background: var(--gold); }
+
+        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--anthracite); color: var(--white); padding: 12px 24px; border-radius: var(--radius); font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); animation: toastIn 0.3s forwards; }
+        @keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); } }
+
+        /* Modal Paiement */
+        #payment-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 6000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        #payment-modal.open { display: flex; }
+        .cawl-container { background: var(--white); width: 90%; max-width: 420px; padding: 35px; border-top: 4px solid var(--gold); border-radius: var(--radius); animation: modalIn 0.3s ease; }
+        .cawl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .cawl-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .cawl-close-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--anthracite); transition: color 0.3s; }
+        .cawl-close-btn:hover { color: var(--gold); }
+        .cawl-product-recap { background: var(--cream); padding: 14px 16px; margin-bottom: 22px; border-radius: var(--radius); font-size: 0.78rem; }
+        .cawl-product-recap strong { display: block; font-size: 0.95rem; margin-bottom: 2px; }
+        .cawl-form input { width: 100%; padding: 13px 15px; margin-bottom: 10px; border: 1px solid #e0e0e0; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; border-radius: var(--radius); transition: border-color 0.3s; }
+        .cawl-form input:focus { outline: none; border-color: var(--gold); }
+        .cawl-row { display: flex; gap: 10px; } .cawl-row input { flex: 1; }
+        .btn-pay-custom { background: var(--anthracite); color: white; border: none; padding: 15px; width: 100%; font-family: 'Montserrat', sans-serif; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 1.5px; margin-top: 6px; transition: var(--transition); border-radius: var(--radius); }
+        .btn-pay-custom:hover { background: var(--gold); }
+        .cawl-secure { text-align: center; font-size: 0.58rem; color: #bbb; margin-top: 12px; letter-spacing: 1px; }
+
+        /* ============================================
+           SECTION LÉGALE (INTÉGRATION STRICTE DES DOCS)
+        ============================================ */
+        .legal-section { background: var(--white); padding: 80px 5%; border-top: 1px solid rgba(197,160,89,0.25); }
+        .legal-container { max-width: 1000px; margin: 0 auto; }
+        .legal-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 35px; color: var(--anthracite); text-align: center; }
+        
         .acc-item { border-bottom: 1px solid #eee; }
-        .acc-header { padding: 25px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
-        .acc-content { max-height: 0; overflow: hidden; transition: all 0.5s ease; font-size: 0.85rem; color: #555; line-height: 1.8; white-space: pre-line; }
-        /* Augmentation massive du max-height pour accomoder les très longs textes légaux */
-        .acc-content.active { max-height: 15000px; padding-bottom: 30px; }
+        .acc-header { padding: 22px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; letter-spacing: 1.5px; transition: color 0.3s; color: var(--anthracite); }
+        .acc-header:hover { color: var(--gold); }
+        .acc-header span { font-size: 1.4rem; font-weight: 300; color: var(--gold); transition: transform 0.4s ease; }
+        
+        .acc-content { max-height: 0; overflow: hidden; transition: all 0.5s ease; font-size: 0.82rem; color: #444; line-height: 1.9; }
+        .acc-content.active { max-height: 50000px; padding-bottom: 28px; }
+        .acc-content p { margin-bottom: 12px; }
+        .acc-content strong { color: var(--anthracite); font-weight: 700; display: block; margin-top: 20px; margin-bottom: 8px; }
+        .acc-content ul { padding-left: 20px; margin-bottom: 12px; }
+        
+        /* ============================================
+           FOOTER
+        ============================================ */
+        footer { background: var(--anthracite); color: rgba(255,255,255,0.7); padding: 45px 5%; text-align: center; }
+        .footer-logo { height: 65px; margin-bottom: 20px; filter: brightness(0) invert(1) opacity(0.6); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--gold); }
+        .footer-copy { font-size: 0.65rem; letter-spacing: 1.5px; opacity: 0.45; }
+        .footer-gold-line { width: 50px; height: 1px; background: var(--gold); margin: 18px auto; opacity: 0.5; }
+        
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--anthracite-light); }
+        .empty-state i { font-size: 2.5rem; color: var(--gold-pale); margin-bottom: 16px; }
 
-        footer { background: var(--anthracite); color: white; padding: 40px; text-align: center; font-size: 0.75rem; letter-spacing: 1px; }
+        #scroll-top { position: fixed; bottom: 28px; right: 22px; width: 44px; height: 44px; background: var(--anthracite); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; transform: translateY(10px); transition: var(--transition); z-index: 998; }
+        #scroll-top.visible { opacity: 1; transform: translateY(0); }
+        #scroll-top:hover { background: var(--gold); }
+
+        @media (max-width: 768px) {
+            nav { grid-template-columns: auto 1fr auto; padding: 10px 4%; }
+            .nav-links.left { display: none; }
+            .logo-nav { height: 70px; margin: 0; }
+            .modal-body { grid-template-columns: 1fr; }
+            .modal-gallery, .modal-main-img { min-height: 280px; }
+            .modal-details { padding: 25px 20px; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+            .category-bar { top: 90px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="contact-bar">
-        <a href="https://www.instagram.com/valandart.creations/" target="_blank" class="contact-icon"><i class="fab fa-instagram"></i></a>
-        <a href="tel:0663104180" class="contact-icon"><i class="fas fa-phone"></i></a>
-        <a href="mailto:valandartcreations@gmail.com" class="contact-icon"><i class="fas fa-envelope"></i></a>
+<div class="contact-bar">
+    <a href="https://www.instagram.com/valandart.creations/" target="_blank" class="contact-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="tel:0663104180" class="contact-icon" title="Téléphone"><i class="fas fa-phone"></i></a>
+    <a href="mailto:valandartcreations@gmail.com" class="contact-icon" title="Email"><i class="fas fa-envelope"></i></a>
+</div>
+
+<nav>
+    <ul class="nav-links left">
+        <li><a href="#boucles">Boucles d'Oreilles</a></li>
+        <li><a href="#colliers">Colliers</a></li>
+        <li><a href="#legal">Infos & CGU</a></li>
+    </ul>
+    <img src="logo.png" class="logo-nav" alt="Valand'Art Créations" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <ul class="nav-links right">
+        <li><a href="mailto:valandartcreations@gmail.com">Contact</a></li>
+        <li>
+            <a href="#" onclick="toggleCart(); return false;" style="position: relative;">
+                Panier <i class="fas fa-shopping-bag" style="font-size:0.7em"></i>
+                <span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+        <h3 class="cart-title">Votre Panier</h3>
+        <button class="cart-close" onclick="toggleCart()"><i class="fas fa-times"></i></button>
     </div>
+    <div class="cart-items" id="cart-items-container"></div>
+    <div class="cart-footer">
+        <div class="cart-total-line"><span>Total</span><span id="cart-total-price">0 €</span></div>
+        <button class="btn-checkout" onclick="checkoutCart()">Procéder au paiement</button>
+    </div>
+</div>
 
-    <nav>
-        <ul class="nav-links">
-            <li><a href="#collection">Collection</a></li>
-            <li><a href="#legal">Infos & CGU</a></li>
-        </ul>
-        <img src="logo.png" class="logo-nav" alt="Valand'Art Logo" onclick="window.scrollTo(0,0)">
-        <ul class="nav-links">
-            <li><a href="mailto:valandartcreations@gmail.com">Contact</a></li>
-            <li><a href="#" onclick="openPayment(0)">Panier</a></li>
-        </ul>
-    </nav>
+<div id="toast-container"></div>
 
-    <main id="collection">
-        <div class="product-grid" id="grid"></div>
-    </main>
+<section class="hero">
+    <p class="hero-sub">Bijouterie artisanale française</p>
+    <h1 class="hero-tagline">L'art du bijou, <span>fait à la main</span></h1>
+    <div class="hero-divider"></div>
+</section>
 
-    <div id="payment-modal">
-        <div class="cawl-container">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <span style="font-weight:700; letter-spacing:1px;">PAIEMENT SÉCURISÉ CAWL</span>
-                <span style="cursor:pointer" onclick="closePayment()">✕</span>
+<div class="category-bar">
+    <button class="cat-btn active" onclick="filterCategory('all', this)">Tout voir</button>
+    <button class="cat-btn" onclick="filterCategory('Boucles d\'Oreilles', this)">Boucles d'Oreilles</button>
+    <button class="cat-btn" onclick="filterCategory('Collier', this)">Colliers</button>
+</div>
+
+<main id="collection">
+    <div id="boucles" class="section-title"><h2>Boucles d'Oreilles</h2><p>Pièces artisanales en acier inoxydable</p></div>
+    <div class="product-grid" id="grid-boucles"></div>
+    <div id="colliers" class="section-title"><h2>Colliers</h2><p>Pendentifs et chaînes uniques</p></div>
+    <div class="product-grid" id="grid-colliers"></div>
+</main>
+
+<div id="product-modal">
+    <div class="modal-inner">
+        <button class="modal-close" onclick="closeProductModal()">✕</button>
+        <div class="modal-body">
+            <div class="modal-gallery">
+                <img id="modal-main-img" class="modal-main-img" src="" alt="Bijou">
+                <button class="gallery-nav prev hidden" id="gallery-prev" onclick="changeGalleryPhoto(-1)"><i class="fas fa-chevron-left"></i></button>
+                <button class="gallery-nav next hidden" id="gallery-next" onclick="changeGalleryPhoto(1)"><i class="fas fa-chevron-right"></i></button>
+                <div class="modal-thumbs" id="modal-thumbs"></div>
             </div>
-            <div class="cawl-form">
-                <input type="text" placeholder="Titulaire de la carte">
-                <input type="text" placeholder="N° de carte (16 chiffres)">
-                <div style="display:flex; gap:10px">
-                    <input type="text" placeholder="MM/AA">
-                    <input type="text" placeholder="CVV">
-                </div>
-                <button class="btn-pay-custom" onclick="alert('Simulation de paiement réussie !')">VALIDER LE PAIEMENT (<span id="pay-amount">0</span> €)</button>
-                <p style="text-align:center; font-size:0.6rem; margin-top:10px; color:#999;">Solution certifiée par Crédit Agricole</p>
+            <div class="modal-details">
+                <p class="modal-badge" id="modal-cat">—</p>
+                <h2 class="modal-name" id="modal-name">—</h2>
+                <p class="modal-price" id="modal-price">—</p>
+                <div class="modal-sep"></div>
+                <div><p class="modal-spec-title">Description & Dimensions</p><ul class="modal-spec-list" id="modal-specs"></ul></div>
+                <p class="modal-note">TVA non applicable – art. 293 B du CGI – hors frais de port.<br>Livraison gratuite pour toute commande domestique supérieure à 60 €.</p>
+                <button class="btn-buy-modal" id="modal-buy-btn">Ajouter au panier</button>
             </div>
         </div>
     </div>
+</div>
 
-    <section class="legal-section" id="legal">
-        <div class="legal-container">
-            <h2 style="text-align:center; margin-bottom:50px; letter-spacing:3px; text-transform:uppercase;">Informations LÉGALES & CGU</h2>
-
-            <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">💎 NOTRE PHILOSOPHIE & FABRICATION <span>+</span></div>
-                <div class="acc-content">
-                    Valand’Art Créations propose des bijoux artisanaux fabriqués en série limitée ou modèle unique dans mon atelier au nord de Toulouse. Mon exigence : la qualité au prix juste. 
-                    Toutes les pièces sont conçues avec passion et soin. 
-                    <strong>MADE IN FRANCE</strong>.
-                </div>
-            </div>
-
-            <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">🍪 POLITIQUE RELATIVE AUX COOKIES <span>+</span></div>
-                <div class="acc-content">
-                    <strong>Mentions légales : Politique relative aux cookies</strong>
-                    Cette politique de cookies a été mise à jour pour la dernière fois le 8 mars 2023 et s’applique aux citoyens et aux résidents permanents légaux de l’Espace Économique Européen et de la Suisse.
-
-                    <strong>1. Introduction</strong>
-                    Notre site web, Valand'art Créations | Bijouterie d'Art (ci-après : « le site web ») utilise des cookies et autres technologies liées (par simplification, toutes ces technologies sont désignées par le terme « cookies »).
-                    Des cookies sont également placés par des tierces parties que nous avons engagées.
-                    Dans le document ci-dessous, nous vous informons de l’utilisation des cookies sur notre site web.
-
-                    <strong>2. Que sont les cookies ?</strong>
-                    Un cookie est un petit fichier simple envoyé avec les pages de ce site web et stocké par votre navigateur sur le disque dur de votre ordinateur ou d’un autre appareil.
-                    Les Informations qui y sont stockées peuvent être renvoyées à nos serveurs ou aux serveurs des tierces parties concernées lors d’une visite ultérieure.
-
-                    <strong>3. Que sont les scripts ?</strong>
-                    Un script est un élément de code utilisé pour que notre site web fonctionne correctement et de manière interactive.
-                    Ce code est exécuté sur notre serveur ou sur votre appareil.
-
-                    <strong>4. Qu’est-ce qu’une balise invisible ?</strong>
-                    Une balise invisible (ou balise web) est un petit morceau de texte ou d’image invisible sur un site web, utilisé pour suivre le trafic sur un site web.
-                    Pour ce faire, diverses données vous concernant sont stockées à l’aide de balises invisibles.
-
-                    <strong>5. Cookies</strong>
-                    <strong>5.1 Cookies techniques ou fonctionnels</strong>
-                    Certains cookies assurent le fonctionnement correct de certaines parties du site web et la prise en compte de vos préférences en tant qu’internaute.
-                    En plaçant des cookies fonctionnels, nous vous facilitons la visite de notre site web.
-                    Ainsi, vous n’avez pas besoin de saisir à plusieurs reprises les mêmes informations lors de la visite de notre site web et, par exemple, les éléments restent dans votre panier jusqu’à votre paiement.
-                    Nous pouvons déposer ces cookies sans votre consentement.
-
-                    <strong>5.2 Cookies de marketing/suivi</strong>
-                    Les cookies de marketing/suivi sont des cookies ou toute autre forme de stockage local, utilisés pour créer des profils d’utilisateurs afin d’afficher de la publicité ou de suivre l’utilisateur sur ce site web ou sur plusieurs sites web dans des finalités marketing similaires.
-
-                    <strong>6. Cookies placés</strong>
-                    Elementor
-                    Statistiques (anonymes)
-                    Consent to service elementor
-                    Utilisation
-                    Nous utilisons Elementor pour la création de contenu. En savoir plus sur Elementor
-                    Partage de données
-                    Ces données ne sont pas partagées avec des tierces parties.
-                    Statistiques (anonymes)
-                    Nom : elementor
-                    Expiration : persistante
-                    Fonction : Stocker les actions effectuées par les utilisateurs sur le site web
-                    
-                    WordPress
-                    Fonctionnel
-                    Consent to service wordpress
-                    Utilisation
-                    Nous utilisons WordPress pour le développement du site web. En savoir plus sur WordPress
-                    Partage de données
-                    Ces données ne sont pas partagées avec des tierces parties.
-                    Fonctionnel
-                    Nom : wp-settings-*
-                    Expiration : persistante
-                    Fonction : Stocker les préférences des utilisateurs
-                    Nom : wp-settings-time-*
-                    Expiration : 1 an
-                    Fonction : Stocker les préférences des utilisateurs
-                    Nom : wordpress_test_cookie
-                    Expiration : session
-                    Fonction : Vérifier si des cookies peuvent être déposés
-                    Nom : wordpress_logged_in_*
-                    Expiration : persistante
-                    Fonction : Garder les utilisateurs connectés
-                    
-                    Divers
-                    Finalité en attente d’enquête
-                    Consent to service divers
-                    Utilisation
-                    Partage de données
-                    Le partage des données est en cours d’enquête
-                    Finalité en attente d’enquête
-                    Nom : e_kit-elements-defaults
-                    Nom : isReturningVisitor*
-                    Nom : localTimeZone
-                    Nom : cmplz_consenttype (Expiration: 365 jours)
-                    Nom : cmplz_banner-status (Expiration: 365 jours)
-                    Nom : cmplz_consented_services (Expiration: 365 jours)
-                    Nom : cmplz_functional (Expiration: 365 jours)
-                    Nom : cmplz_marketing (Expiration: 365 jours)
-                    Nom : cmplz_policy_id (Expiration: 365 jours)
-                    Nom : cmplz_preferences (Expiration: 365 jours)
-                    Nom : cmplz_statistics (Expiration: 365 jours)
-                    Nom : mp_a36067b00a263cce0299cfd960e26ecf_mixpanel
-                    Nom : SERVERID77446
-                    Nom : wpEmojiSettingsSupports
-                    Nom : wp_lang
-
-                    <strong>7. Consentement</strong>
-                    Lorsque vous visitez notre site web pour la première fois, nous vous montrerons une fenêtre contextuelle avec une explication sur les cookies.
-                    Dès que vous cliquez sur « Enregistrer les préférences » vous nous autorisez à utiliser les catégories de cookies et d’extensions que vous avez sélectionnés dans la fenêtre contextuelle, comme décrit dans la présente politique de cookies.
-                    Vous pouvez désactiver l’utilisation des cookies via votre navigateur, mais veuillez noter que notre site web pourrait ne plus fonctionner correctement.
-                    
-                    <strong>7.1 Gérez vos réglages de consentement</strong>
-                    Fonctionnel : Toujours activé. Le stockage ou l’accès technique est strictement nécessaire dans la finalité d’intérêt légitime de permettre l’utilisation d’un service spécifique explicitement demandé par l’abonné ou l’utilisateur, ou dans le seul but d’effectuer la transmission d’une communication sur un réseau de communications électroniques.
-                    Marketing : Le stockage ou l’accès technique est nécessaire pour créer des profils d’utilisateurs afin d’envoyer des publicités, ou pour suivre l’utilisateur sur un site web ou sur plusieurs sites web ayant des finalités marketing similaires.
-
-                    <strong>8. Activer/désactiver et supprimer les cookies</strong>
-                    Vous pouvez utiliser votre navigateur internet pour supprimer automatiquement ou manuellement les cookies.
-                    Vous pouvez également spécifier que certains cookies ne peuvent pas être placés.
-                    Une autre option consiste à modifier les réglages de votre navigateur Internet afin que vous receviez un message à chaque fois qu’un cookie est placé.
-                    Pour plus d’informations sur ces options, reportez-vous aux instructions de la section Aide de votre navigateur.
-                    Veuillez noter que notre site web peut ne pas marcher correctement si tous les cookies sont désactivés.
-                    Si vous supprimez les cookies dans votre navigateur, ils seront de nouveau placés après votre consentement lorsque vous revisiterez notre site web.
-
-                    <strong>9. Vos droits concernant les données personnelles</strong>
-                    Vous avez les droits suivants concernant vos données personnelles :
-                    ● Vous avez le droit de savoir pourquoi vos données personnelles sont nécessaires, ce qui leur arrivera et combien de temps elles seront conservées.
-                    ● Droit d’accès : vous avez le droit d’accéder à vos données personnelles que nous connaissons.
-                    ● Droit de rectification : vous avez le droit à tout moment de compléter, corriger, faire supprimer ou bloquer vos données personnelles.
-                    ● Si vous nous donnez votre consentement pour le traitement de vos données, vous avez le droit de révoquer ce consentement et de faire supprimer vos données personnelles.
-                    ● Droit de transférer vos données : vous avez le droit de demander toutes vos données personnelles au responsable du traitement et de les transférer dans leur intégralité à un autre responsable du traitement.
-                    ● Droit d’opposition : vous pouvez vous opposer au traitement de vos données.
-                    Nous obtempérerons, à moins que certaines raisons ne justifient ce traitement.
-                    Pour exercer ces droits, veuillez nous contacter. Veuillez-vous référer aux coordonnées au bas de cette politique de cookies.
-                    Si vous avez une plainte concernant la façon dont nous traitons vos données, nous aimerions en être informés, mais vous avez également le droit de déposer une plainte auprès de l’autorité de contrôle (l’autorité chargée de la protection des données).
-
-                    <strong>10. Coordonnées</strong>
-                    Pour des questions et/ou des commentaires sur notre politique de cookies et cette déclaration, veuillez-nous contacter en utilisant les coordonnées suivantes :
-                    Valand’Art Créations
-                    Castelnau-d'Estrétefonds 31620
-                    France
-                    Site web : Valand'art Créations | Bijouterie d'Art
-                    E-mail : valandartcreations@gmail.com
-                    Numéro de téléphone : 06 63 10 41 80
-                    
-                    Cette politique de cookies a été synchronisée avec cookiedatabase.org le 8 mars 2023.
-                    Copyright
-                    MetaCore | Services informatiques
-                </div>
-            </div>
-
-            <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">⚖️ MENTIONS LÉGALES <span>+</span></div>
-                <div class="acc-content">
-                    <strong>Article 1 – Mentions légales</strong>
-                    Propriétaire : Valérie LE GAC EI
-                    Siège social : 1 impasse des Bordes – 31620 Castelnau d’Estrétefonds
-                    Téléphone Siège : 06 63 10 41 80
-                    Email pour contact : valandartcreations@gmail.com
-                    Siret : 493 703 573 00029
-                    N° TVA intra-communautaire :
-                    Créateur : DUPUY MORGAN
-                    Site Internet : MetaCore | Services informatiques
-                    Tél : 07 67 29 81 02
-                    Nom Commercial : MetaCore
-                    Email : metacorerepair@gmail.com
-                    SIRET : 993 559 780 00016
-                    Siège Social : 7 rue du béarn 31270 Cugnaux
-                    Hébergeur : Meta Core
-                    7 rue du béarn 31270 Cugnaux
-                    Responsable publication : MetaCore
-                    Le responsable publication est une personne physique ou une personne morale.
-
-                    <strong>Article 2 – Accès au site</strong>
-                    L’accès au site et son utilisation sont réservés à un usage strictement personnel.
-                    Vous vous engagez à ne pas utiliser ce site et les informations ou données qui y figurent à des fins commerciales, politiques, publicitaires et pour toute forme de sollicitation commerciale et notamment l’envoi de courriers électroniques non sollicités.
-
-                    <strong>Article 3 – Contenu du site</strong>
-                    Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sons, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site et plus généralement tous les éléments reproduits ou utilisés sur le site sont protégés par les lois en vigueur au titre de la propriété intellectuelle.
-                    Ils sont la propriété pleine et entière de l’éditeur ou de ses partenaires.
-                    Toute reproduction, représentation, utilisation ou adaptation, sous quelque forme que ce soit, de tout ou partie de ces éléments, y compris les applications informatiques, sans l’accord préalable et écrit de l’éditeur, sont strictement interdites.
-                    Le fait pour l’éditeur de ne pas engager de procédure dès la prise de connaissance de ces utilisations non autorisées ne vaut pas acceptation desdites utilisations et renonciation aux poursuites.
-
-                    <strong>Article 4 – Gestion du site</strong>
-                    Pour la bonne gestion du site, l’éditeur pourra à tout moment : suspendre, interrompre ou limiter l’accès à tout ou partie du site, réserver l’accès au site, ou à certaines parties du site, à une catégorie déterminée d’internautes :
-                    supprimer toute information pouvant en perturber le fonctionnement ou entrant en contravention avec les lois nationales ou internationales ;
-                    suspendre le site afin de procéder à des mises à jour.
-
-                    <strong>Article 5 – Responsabilités</strong>
-                    La responsabilité de l’éditeur ne peut être engagée en cas de défaillance, panne, difficulté ou interruption de fonctionnement empêchant l’accès au site ou à une de ses fonctionnalités.
-                    Le matériel de connexion au site que vous utilisez est sous votre entière responsabilité.
-                    Vous devez prendre toutes les mesures appropriées pour protéger votre matériel et vos propres données notamment d’attaques virales par Internet.
-                    Vous êtes par ailleurs seul responsable des sites et données que vous consultez.
-                    L’éditeur ne pourra être tenu responsable en cas de poursuites judiciaires à votre encontre : du fait de l’usage du site ou de tout service accessible via Internet ;
-                    - du fait du non-respect par vous des présentes conditions générales.
-                    L’éditeur n’est pas responsable des dommages causés à vous-même, à des tiers et/ou à votre équipement du fait de votre connexion ou de votre utilisation du site et vous renoncez à toute action contre lui de ce fait.
-                    Si l’éditeur venait à faire l’objet d’une procédure amiable ou judiciaire en raison de votre utilisation du site, il pourra se retourner contre vous pour obtenir l’indemnisation de tous les préjudices, sommes, condamnations et frais qui pourraient découler de cette procédure.
-
-                    <strong>Article 6 – Liens hypertextes</strong>
-                    La mise en place par les utilisateurs de tous liens hypertextes vers tout ou partie du site est strictement interdite, sauf autorisation préalable et écrite de l’éditeur.
-                    L’éditeur est libre de refuser cette autorisation sans avoir à justify de quelque manière que ce soit sa décision.
-                    Dans le cas où l’éditeur accorderait son autorisation, celle-ci n’est dans tous les cas que temporaire et pourra être retirée à tout moment, sans obligation de justification à la charge de l’éditeur.
-                    Toute information accessible via un lien vers d’autres sites n’est pas publiée par l’éditeur.
-                    L’éditeur ne dispose d’aucun droit sur le contenu présent dans ledit lien.
-
-                    <strong>Article 7 – Collecte et protection des données</strong>
-                    Vos données sont collectées par la société ....
-                    Une donnée à caractère personnel désigne toute information concernant une personne physique identifiée ou identifiable (personne concernée) ;
-                    est réputée identifiable une personne qui peut être identifiée, directement ou indirectement, notamment par référence à un nom, un numéro d’identification ou à un ou plusieurs éléments spécifiques, propres à son identité physique, physiologique, génétique, psychique, économique, culturelle ou sociale.
-                    Les informations personnelles pouvant être recueillies sur le site sont principalement utilisées par l’éditeur pour la gestion des relations avec vous, et le cas échéant pour le traitement de vos commandes.
-                    Les données personnelles collectées sont les suivantes :
-                    – nom et prénom
-                    – adresse mall
-                    – numéro de téléphone
-
-                    <strong>Article 8 – Droit d’accès, de rectification et de déréférencement de vos données</strong>
-                    En application de la réglementation applicable aux données à caractère personnel, les utilisateurs disposent des droits suivants : le droit d’accès : ils peuvent exercer leur droit d’accès, pour connaître les données personnelles les concernant, en écrivant à l’adresse électronique ci-dessous mentionnée.
-                    Dans ce cas, avant la mise en œuvre de ce droit, la Plateforme peut demander une preuve de l’identité de l’utilisateur afin d’en vérifier l’exactitude ;
-                    • le droit de rectification : si les données à caractère personnel détenues par la Plateforme sont inexactes, ils peuvent demander la mise à jour des informations ;
-                    le droit de suppression des données : les utilisateurs peuvent demander la suppression de leurs données à caractère personnel, conformément aux lois applicables en matière de protection des données ;
-                    le droit à la limitation du traitement : les utilisateurs peuvent de demander à la Plateforme de limiter le traitement des données personnelles conformément aux hypothèses prévues par le RGPD ;
-                    le droit de s’opposer au traitement des données : les utilisateurs peuvent s’opposer à ce que leurs données soient traitées conformément aux hypothèses prévues par le RGPD;
-                    • le droit à la portabilité : ils peuvent réclamer que la Plateforme leur remette les données
-                    personnelles qu’ils ont fournies pour les transmettre à une nouvelle Plateforme.
-                    Vous pouvez exercer ce droit en nous contactant, à l’adresse suivante : 7 rue du Béarn 31270 Cugnaux Ou par email, à l’adresse : metacorerepair@gmail.com .
-                    Toute demande doit être accompagnée de la photocopie d’un titre d’identité en cours de validité signé et faire mention de l’adresse à laquelle l’éditeur pourra contacter le demandeur.
-                    La réponse sera adressée dans le mois suivant la réception de la demande.
-                    Ce délai d’un mois peut être prolongé de deux mois si la complexité de la demande et/ou le nombre de demandes l’exigent.
-                    De plus, et depuis la loi n°2016-1321 du 7 octobre 2016, les personnes qui le souhaitent, ont la possibilité d’organiser le sort de leurs données après leur décès.
-                    Pour plus d’information sur le sujet, vous pouvez consulter le site Internet de la CNIL : https://www.cnil.fr/.
-                    Les utilisateurs peuvent aussi introduire une réclamation auprès de la CNIL sur le site de la CNIL : https://www.cnil.fr
-                    Nous vous recommandons de nous contacter dans un premier temps avant de déposer une réclamation auprès de la CNIL, car nous sommes à votre entière disposition pour régler votre problème.
-
-                    <strong>Article 9 – Utilisation des données</strong>
-                    Les données personnelles collectées auprès des utilisateurs ont pour objectif la mise à disposition des services de la Plateforme, leur amélioration et le maintien d’un environnement sécurisé.
-                    La base légale des traitements est l’exécution du contrat entre l’utilisateur et la Plateforme.
-                    Plus précisément, les utilisations sont les suivantes :
-                    – accès et utilisation de la Plateforme par l’utilisateur
-                    – gestion du fonctionnement et optimisation de la Plateforme ;
-                    – mise en œuvre d’une assistance utilisateurs :
-                    – vérification, identification et authentification des données transmises par l’utilisateur ;
-                    – personnalisation des services en affichant des publicités en fonction de l’historique de navigation de l’utilisateur, selon ses préférences ;
-                    – prévention et détection des fraudes, malwares (malicious softwares ou logiciels malveillants) et gestion des incidents de sécurité ;
-                    gestion des éventuels litiges avec les utilisateurs ;
-                    envoi d’informations commerciales et publicitaires, en fonction des préférences de l’utilisateur
-
-                    <strong>Article 10 – Politique de conservation des données</strong>
-                    La Plateforme conserve vos données pour la durée nécessaire pour vous fournir ses services ou son assistance.
-                    Dans la mesure raisonnablement nécessaire ou requise pour satisfaire aux obligations légales ou réglementaires, régler des litiges, empêcher les fraudes et abus ou appliquer nos modalités et conditions, nous pouvons également conserver certaines de vos informations si nécessaire, même après que vous ayez fermé votre compte ou que nous n’ayons plus besoin pour vous fournir nos services.
-
-                    <strong>Article 11-Partage des données personnelles avec des tiers</strong>
-                    Les données personnelles peuvent être partagées avec des sociétés tierces exclusivement dans l’Union européenne, dans les cas suivants :
-                    lorsque l’utilisateur publie, dans les zones de commentaires libres de la Plateforme, des informations accessibles au public ;
-                    quand l’utilisateur autorise le site web d’un tiers à accéder à ses données ;
-                    quand la Plateforme recourt aux services de prestataires pour fournir l’assistance utilisateurs, la publicité et les services de paiement.
-                    Ces prestataires disposent d’un accès limité aux données de l’utilisateur, dans le cadre de l’exécution de ces prestations, et ont l’obligation contractuelle de les utiliser en conformité avec les dispositions de la réglementation applicable en matière protection des données à caractère personnel ;
-                    si la loi l’exige, la Plateforme peut effectuer la transmission de données pour donner suite aux réclamations présentées contre la Plateforme et se conformer aux procédures administratives et judiciaires.
-
-                    <strong>Article 12 – Offres commerciales</strong>
-                    Vous êtes susceptible de recevoir des offres commerciales de l’éditeur.
-                    Si vous ne le souhaitez pas, veuillez cliquer sur le lien suivant :
-                    Vos données sont susceptibles d’être utilisées par les partenaires de l’éditeur à des fins de prospection commerciale, si vous ne le souhaitez pas, veuillez cliquer sur le lien suivant :
-                    Si, lors de la consultation du site, vous accédez à des données à caractère personnel, vous devez vous abstenir de toute collecte, de toute utilisation non autorisée et de tout acte pouvant constituer une atteinte à la vie privée ou à la réputation des personnes.
-                    L’éditeur décline toute responsabilité à cet égard.
-                    Les données sont conservées et utilisées pour une durée conforme à la législation en vigueur.
-
-                    <strong>Article 13- Photographies et représentation des produits</strong>
-                    Les photographies de produits, accompagnant leur description, ne sont pas contractuelles et n’engagent pas l’éditeur
-
-                    <strong>Article 14 – Loi applicable</strong>
-                    Les présentes conditions d’utilisation du site sont régies par la loi française et soumises à la compétence des tribunaux du siège social de l’éditeur, sous réserve d’une attribution de compétence spécifique découlant d’un texte de loi ou réglementaire particulier.
-
-                    <strong>Article 15 – Contactez-nous</strong>
-                    Pour toute question, information sur les produits présentés sur le site, ou concernant le site lui-même, vous pouvez laisser un message à l’adresse suivante : valandartcreations@gmail.com
-                </div>
-            </div>
-
-            <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">📜 CONDITIONS GÉNÉRALES DE VENTE <span>+</span></div>
-                <div class="acc-content">
-                    <strong>Colisage</strong>
-                    Toutes mes créations sont importantes pour moi de la création à la réception.
-                    Chaque bijou est emballé dans une pochette en tissu.
-
-                    <strong>Conditions générales de vente</strong>
-                    <strong>Article 1. Objet</strong>
-                    Les présentes Conditions Générales de Vente s’appliquent à toutes les commandes réalisées par un consommateur (ci-après dénommé le « Client ») s’agissant des produits proposés sur le site internet https://ValandartCreations (ci-après le « Site ») par :
-                    VALAND’ART CREATIONS
-                    État : Entreprise active depuis le 01/10/2021 au répertoire Sirene
-                    Siret du siège : 493 703 573 00029
-                    Adresse du siège : 1 IMPASSE DES BORDES, 31620 CASTELNAU-D'ESTRETEFONDS
-                    Catégorie juridique : Entrepreneur individuel
-                    Ci-après dénommé « le Vendeur »
-                    Le consommateur est entendu, selon les dispositions du Code de la consommation, comme toute personne physique qui agit à des fins qui n'entrent pas dans le cadre de son activité commerciale, industrielle, artisanale, libérale ou agricole.
-                    Toute commande effectuée sur le Site est subordonnée à l’acceptation des Conditions Générales de Vente.
-                    Elles ont pour objet de définir les droits et obligations des parties au contrat.
-                    S’il l’une des clauses des Conditions Générales de Vente se révèlerait nulle pour quelque motif que ce soit, seule cette clause serait réputée non écrite, toutes les autres dispositions étant maintenues.
-                    Le Vendeur se réserve la possibilité de modifier ses Conditions Générales de Vente par la publication de nouvelles versions en ligne.
-                    La version applicable est celle en vigueur au jour de la commande.
-
-                    <strong>Article 2. Durée</strong>
-                    Les présentes Conditions Générales de Vente sont réputées avoir été acceptées par le Client au moment de la validation de sa commande.
-                    Elles s’appliquent pour la durée nécessaire à la fourniture des Produits, jusqu’à l’extinction des garanties et obligations prévues aux présentes.
-
-                    <strong>Article 3. Prix et frais de livraison</strong>
-                    Les prix appliqués sont les prix indiqués en euros par article ou par prestation de service au jour de la commande.
-                    Après cette date, ils sont susceptibles d’être modifiés à tout moment.
-                    En cas de promotion, le prix affiché n’est applicable qu’au cours de la durée de la promotion correspondante.
-                    Les prix proposés ne tiennent pas compte d’éventuels frais de livraison ou frais supplémentaires, dont le Client est informé avant la confirmation de sa demande.
-
-                    <strong>Article 4. Modalités de paiement</strong>
-                    Le Client pour effectuer le paiement de sa commande au choix parmi les différents moyens de paiement proposés lors de la validation de la commande
-                    A aucun moment le site VALAND’ART CRÉATIONS n’enregistre les données bancaires utilisées au moment du paiement par le client.
-
-                    <strong>Article 5. Livraison de la commande</strong>
-                    Mode de livraison
-                    Le Client choisit l’un des modes de livraison proposé sur le site au moment de la validation de sa commande.
-                    Dès réception du paiement, expédition rapide de la marchandise entre 1 à 2 jours.
-                    Lettre suivie livrée dans la boite aux lettres
-                    Lettre Services Plus
-                    Colissimo remise en main propre ou en boîte aux lettres ou en point de retrait
-                    Colissimo avec signature
-                    
-                    Adresse de livraison
-                    Le Client peut se faire livrer les Produits commandés à l’adresse de son choix.
-                    Le Client est seul responsable d'un défaut de Livraison dû à un manque d'indication lors de la Commande.
-                    Il doit veiller à l’exactitude de l’adresse indiquée lors de la validation de sa commande.
-                    
-                    Montant des frais de livraison
-                    Le montant des Frais de Livraison dépend du montant de la Commande et du mode de livraison choisi par le Client.
-                    En tout état de cause, le montant des Frais de Livraison est indiqué au Client avant la Validation de la Commande
-                    
-                    Délais de livraison
-                    Pour la France, les délais de livraison standard sont les suivants :
-                    Lettre suivie : livrée dans un délai de trois jours (délai indicatif) pour la France métropolitaine et les DOM.
-                    Lettre Services Plus : livré dans un délai de 2 jours
-                    Colissimo : livré dans les 48h ouvrés en France, en Europe, comptez de 3 à 4 ours
-                    Les délais de livraison affichés courent à compter de la date de remise du colis au transporteur.
-                    Le temps de préparation de la commande est en moyenne de 1 jour ouvré.
-                    Les délais de livraison indiqués lors de l’enregistrement de la commande n’est donné qu’à titre indicatif et n’est pas garanti.
-                    En cas de retard de livraison, la commande n'est pas annulée.
-                    Pour toute commande vers un pays autre que la France, ainsi que pour les DOM-TOM, le Client est l'importateur du ou des produit(s) commandé(s).
-                    Des droits de douane, autres taxes locales, droits d'importation ou taxes étatiques sont susceptibles d'être exigibles.
-                    Ces droits et sommes ne sont pas du ressort du Vendeur et ne relèvent pas de sa responsabilité.
-                    Ils seront intégralement à la charge du Client et sous sa responsabilité, tant en termes de déclarations que de paiements aux autorités ou organismes compétents.
-                    Nous conseillons à nos clients de se renseigner auprès des autorités compétentes de leur pays.
-                    
-                    Réception de la commande
-                    Le Client est tenu, à la livraison, de vérifier l’état de l’emballage ainsi que la conformité du produit reçu à la commande effectuée.
-                    En cas de non-conformité du produit ou en cas de colis endommagé à la livraison, le Client devra signaler les réserves et les réclamations qu’il estime nécessaires et de contacter le service client du Vendeur dans les 48h suivant sa livraison.
-                    Le Client pourra être tenu de retourner le produit non conforme ou détérioré. A défaut de réclamation dans les 7 jours suivant la livraison, sous réserve des dispositions portant sur le droit de rétractation et les garanties légales, la commande est réputée conforme.
-
-                    <strong>Article 6. Transfert de propriété – Transfert des risques</strong>
-                    Le transfert de propriété des produits au profit du Client ne s’opère qu’au complet paiement du prix.
-                    Les risques de perte et d’endommagement des Produits commandés sont transférés au Client au moment où il en prend physiquement possession.
-
-                    <strong>Article 7. Droit de rétractation</strong>
-                    Le Client dispose, conformément aux dispositions de l’article L222-7 du Code de la consommation, d’un délai de quinze (15) jours après la réception de la commande pour exercer son droit de rétractation et retourner le ou les produits.
-                    En notifiant à VALAND’ART CRÉATIONS sa décision de se rétracter avant l'expiration du délai imparti, par formulaire de contact ou à l'adresse mail suivante : valandartcreations@gmail.com qui confirmera l’autorisation de retour par email, en y incluant un bon de transport, permettant au client d’organiser le retour.
-                    Les frais de retour sont à la charge du client, sauf en cas d’erreur de notre part.
-                    Les produits devront être retournés complets, non portés et dans l’emballage d’origine avec la copie de la facture.
-                    Les produits retournés incomplets, abîmés, endommagés, ou salis par le Client ne seront pas repris ni remboursés.
-                    Le Vendeur procèdera au remboursement en utilisant le même moyen de paiement que celui que le Client aura utilisé pour la commande initiale.
-                    Le Client devra renvoyer ou rendre le bijou, sans retard excessif et, en tout état de cause, au plus tard quatorze (14) jours après que le Client aura communiqué sa décision de rétractation.
-                    Après réception de l’article retourné, si celui-ci est conforme Le Vendeur procèdera au remboursement en utilisant le même moyen de paiement que celui que le Client aura utilisé pour la commande initiale, un échange ou un avoir valable 6 mois.
-
-                    <strong>Article 8. Service Après-Vente</strong>
-                    Le service après-vente de VALAND’ART CRÉATIONS se tient à votre entière disposition du lundi au vendredi de 9h30 à 12h et de 13h par mail à valandartcreations@gmail.com
-
-                    <strong>Article 09. Propriété intellectuelle</strong>
-                    L’ensemble des éléments et Produits figurant sur le Site VALAND’ART CRÉATIONS , y compris la charte graphique, nom de domaines, textes, commentaires, photos, vidéos, marques, graphismes, concept, illustration, image et tout autre signe distinctif sont protégés par la législation en vigueur sur la propriété intellectuelle et le droit d’auteur, pour lesquels le Vendeur détient les droits.
-                    Toute reproduction totale ou partielle, modification ou utilisation du Site ou de son contenu, pour quelque motif et sur quelque support que ce soit, sans accord exprès et préalable du Vendeur, est strictement interdite.
-                </div>
-            </div>
-
-            <div class="acc-item">
-                <div class="acc-header" onclick="toggleAcc(this)">✨ ENTRETIEN DES BIJOUX <span>+</span></div>
-                <div class="acc-content">
-                    Pour profiter longtemps de votre bijou, je vous conseille de le retirer lors de tout contact avec l’eau. Évitez également les produits chimiques, parfums et produits ménagers qui pourraient altérer l'éclat des matériaux.
-                </div>
-            </div>
-
+<div id="payment-modal">
+    <div class="cawl-container">
+        <div class="cawl-header"><span class="cawl-title">Paiement sécurisé</span><button class="cawl-close-btn" onclick="closePayment()">✕</button></div>
+        <div class="cawl-product-recap" id="cawl-recap"><strong id="cawl-name">Commande globale</strong><span id="cawl-price">—</span></div>
+        <div class="cawl-form">
+            <input type="text" placeholder="Titulaire de la carte" autocomplete="cc-name">
+            <input type="text" placeholder="N° de carte (16 chiffres)" autocomplete="cc-number" maxlength="19">
+            <div class="cawl-row"><input type="text" placeholder="MM/AA" autocomplete="cc-exp" maxlength="5"><input type="text" placeholder="CVV" autocomplete="cc-csc" maxlength="4"></div>
+            <button class="btn-pay-custom" onclick="simulatePay()">Valider le paiement — <span id="pay-amount">0</span> €</button>
         </div>
-    </section>
+        <p class="cawl-secure">🔒 Solution certifiée Crédit Agricole CAWL</p>
+    </div>
+</div>
 
-    <footer>
-        <p>VALAND'ART CRÉATIONS &copy; 2026<br>SIRET : 493 703 573 00029 - Castelnau-d'Estrétefonds, France</p>
-    </footer>
+<section class="legal-section" id="legal">
+        <div class="image-with-text__text-item grid__item">
+          <div
+            id="ImageWithText--template--20204114968910__image_with_text_Rr8fhx"
+            class="image-with-text__content image-with-text__content--bottom image-with-text__content--desktop-center image-with-text__content--mobile-center image-with-text__content--medium content-container gradient color-background-1"
+          ><h2
+                    class="image-with-text__heading inline-richtext h1"
+                    
+                  >
+                    Qui  sommes-nous ?
+                  </h2><div class="image-with-text__text rte body" >
+                    <p>Valandartcréations, c'est l'histoire de Castelnaud.</p>
+                  </div></div>
+        </div>
+    <div class="legal-container">
+        <h2 class="legal-title">Infos pratiques & Conditions</h2>
 
-    <script>
-        const products = [
-            { id: 1, name: "Boucle D'Or", price: 35, file: "Photos/Boucle D'Or.jpeg" },
-            { id: 2, name: "Boucle Verte", price: 30, file: "Photos/Boucle Verte.jpeg" },
-            { id: 3, name: "Collier à Médaille", price: 45, file: "Photos/Collier a Médaille.jpeg" },
-            { id: 4, name: "Fleur Perlée", price: 38, file: "Photos/Fleur Perlée.jpeg" },
-            { id: 5, name: "Paillette à goutte", price: 32, file: "Photos/Paillette a goutte.jpeg" },
-            { id: 6, name: "Perle Disque", price: 35, file: "Photos/Perle Disque.jpeg" }
-        ];
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(this)">📋 Mentions Légales <span>+</span></div>
+            <div class="acc-content">
+                <strong>Mentions Légales</strong>
+                <strong>Article 1 – Mentions légales</strong>
+                <p>Propriétaire : Valérie LE GAC EI<br>Siège social : 1 impasse des Bordes – 31620 Castelnau d’Estrétefonds<br>Téléphone Siège : 06 63 10 41 80<br>Email pour contact : valandartcreations@gmail.com<br>Siret : 493 703 573 00029<br>N° TVA intra-communautaire : <br>Créateur : DUPUY MORGAN<br>Site Internet : MetaCore | Services informatiques<br>Tél : 07 67 29 81 02<br>Nom Commercial : MetaCore<br>Email : metacorerepair@gmail.com<br>SIRET : 993 559 780 00016<br>Siège Social : 7 rue du béarn 31270 Cugnaux<br>Hébergeur : Meta Core<br>7 rue du béarn 31270 Cugnaux<br>Responsable publication : MetaCore<br>Le responsable publication est une personne physique ou une personne morale.</p>
+                <strong>Article 2 – Accès au site</strong>
+                <p>L’accès au site et son utilisation sont réservés à un usage strictement personnel. Vous vous engagez à ne pas utiliser ce site et les informations ou données qui y figurent à des fins commerciales, politiques, publicitaires et pour toute forme de sollicitation commerciale et notamment l’envoi de courriers électroniques non sollicités.</p>
+                <strong>Article 3 – Contenu du site</strong>
+                <p>Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sons, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site et plus généralement tous les éléments reproduits ou utilisés sur le site sont protégés par les lois en vigueur au titre de la propriété intellectuelle. Ils sont la propriété pleine et entière de l’éditeur ou de ses partenaires. Toute reproduction, représentation, utilisation ou adaptation, sous quelque forme que ce soit, de tout ou partie de ces éléments, y compris les applications informatiques, sans l’accord préalable et écrit de l’éditeur, sont strictement interdites. Le fait pour l’éditeur de ne pas engager de procédure dès la prise de connaissance de ces utilisations non autorisées ne vaut pas acceptation desdites utilisations et renonciation aux poursuites.</p>
+                <strong>Article 4 – Gestion du site</strong>
+                <p>Pour la bonne gestion du site, l’éditeur pourra à tout moment : suspendre, interrompre ou limiter l’accès à tout ou partie du site, réserver l’accès au site, ou à certaines parties du site, à une catégorie déterminée d’internautes : supprimer toute information pouvant en perturber le fonctionnement ou entrant en contravention avec les lois nationales ou internationales ; suspendre le site afin de procéder à des mises à jour.</p>
+                <strong>Article 5 – Responsabilités</strong>
+                <p>La responsabilité de l’éditeur ne peut être engagée en cas de défaillance, panne, difficulté ou interruption de fonctionnement empêchant l’accès au site ou à une de ses fonctionnalités. Le matériel de connexion au site que vous utilisez est sous votre entière responsabilité. Vous devez prendre toutes les mesures appropriées pour protéger votre matériel et vos propres données notamment d’attaques virales par Internet. Vous êtes par ailleurs seul responsable des sites et données que vous consultez. L’éditeur ne pourra être tenu responsable en cas de poursuites judiciaires à votre encontre : du fait de l’usage du site ou de tout service accessible via Internet ; - du fait du non-respect par vous des présentes conditions générales. L’éditeur n’est pas responsable des dommages causés à vous-même, à des tiers et/ou à votre équipement du fait de votre connexion ou de votre utilisation du site et vous renoncez à toute action contre lui de ce fait. Si l’éditeur venait à faire l’objet d’une procédure amiable ou judiciaire en raison de votre utilisation du site, il pourra se retourner contre vous pour obtenir l’indemnisation de tous les préjudices, sommes, condamnations et frais qui pourraient découler de cette procédure.</p>
+                <strong>Article 6 – Liens hypertextes</strong>
+                <p>La mise en place par les utilisateurs de tous liens hypertextes vers tout ou partie du site est strictement interdite, sauf autorisation préalable et écrite de l’éditeur. L’éditeur est libre de refuser cette autorisation sans avoir à justifyer de quelque manière que ce soit sa décision. Dans le cas où l’éditeur accorderait son autorisation, celle-ci n’est dans tous les cas que temporaire et pourra être retirée à tout moment, sans obligation de justification à la charge de l’éditeur. Toute information accessible via un lien vers d’autres sites n’est pas publiée par l’éditeur. L’éditeur ne dispose d’aucun droit sur le contenu présent dans ledit lien.</p>
+                <strong>Article 7 – Collecte et protection des données</strong>
+                <p>Vos données sont collectées par la société .... Une donnée à caractère personnel désigne toute information concernant une personne physique identifiée ou identifiable (personne concernée) ; est réputée identifiable une personne qui peut être identifiée, directement ou indirectement, notamment par référence à un nom, un numéro d’identification ou à un ou plusieurs éléments spécifiques, propres à son identité physique, physiologique, génétique, psychique, économique, culturelle ou sociale. Les informations personnelles pouvant être recueillies sur le site sont principalement utilisées par l’éditeur pour la gestion des relations avec vous, et le cas échéant pour le traitement de vos commandes. Les données personnelles collectées sont les suivantes : – nom et prénom – adresse mall – numéro de téléphone</p>
+                <strong>Article 8 – Droit d’accès, de rectification et de déréférencement de vos données</strong>
+                <p>En application de la réglementation applicable aux données à caractère personnel, les utilisateurs disposent des droits suivants : le droit d’accès : ils peuvent exercer leur droit d’accès, pour connaître les données personnelles les concernant, en écrivant à l’adresse électronique ci-dessous mentionnée. Dans ce cas, avant la mise en œuvre de ce droit, la Plateforme peut demander une preuve de l’identité de l’utilisateur afin d’en vérifier l’exactitude ; • le droit de rectification : si les données à caractère personnel détenues par la Plateforme sont inexactes, ils peuvent demander la mise à jour des informations ; le droit de suppression des données : les utilisateurs peuvent demander la suppression de leurs données à caractère personnel, conformément aux lois applicables en matière de protection des données ; le droit à la limitation du traitement : les utilisateurs peuvent de demander à la Plateforme de limiter le traitement des données personnelles conformément aux hypothèses prévues par le RGPD ; le droit de s’opposer au traitement des données : les utilisateurs peuvent s’opposer à ce que leurs données soient traitées conformément aux hypothèses prévues par le RGPD; • le droit à la portabilité : ils peuvent réclamer que la Plateforme leur remette les données personnelles qu’ils ont fournies pour les transmettre à une nouvelle Plateforme. Vous pouvez exercer ce droit en nous contactant, à l’adresse suivante : 7 rue du Béarn 31270 Cugnaux Ou par email, à l’adresse : metacorerepair@gmail.com . Toute demande doit être accompagnée de la photocopie d’un titre d’identité en cours de validité signé et faire mention de l’adresse à laquelle l’éditeur pourra contacter le demandeur. La réponse sera adressée dans le mois suivant la réception de la demande. Ce délai d’un mois peut être prolongé de deux mois si la complexité de la demande et/ou le nombre de demandes l’exigent. De plus, et depuis la loi n°2016-1321 du 7 octobre 2016, les personnes qui le souhaitent, ont la possibilité d’organiser le sort de leurs données après leur décès. Pour plus d’information sur le sujet, vous pouvez consulter le site Internet de la CNIL : https://www.cnil.fr/. Les utilisateurs peuvent aussi introduire une réclamation auprès de la CNIL sur le site de la CNIL : https://www.cnil.fr Nous vous recommandons de nous contacter dans un premier temps avant de déposer une réclamation auprès de la CNIL, car nous sommes à votre entière disposition pour régler votre problème.</p>
+                <strong>Article 9 – Utilisation des données</strong>
+                <p>Les données personnelles collectées auprès des utilisateurs ont pour objectif la mise à disposition des services de la Plateforme, leur amélioration et le maintien d’un environnement sécurisé. La base légale des traitements est l’exécution du contrat entre l’utilisateur et la Plateforme. Plus précisément, les utilisations sont les suivantes : – accès et utilisation de la Plateforme par l’utilisateur – gestion du fonctionnement et optimisation de la Plateforme ; – mise en œuvre d’une assistance utilisateurs : – vérification, identification et authentification des données transmises par l’utilisateur ; – personnalisation des services en affichant des publicités en fonction de l’historique de navigation de l’utilisateur, selon ses préférences ; – prévention et détection des fraudes, malwares (malicious softwares ou logiciels malveillants) et gestion des incidents de sécurité ; gestion des éventuels litiges avec les utilisateurs ; envoi d’informations commerciales et publicitaires, en fonction des préférences de l’utilisateur</p>
+                <strong>Article 10 – Politique de conservation des données</strong>
+                <p>La Plateforme conserve vos données pour la durée nécessaire pour vous fournir ses services ou son assistance. Dans la mesure raisonnablement nécessaire ou requise pour satisfaire aux obligations légales ou réglementaires, régler des litiges, empêcher les fraudes et abus ou appliquer nos modalités et conditions, nous pouvons également conserver certaines de vos informations si nécessaire, même après que vous ayez fermé votre compte ou que nous n’ayons plus besoin pour vous fournir nos services.</p>
+                <strong>Article 11-Partage des données personnelles avec des tiers</strong>
+                <p>Les données personnelles peuvent être partagées avec des sociétés tierces exclusivement dans l’Union européenne, dans les cas suivants : lorsque l’utilisateur publie, dans les zones de commentaires libres de la Plateforme, des informations accessibles au public ; quand l’utilisateur autorise le site web d’un tiers à accéder à ses données ; quand la Plateforme recourt aux services de prestataires pour fournir l’assistance utilisateurs, la publicité et les services de paiement. Ces prestataires disposent d’un accès limité aux données de l’utilisateur, dans le cadre de l’exécution de ces prestations, et ont l’obligation contractuelle de les utiliser en conformité avec les dispositions de la réglementation applicable en matière protection des données à caractère personnel ; si la loi l’exige, la Plateforme peut effectuer la transmission de données pour donner suite aux réclamations présentées contre la Plateforme et se conformer aux procédures administratives et judiciaires.</p>
+                <strong>Article 12 – Offres commerciales</strong>
+                <p>Vous êtes susceptible de recevoir des offres commerciales de l’éditeur. Si vous ne le souhaitez pas, veuillez cliquer sur le lien suivant : Vos données sont susceptibles d’être utilisées par les partenaires de l’éditeur à des fins de prospection commerciale, si vous ne le souhaitez pas, veuillez cliquer sur le lien suivant : Si, lors de la consultation du site, vous accédez à des données à caractère personnel, vous devez vous abstenir de toute collecte, de toute utilisation non autorisée et de tout acte pouvant constituer une atteinte à la vie privée ou à la réputation des personnes. L’éditeur décline toute responsabilité à cet égard. Les données sont conservées et utilisées pour une durée conforme à la législation en vigueur.</p>
+                <strong>Article 13- Photographies et représentation des produits</strong>
+                <p>Les photographies de produits, accompagnant leur description, ne sont pas contractuelles et n’engagent pas l’éditeur</p>
+                <strong>Article 14 – Loi applicable</strong>
+                <p>Les présentes conditions d’utilisation du site sont régies par la loi française et soumises à la compétence des tribunaux du siège social de l’éditeur, sous réserve d’une attribution de compétence spécifique découlant d’un texte de loi ou réglementaire particulier.</p>
+                <strong>Article 15 – Contactez-nous</strong>
+                <p>Pour toute question, information sur les produits présentés sur le site, ou concernant le site lui-même, vous pouvez laisser un message à l’adresse suivante : valandartcreations@gmail.com</p>
+            </div>
+        </div>
 
-        function render() {
-            document.getElementById('grid').innerHTML = products.map(p => `
-                <div class="product-card">
-                    <div class="img-box">
-                        <img src="${p.file}" class="product-img" onerror="this.src='https://via.placeholder.com/300x380?text=Bijou'">
-                    </div>
-                    <p style="font-size:0.6rem; letter-spacing:2px; color:#999; margin-bottom:5px;">ARTISANAT FRANÇAIS</p>
-                    <h3 style="font-size:1rem; margin-bottom:10px;">${p.name}</h3>
-                    <p style="font-weight:700; margin-bottom:15px; color:var(--gold);">${p.price} €</p>
-                    <button class="btn-buy" onclick="openPayment(${p.price})">Acheter</button>
-                </div>
-            `).join('');
-        }
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(this)">📦 Conditions Générales de Vente (CGV) & Colisage <span>+</span></div>
+            <div class="acc-content">
+                <strong>Site INTERNET</strong>
+                <p>Note à Morgan : A positionner dans «  Informations & CGU »</p>
+                <strong>Colisage</strong>
+                <p>Toutes mes créations sont importantes pour moi de la création à la réception. Chaque bijou est emballé dans une pochette en tissu.</p>
+                <p>Note à Morgan : ne pas oublier … je t’envoi les docs dans un autre fichier</p>
+                <strong>Cookies</strong>
+                <p>Mentions Légales<br>Politique de cookies (EU)<br>Note à Morgan : Pour les CGV prendre uniquement les 5 pages</p>
+                <strong>Conditions générales de vente</strong>
+                <strong>Article 1. Objet</strong>
+                <p>Les présentes Conditions Générales de Vente s’appliquent à toutes les commandes réalisées par un consommateur (ci-après dénommé le « Client ») s’agissant des produits proposés sur le site internet https://ValandartCreations (ci-après le « Site ») par :<br>VALAND’ART CREATIONS<br>État : Entreprise active depuis le 01/10/2021 au répertoire Sirene<br>Siret du siège : 493 703 573 00029<br>Adresse du siège<br>1 IMPASSE DES BORDES<br>31620 CASTELNAU-D'ESTRETEFONDS<br>Catégorie juridique : Entrepreneur individuel<br>Ci-après dénommé « le Vendeur »<br>Le consommateur est entendu, selon les dispositions du Code de la consommation, comme toute personne physique qui agit à des fins qui n'entrent pas dans le cadre de son activité commerciale, industrielle, artisanale, libérale ou agricole. Toute commande effectuée sur le Site est subordonnée à l’acceptation des Conditions Générales de Vente. Elles ont pour objet de définir les droits et obligations des parties au contrat. S’il l’une des clauses des Conditions Générales de Vente se révèlerait nulle pour quelque motif que ce soit, seule cette clause serait réputée non écrite, toutes les autres dispositions étant maintenues. Le Vendeur se réserve la possibilité de modifier ses Conditions Générales de Vente par la publication de nouvelles versions en ligne. La version applicable est celle en vigueur au jour de la commande.</p>
+                <strong>Article 2. Durée</strong>
+                <p>Les présentes Conditions Générales de Vente sont réputées avoir été acceptées par le Client au moment de la validation de sa commande. Elles s’appliquent pour la durée nécessaire à la fourniture des Produits, jusqu’à l’extinction des garanties et obligations prévues aux présentes.</p>
+                <strong>Article 3. Prix et frais de livraison</strong>
+                <p>Les prix appliqués sont les prix indiqués en euros par article ou par prestation de service au jour de la commande. Après cette date, ils sont susceptibles d’être modifiés à tout moment. En cas de promotion, le prix affiché n’est applicable qu’au cours de la durée de la promotion correspondante. Les prix proposés ne tiennent pas compte d’éventuels frais de livraison ou frais supplémentaires, dont le Client est informé avant la confirmation de sa demande.</p>
+                <strong>Article 4. Modalités de paiement</strong>
+                <p>Le Client pour effectuer le paiement de sa commande au choix parmi les différents moyens de paiement proposés lors de la validation de la commande. A aucun moment le site VALAND’ART CRÉATIONS n’enregistre les données bancaires utilisées au moment du paiement par le client.</p>
+                <strong>Article 5. Livraison de la commande</strong>
+                <p>Mode de livraison<br>Le Client choisit l’un des modes de livraison proposé sur le site au moment de la validation de sa commande. Dès réception du paiement, expédition rapide de la marchandise entre 1 à 2 jours.<br>Lettre suivie livrée dans la boite aux lettres<br>Lettre Services Plus<br>Colissimo remise en main propre ou en boîte aux lettres ou en point de retrait<br>Colissimo avec signature</p>
+                <p>Adresse de livraison<br>Le Client peut se faire livrer les Produits commandés à l’adresse de son choix. Le Client est seul responsable d'un défaut de Livraison dû à un manque d'indication lors de la Commande. Il doit veiller à l’exactitude de l’adresse indiquée lors de la validation de sa commande.</p>
+                <p>Montant des frais de livraison<br>Le montant des Frais de Livraison dépend du montant de la Commande et du mode de livraison choisi par le Client. En tout état de cause, le montant des Frais de Livraison est indiqué au Client avant la Validation de la Commande</p>
+                <p>Délais de livraison<br>Pour la France, les délais de livraison standard sont les suivants :<br>Lettre suivie : livrée dans un délai de trois jours (délai indicatif) pour la France métropolitaine et les DOM.<br>Lettre Services Plus : livré dans un délai de 2 jours<br>Colissimo : livré dans les 48h ouvrés en France, en Europe, comptez de 3 à 4 ours<br>Les délais de livraison affichés courent à compter de la date de remise du colis au transporteur. Le temps de préparation de la commande est en moyenne de 1 jour ouvré. Les délais de livraison indiqués lors de l’enregistrement de la commande n’est donné qu’à titre indicatif et n’est pas garanti. En cas de retard de livraison, la commande n'est pas annulée. Pour toute commande vers un pays autre que la France, ainsi que pour les DOM-TOM, le Client est l'importateur du ou des produit(s) commandé(s). Des droits de douane, autres taxes locales, droits d'importation ou taxes étatiques sont susceptibles d'être exigibles. Ces droits et sommes ne sont pas du ressort du Vendeur et ne relèvent pas de sa responsabilité. Ils seront intégralement à la charge du Client et sous sa responsabilité, tant en termes de déclarations que de paiements aux autorités ou organismes compétents. Nous conseillons à nos clients de se renseigner auprès des autorités compétentes de leur pays.</p>
+                <p>Réception de la commande<br>Le Client est tenu, à la livraison, de vérifier l’état de l’emballage ainsi que la conformité du produit reçu à la commande effectuée. En cas de non-conformité du produit ou en cas de colis endommagé à la livraison, le Client devra signaler les réserves et les réclamations qu’il estime nécessaires et de contacter le service client du Vendeur dans les 48h suivant sa livraison. Le Client pourra être tenu de retourner le produit non conforme ou détérioré.A défaut de réclamation dans les 7 jours suivant la livraison, sous réserve des dispositions portant sur le droit de rétractation et les garanties légales, la commande est réputée conforme.</p>
+                <strong>Article 6. Transfert de propriété – Transfert des risques</strong>
+                <p>Le transfert de propriété des produits au profit du Client ne s’opère qu’au complet paiement du prix. Les risques de perte et d’endommagement des Produits commandés sont transférés au Client au moment où il en prend physiquement possession.</p>
+                <strong>Article 7. Droit de rétractation</strong>
+                <p>Le Client dispose, conformément aux dispositions de l’article L222-7 du Code de la consommation, d’un délai de quinze (15) jours après la réception de la commande pour exercer son droit de rétractation et retourner le ou les produits. En notifiant à VALAND’ART CRÉATIONS sa décision de se rétracter avant l'expiration du délai imparti, par formulaire de contact ou à l'adresse mail suivante : valandartcreations@gmail.com qui confirmera l’autorisation de retour par email, en y incluant un bon de transport, permettant au client d’organiser le retour. Les frais de retour sont à la charge du client, sauf en cas d’erreur de notre part. Les produits devront être retournés complets, non portés et dans l’emballage d’origine avec la copie de la facture. Les produits retournés incomplets, abîmés, endommagés, ou salis par le Client ne seront pas repris ni remboursés. Le Vendeur procèdera au remboursement en utilisant le même moyen de paiement que celui que le Client aura utilisé pour la commande initiale. Le Client devra renvoyer ou rendre le bijou, sans retard excessif et, en tout état de cause, au plus tard quatorze (14) jours après que le Client aura communiqué sa décision de rétractation. Après réception de l’article retourné, si celui-ci est conforme Le Vendeur procèdera au remboursement en utilisant le même moyen de paiement que celui que le Client aura utilisé pour la commande initiale, un échange ou un avoir valable 6 mois.</p>
+                <strong>Article 8. Service Après-Vente</strong>
+                <p>Le service après-vente de VALAND’ART CRÉATIONS se tient à votre entière disposition du lundi au vendredi de 9h30 à 12h et de 13h par mail à valandartcreations@gmail.com</p>
+                <strong>Article 09. Propriété intellectuelle</strong>
+                <p>L’ensemble des éléments et Produits figurant sur le Site VALAND’ART CRÉATIONS , y compris la charte graphique, nom de domaines, textes, commentaires, photos, vidéos, marques, graphismes, concept, illustration, image et tout autre signe distinctif sont protégés par la législation en vigueur sur la propriété intellectuelle et le droit d’auteur, pour lesquels le Vendeur détient les droits. Toute reproduction totale ou partielle, modification ou utilisation du Site ou de son contenu, pour quelque motif et sur quelque support que ce soit, sans accord exprès et préalable du Vendeur, est strictement interdite.</p>
+            </div>
+        </div>
 
-        function openPayment(amt) {
-            document.getElementById('pay-amount').innerText = amt;
-            document.getElementById('payment-modal').style.display = 'flex';
-        }
-        function closePayment() { document.getElementById('payment-modal').style.display = 'none'; }
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(this)">🍪 Politique relative aux cookies <span>+</span></div>
+            <div class="acc-content">
+                <p>Message pour Morgan : VOIR LE POINT 6. Cookies placés<br>ET VOIR LE LIEN POUR REAJUSTER LES TEXTES<br>https://cookiedatabase.org/legal/cookie-policy/</p>
+                <strong>Mentions légales :  Politique relative aux cookies</strong>
+                <p>Cette politique de cookies a été mise à jour pour la dernière fois le 8 mars 2023 et s’applique aux citoyens et aux résidents permanents légaux de l’Espace Économique Européen et de la Suisse.</p>
+                <strong>1. Introduction</strong>
+                <p>Notre site web, Valand'art Créations | Bijouterie d'Art (ci-après : « le site web ») utilise des cookies et autres technologies liées (par simplification, toutes ces technologies sont désignées par le terme « cookies »). Des cookies sont également placés par des tierces parties que nous avons engagées. Dans le document ci-dessous, nous vous informons de l’utilisation des cookies sur notre site web.</p>
+                <strong>2. Que sont les cookies ?</strong>
+                <p>Un cookie est un petit fichier simple envoyé avec les pages de ce site web et stocké par votre navigateur sur le disque dur de votre ordinateur ou d’un autre appareil. Les Informations qui y sont stockées peuvent être renvoyées à nos serveurs ou aux serveurs des tierces parties concernées lors d’une visite ultérieure.</p>
+                <strong>3. Que sont les scripts ?</strong>
+                <p>Un script est un élément de code utilisé pour que notre site web fonctionne correctement et de manière interactive. Ce code est exécuté sur notre serveur ou sur votre appareil.</p>
+                <strong>4. Qu’est-ce qu’une balise invisible ?</strong>
+                <p>Une balise invisible (ou balise web) est un petit morceau de texte ou d’image invisible sur un site web, utilisé pour suivre le trafic sur un site web. Pour ce faire, diverses données vous concernant sont stockées à l’aide de balises invisibles.</p>
+                <strong>5. Cookies</strong>
+                <p>5.1 Cookies techniques ou fonctionnels<br>Certains cookies assurent le fonctionnement correct de certaines parties du site web et la prise en compte de vos préférences en tant qu’internaute. En plaçant des cookies fonctionnels, nous vous facilitons la visite de notre site web. Ainsi, vous n’avez pas besoin de saisir à plusieurs reprises les mêmes informations lors de la visite de notre site web et, par exemple, les éléments restent dans votre panier jusqu’à votre paiement. Nous pouvons déposer ces cookies sans votre consentement.</p>
+                <p>5.2 Cookies de marketing/suivi<br>Les cookies de marketing/suivi sont des cookies ou toute autre forme de stockage local, utilisés pour créer des profils d’utilisateurs afin d’afficher de la publicité ou de suivre l’utilisateur sur ce site web ou sur plusieurs sites web dans des finalités marketing similaires.</p>
+                <strong>6. Cookies placés</strong>
+                <p>Elementor<br>Statistiques (anonymes)<br>Consent to service elementor<br>Utilisation<br>Nous utilisons Elementor pour la création de contenu. En savoir plus sur Elementor<br>Partage de données<br>Ces données ne sont pas partagées avec des tierces parties.<br>Statistiques (anonymes)<br>Nom : elementor<br>Expiration : persistante<br>Fonction : Stocker les actions effectuées par les utilisateurs sur le site web</p>
+                <p>WordPress<br>Fonctionnel<br>Consent to service wordpress<br>Utilisation<br>Nous utilisons WordPress pour le développement du site web. En savoir plus sur WordPress<br>Partage de données<br>Ces données ne sont pas partagées avec des tierces parties.<br>Fonctionnel<br>Nom : wp-settings-*<br>Expiration : persistante<br>Fonction : Stocker les préférences des utilisateurs<br>Nom : wp-settings-time-*<br>Expiration : 1 an<br>Fonction : Stocker les préférences des utilisateurs<br>Nom : wordpress_test_cookie<br>Expiration : session<br>Fonction : Vérifier si des cookies peuvent être déposés<br>Nom : wordpress_logged_in_*<br>Expiration : persistante<br>Fonction : Garder les utilisateurs connectés</p>
+                <p>Divers<br>Finalité en attente d’enquête<br>Consent to service divers<br>Utilisation<br>Partage de données<br>Le partage des données est en cours d’enquête<br>Finalité en attente d’enquête<br>Nom : e_kit-elements-defaults<br>Expiration : Fonction :<br>Nom : isReturningVisitor*<br>Expiration : Fonction :<br>Nom : localTimeZone<br>Expiration : Fonction :<br>Nom : cmplz_consenttype<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_banner-status<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_consented_services<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_functional<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_marketing<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_policy_id<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_preferences<br>Expiration : 365 jours Fonction :<br>Nom : cmplz_statistics<br>Expiration : 365 jours Fonction :<br>Nom : mp_a36067b00a263cce0299cfd960e26ecf_mixpanel<br>Expiration : Fonction :<br>Nom : SERVERID77446<br>Expiration : Fonction :<br>Nom : wpEmojiSettingsSupports<br>Expiration : Fonction :<br>Nom : wp_lang<br>Expiration : Fonction :</p>
+                <strong>7. Consentement</strong>
+                <p>Lorsque vous visitez notre site web pour la première fois, nous vous montrerons une fenêtre contextuelle avec une explication sur les cookies. Dès que vous cliquez sur « Enregistrer les préférences » vous nous autorisez à utiliser les catégories de cookies et d’extensions que vous avez sélectionnés dans la fenêtre contextuelle, comme décrit dans la présente politique de cookies. Vous pouvez désactiver l’utilisation des cookies via votre navigateur, mais veuillez noter que notre site web pourrait ne plus fonctionner correctement.</p>
+                <p>7.1 Gérez vos réglages de consentement<br>Fonctionnel<br>Toujours activé<br>Le stockage ou l’accès technique est strictement nécessaire dans la finalité d’intérêt légitime de permettre l’utilisation d’un service spécifique explicitement demandé par l’abonné ou l’utilisateur, ou dans le seul but d’effectuer la transmission d’une communication sur un réseau de communications électroniques.<br>Marketing<br>Le stockage ou l’accès technique est nécessaire pour créer des profils d’utilisateurs afin d’envoyer des publicités, ou pour suivre l’utilisateur sur un site web ou sur plusieurs sites web ayant des finalités marketing similaires.</p>
+                <strong>8. Activer/désactiver et supprimer les cookies</strong>
+                <p>Vous pouvez utiliser votre navigateur internet pour supprimer automatiquement ou manuellement les cookies. Vous pouvez également spécifier que certains cookies ne peuvent pas être placés. Une autre option consiste à modifier les réglages de votre navigateur Internet afin que vous receviez un message à chaque fois qu’un cookie est placé. Pour plus d’informations sur ces options, reportez-vous aux instructions de la section Aide de votre navigateur. Veuillez noter que notre site web peut ne pas marcher correctement si tous les cookies sont désactivés. Si vous supprimez les cookies dans votre navigateur, ils seront de nouveau placés après votre consentement lorsque vous revisiterez notre site web.</p>
+                <strong>9. Vos droits concernant les données personnelles</strong>
+                <p>Vous avez les droits suivants concernant vos données personnelles :<br>● Vous avez le droit de savoir pourquoi vos données personnelles sont nécessaires, ce qui leur arrivera et combien de temps elles seront conservées.<br>● Droit d’accès : vous avez le droit d’accéder à vos données personnelles que nous connaissons.<br>● Droit de rectification : vous avez le droit à tout moment de compléter, corriger, faire supprimer ou bloquer vos données personnelles.<br>● Si vous nous donnez votre consentement pour le traitement de vos données, vous avez le droit de révoquer ce consentement et de faire supprimer vos données personnelles.<br>● Droit de transférer vos données : vous avez le droit de demander toutes vos données personnelles au responsable du traitement et de les transférer dans leur intégralité à un autre responsable du traitement.<br>● Droit d’opposition : vous pouvez vous opposer au traitement de vos données. Nous obtempérerons, à moins que certaines raisons ne justifient ce traitement.<br>Pour exercer ces droits, veuillez nous contacter. Veuillez-vous référer aux coordonnées au bas de cette politique de cookies. Si vous avez une plainte concernant la façon dont nous traitons vos données, nous aimerions en être informés, mais vous avez également le droit de déposer une plainte auprès de l’autorité de contrôle (l’autorité chargée de la protection des données).</p>
+                <strong>10. Coordonnées</strong>
+                <p>Pour des questions et/ou des commentaires sur notre politique de cookies et cette déclaration, veuillez-nous contacter en utilisant les coordonnées suivantes :<br>Valand’Art Créations<br>Castelnau-d'Estrétefonds 31620<br>France<br>Site web : Valand'art Créations | Bijouterie d'Art<br>E-mail :valandartcreations@gmail.com<br>Numéro de téléphone : 06 63 10 41 80<br>Cette politique de cookies a été synchronisée avec cookiedatabase.org le 8 mars 2023.<br>Copyright<br>MetaCore | Services informatiques</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-        function toggleAcc(header) {
-            const content = header.nextElementSibling;
-            const span = header.querySelector('span');
-            const isActive = content.classList.contains('active');
-            
-            document.querySelectorAll('.acc-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.acc-header span').forEach(s => s.innerText = '+');
+<footer>
+    <img src="logo.png" class="footer-logo" alt="Valand'Art Créations" onerror="this.style.display='none'">
+    <div class="footer-links">
+        <a href="#collection">Collection</a>
+        <a href="#legal">CGU</a>
+        <a href="mailto:valandartcreations@gmail.com">Contact</a>
+        <a href="https://www.instagram.com/valandart.creations/" target="_blank">Instagram</a>
+    </div>
+    <div class="footer-gold-line"></div>
+    <p class="footer-copy">VALAND'ART CRÉATIONS &copy; 2026 — SIRET : 493 703 573 00029 — Artisanat français</p>
+</footer>
 
-            if(!isActive) {
-                content.classList.add('active');
-                span.innerText = '-';
-            }
-        }
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
 
-        window.onload = render;
-    </script>
+<script>
+const products = [
+    { id: 1, name: "Boucles d'Oreilles Cléo", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Cléo.png"], specs: ["Acier inoxydable", "Pastille motif floral ajouré et breloque mini éventail", "Longueur : 80 mm", "Largeur : 10 mm"] },
+    { id: 2, name: "Boucles d'Oreilles Violette", category: "Boucles d'Oreilles", price: 27, photos: ["Library1/Boucles d'Oreilles Violette.png"], specs: ["Acier inoxydable – Résine – Fleurs naturelles", "Longueur : 50 mm", "Diamètre : 20 mm"] },
+    { id: 3, name: "BO Apolline", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/BO Apolline.png"], specs: ["Acier inoxydable", "Longueur : 80 mm", "Clou : diamètre 10 mm"] },
+    { id: 4, name: "Boucles d'Oreilles Liza", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Liza.png"], specs: ["Acier inoxydable – Tige émaillée", "Longueur : 50 mm"] },
+    { id: 6, name: "Collier Delphine", category: "Collier", price: 28, photos: ["Library1/Collier Delphine.JPG"], specs: ["Acier inoxydable – Argile – Résine", "Longueur : 220 mm", "Pendentif : 23 mm"] },
+    { id: 7, name: "Collier Anaïs", category: "Collier", price: 31, tagline: "Une touche de nature…", photos: ["Library1/Collier Anaïs.JPG", "Library1/Collier Anaïs 2.JPG"], specs: ["Apprêt et fine chaînette en acier inoxydable doré", "Résine UV + Fleurs naturelles", "Longueur : 220 mm", "Pendentif : 45 mm × 30 mm"] },
+    { id: 8, name: "Collier Audrey", category: "Collier", price: 28, photos: ["Library1/Collier Audrey.JPG"], specs: ["Acier inoxydable – Pastille motif floral, éventail et tige émaillée", "Longueur : 220 mm", "Pendentif : 35 mm"] }
+];
+
+let currentProduct = null; let currentPhotoIndex = 0; let cart = [];
+
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId); if (!product) return;
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) existingItem.qty += 1; else cart.push({ ...product, qty: 1 });
+    updateCartUI(); showToast(`✨ ${product.name} ajouté au panier`);
+}
+
+function updateCartQty(productId, delta) {
+    const item = cart.find(i => i.id === productId); if (!item) return;
+    item.qty += delta; if (item.qty <= 0) cart = cart.filter(i => i.id !== productId);
+    updateCartUI();
+}
+
+function removeFromCart(productId) { cart = cart.filter(i => i.id !== productId); updateCartUI(); }
+
+function updateCartUI() {
+    const container = document.getElementById('cart-items-container'), badge = document.getElementById('cart-count'), totalEl = document.getElementById('cart-total-price');
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0), totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    badge.textContent = totalItems; badge.style.display = totalItems > 0 ? 'block' : 'none'; totalEl.textContent = totalPrice + ' €';
+    if (cart.length === 0) { container.innerHTML = '<p class="cart-empty-msg">Votre panier est vide.</p>'; return; }
+    container.innerHTML = cart.map(item => `<div class="cart-item"><img src="${item.photos[0]}" class="cart-item-img" alt="${item.name}"><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${item.price} €</div><div class="cart-qty-ctrl"><button class="qty-btn" onclick="updateCartQty(${item.id}, -1)">-</button><span class="cart-qty">${item.qty}</span><button class="qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button></div><button class="cart-item-remove" onclick="removeFromCart(${item.id})">Supprimer</button></div></div>`).join('');
+}
+
+function toggleCart() {
+    const drawer = document.getElementById('cart-drawer'), overlay = document.getElementById('cart-overlay'), isOpen = drawer.classList.contains('open');
+    if (isOpen) { drawer.classList.remove('open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+    else { drawer.classList.add('open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+}
+
+function showToast(message) {
+    const container = document.getElementById('toast-container'), toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = message; container.appendChild(toast);
+    setTimeout(() => { toast.style.animation = 'toastOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 2500);
+}
+
+function checkoutCart() {
+    if (cart.length === 0) return showToast("Votre panier est vide.");
+    toggleCart(); const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0); openPayment(null, totalPrice);
+}
+
+function renderAll() { renderGrid('grid-boucles', products.filter(p => p.category === "Boucles d'Oreilles")); renderGrid('grid-colliers', products.filter(p => p.category === "Collier")); }
+function renderGrid(gridId, items) {
+    const grid = document.getElementById(gridId); if (!grid) return;
+    if (items.length === 0) { grid.innerHTML = `<div class="empty-state"><i class="far fa-gem"></i><p>Aucun bijou dans cette catégorie.</p></div>`; return; }
+    grid.innerHTML = items.map((p, idx) => `<div class="product-card" style="animation-delay: ${idx * 0.07}s" onclick="openProductModal(${p.id})"><div class="prod-badge">${p.category}</div><div class="img-box"><img src="${p.photos[0]}" class="product-img" alt="${p.name}" onerror="this.src='https://placehold.co/400x380/F2E7D3/C5A059?text=${encodeURIComponent(p.name)}'"><div class="card-overlay"><button class="overlay-btn">Voir la fiche</button></div>${p.photos.length > 1 ? `<div class="img-dots">${p.photos.map((_, i) => `<div class="img-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : ''}</div><div class="prod-info"><p class="prod-label">Artisanat Français</p><h3 class="prod-name">${p.name}</h3>${p.tagline ? `<p style="font-size:0.72rem; font-style:italic; color:var(--gold); margin-bottom:6px;">${p.tagline}</p>` : ''}<p class="prod-desc">${p.specs[0]}</p><div class="prod-footer"><span class="prod-price">${p.price} €</span><button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button></div></div></div>`).join('');
+}
+
+function filterCategory(cat, btn) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+    if (cat === 'all') { renderAll(); document.querySelectorAll('.section-title, .product-grid').forEach(el => el.style.display = ''); }
+    else { const sectionMap = { "Boucles d'Oreilles": { gridId: 'grid-boucles', titleId: 'boucles' }, "Collier": { gridId: 'grid-colliers', titleId: 'colliers' } }; Object.entries(sectionMap).forEach(([sectionCat, { gridId, titleId }]) => { const grid = document.getElementById(gridId), title = document.getElementById(titleId); if (sectionCat === cat) { grid && (grid.style.display = ''); title && (title.style.display = ''); renderGrid(gridId, products.filter(p => p.category === cat)); } else { grid && (grid.style.display = 'none'); title && (title.style.display = 'none'); } }); }
+}
+
+function openProductModal(productId) {
+    const p = products.find(x => x.id === productId); if (!p) return;
+    currentProduct = p; currentPhotoIndex = 0; document.getElementById('modal-cat').textContent = p.category; document.getElementById('modal-name').textContent = p.name; document.getElementById('modal-price').textContent = p.price + ' €'; document.getElementById('modal-specs').innerHTML = p.specs.map(s => `<li>${s}</li>`).join('');
+    document.getElementById('modal-buy-btn').onclick = () => { addToCart(p.id); closeProductModal(); };
+    updateGallery(); document.getElementById('product-modal').classList.add('open'); document.body.style.overflow = 'hidden';
+}
+
+function closeProductModal() { document.getElementById('product-modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('product-modal').addEventListener('click', function(e) { if (e.target === this) closeProductModal(); });
+
+function updateGallery() {
+    if (!currentProduct) return; const photos = currentProduct.photos; const mainImg = document.getElementById('modal-main-img'); mainImg.style.opacity = '0';
+    setTimeout(() => { mainImg.src = photos[currentPhotoIndex]; mainImg.style.opacity = '1'; }, 150);
+    const prev = document.getElementById('gallery-prev'), next = document.getElementById('gallery-next');
+    if (photos.length > 1) { prev.classList.toggle('hidden', currentPhotoIndex === 0); next.classList.toggle('hidden', currentPhotoIndex === photos.length - 1); } else { prev.classList.add('hidden'); next.classList.add('hidden'); }
+    const thumbsContainer = document.getElementById('modal-thumbs');
+    if (photos.length > 1) { thumbsContainer.innerHTML = photos.map((src, i) => `<img src="${src}" class="modal-thumb ${i === currentPhotoIndex ? 'active' : ''}" onclick="setGalleryPhoto(${i})">`).join(''); thumbsContainer.style.display = 'flex'; } else { thumbsContainer.style.display = 'none'; }
+}
+function changeGalleryPhoto(dir) { const max = currentProduct.photos.length - 1; currentPhotoIndex = Math.max(0, Math.min(max, currentPhotoIndex + dir)); updateGallery(); }
+function setGalleryPhoto(index) { currentPhotoIndex = index; updateGallery(); }
+document.addEventListener('keydown', (e) => { if (!document.getElementById('product-modal').classList.contains('open')) return; if (e.key === 'ArrowLeft') changeGalleryPhoto(-1); if (e.key === 'ArrowRight') changeGalleryPhoto(1); if (e.key === 'Escape') closeProductModal(); });
+
+function openPayment(product, cartTotal = 0) {
+    const name = product ? product.name : (cart.length > 1 ? 'Commande globale (' + cart.length + ' articles)' : cart[0].name); const price = product ? product.price : cartTotal;
+    document.getElementById('cawl-name').textContent = name; document.getElementById('cawl-price').textContent = price + ' €'; document.getElementById('pay-amount').textContent = price;
+    document.getElementById('payment-modal').classList.add('open'); document.body.style.overflow = 'hidden';
+}
+function closePayment() { document.getElementById('payment-modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('payment-modal').addEventListener('click', function(e) { if (e.target === this) closePayment(); });
+
+function simulatePay() { closePayment(); cart = []; updateCartUI(); setTimeout(() => alert(`✅ Paiement validé !\n\nVous recevrez un email de confirmation à valandartcreations@gmail.com.\nMerci pour votre achat !`), 100); }
+
+function toggleAcc(header) {
+    const content = header.nextElementSibling, span = header.querySelector('span'), isOpen = content.classList.contains('active');
+    document.querySelectorAll('.acc-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.acc-header span').forEach(s => s.textContent = '+');
+    if (!isOpen) { content.classList.add('active'); span.textContent = '–'; }
+}
+
+window.addEventListener('scroll', () => document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400));
+window.onload = () => { renderAll(); updateCartUI(); };
+</script>
 </body>
 </html>
