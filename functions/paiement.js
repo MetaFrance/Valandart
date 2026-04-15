@@ -1,16 +1,12 @@
 export async function onRequestPost(context) {
   try {
     const requestData = await context.request.json();
-    
-    // 1. FORÇAGE STRICT : On s'assure que le montant est un "Nombre Entier Absolu"
     const montantEnCentimes = Math.floor(Number(requestData.montant));
     
-    // Si c'est un texte invalide ou zéro, on bloque
     if (isNaN(montantEnCentimes) || montantEnCentimes <= 0) {
-        return new Response(JSON.stringify({ success: false, message: "Erreur : Le montant calculé est invalide." }), { status: 400 });
+        return new Response(JSON.stringify({ success: false, message: "Montant invalide" }), { status: 400 });
     }
 
-    // 2. Préparation du colis
     const cawlPayload = {
       order: {
         amountOfMoney: { 
@@ -18,15 +14,20 @@ export async function onRequestPost(context) {
           amount: montantEnCentimes 
         },
         customer: { 
-          emailAddress: requestData.email || "client@email.com"
+          emailAddress: requestData.email,
+          // AJOUT SÉCURITÉ : On précise que le client est en France (FR) 
+          // C'est souvent ce qui déclenche l'erreur 1016 quand c'est absent
+          billingAddress: {
+            countryCode: "FR"
+          }
         }
       },
       hostedCheckoutSpecificInput: {
-        returnUrl: "https://valandartcreations.pages.dev/index.html"
+        // On simplifie l'URL au maximum
+        returnUrl: "https://valandartcreations.pages.dev/"
       }
     };
 
-    // 3. Envoi à la banque
     const cawlResponse = await fetch("https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts", {
       method: "POST",
       headers: {
@@ -38,12 +39,10 @@ export async function onRequestPost(context) {
 
     if (!cawlResponse.ok) {
        const erreurTexte = await cawlResponse.text();
-       
-       // 🚨 LE SCANNER : On renvoie l'erreur MAIS AUSSI le colis exact qu'on a envoyé !
        return new Response(JSON.stringify({ 
            success: false, 
            message: "Refus CAWL: " + erreurTexte,
-           payloadEnvoye: cawlPayload // On affiche le colis pour le radiographier
+           details: "Code 1016 : Vérifiez aussi l'URL de retour dans votre portail marchand CAWL."
        }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
