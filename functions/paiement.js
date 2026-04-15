@@ -7,6 +7,10 @@ export async function onRequestPost(context) {
         return new Response(JSON.stringify({ success: false, message: "Montant invalide" }), { status: 400 });
     }
 
+    // VOS NOUVEAUX IDENTIFIANTS
+    const merchantId = "CA131066056037"; // Votre PSPID
+    const apiKeyId = "1E9F76181E3AD18D1B46"; // Votre Identifiant de clé API
+
     const cawlPayload = {
       order: {
         amountOfMoney: { 
@@ -15,24 +19,25 @@ export async function onRequestPost(context) {
         },
         customer: { 
           emailAddress: requestData.email,
-          // AJOUT SÉCURITÉ : On précise que le client est en France (FR) 
-          // C'est souvent ce qui déclenche l'erreur 1016 quand c'est absent
           billingAddress: {
             countryCode: "FR"
           }
         }
       },
       hostedCheckoutSpecificInput: {
-        // On simplifie l'URL au maximum
         returnUrl: "https://valandartcreations.pages.dev/"
       }
     };
 
-    const cawlResponse = await fetch("https://api.cawl.fr/v1/merchant/CA131066056037/hostedcheckouts", {
+    // L'URL utilise maintenant le Merchant ID (PSPID)
+    const cawlApiUrl = `https://api.cawl.fr/v1/${merchantId}/hostedcheckouts`;
+
+    const cawlResponse = await fetch(cawlApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Basic " + btoa("8911BE754F77C9DAEB55:" + context.env.CAWL_SECRET_KEY) 
+        // L'autorisation utilise l'ID de clé API + la Clé Secrète (dans Cloudflare)
+        "Authorization": "Basic " + btoa(apiKeyId + ":" + context.env.CAWL_SECRET_KEY) 
       },
       body: JSON.stringify(cawlPayload)
     });
@@ -41,8 +46,7 @@ export async function onRequestPost(context) {
        const erreurTexte = await cawlResponse.text();
        return new Response(JSON.stringify({ 
            success: false, 
-           message: "Refus CAWL: " + erreurTexte,
-           details: "Code 1016 : Vérifiez aussi l'URL de retour dans votre portail marchand CAWL."
+           message: "Refus CAWL: " + erreurTexte
        }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
