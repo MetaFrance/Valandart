@@ -34,13 +34,12 @@ export async function onRequestPost(context) {
 
     const cawlResponse = await fetch(cawlApiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // L'autorisation utilise l'ID de clé API + la Clé Secrète (dans Cloudflare)
-        "Authorization": "Basic " + btoa(apiKeyId + ":" + context.env.CAWL_SECRET_KEY) 
-      },
-      body: JSON.stringify(cawlPayload)
-    });
+// Remplace la partie "headers" par celle-ci
+headers: {
+    "Content-Type": "application/json",
+    // Format : API_KEY_ID:SECRET_KEY encodé en Base64
+    "Authorization": "Basic " + btoa(context.env.CAWL_API_KEY_ID + ":" + context.env.CAWL_SECRET_KEY)
+},
 
     if (!cawlResponse.ok) {
        const erreurTexte = await cawlResponse.text();
