@@ -2,6 +2,7 @@ export async function onRequestPost(context) {
   try {
     const requestData = await context.request.json();
     
+    // On prépare le colis pour la banque (ultra-propre et strict)
     const cawlPayload = {
       order: {
         amountOfMoney: { 
@@ -13,8 +14,8 @@ export async function onRequestPost(context) {
         }
       },
       hostedCheckoutSpecificInput: {
-        isRecurring: true, 
-        returnUrl: "https://valandartcreations.pages.dev"
+        // Ajout de /index.html pour forcer la banque à valider l'URL
+        returnUrl: "https://valandartcreations.pages.dev/index.html"
       }
     };
 
