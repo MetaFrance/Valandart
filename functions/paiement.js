@@ -1,23 +1,15 @@
-// Fichier : functions/paiement.js
-
 export async function onRequestPost(context) {
   try {
-    // 1. On récupère les données de votre site
     const requestData = await context.request.json();
-    const montantEnCentimes = requestData.montant;
-    const emailClient = requestData.email;
-
-    // 2. L'URL CAWL avec votre ID
-    const cawlApiUrl = "https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts"; 
-
+    
     const cawlPayload = {
       order: {
-        amountOfMoney: {
-          currencyCode: "EUR",
-          amount: montantEnCentimes
+        amountOfMoney: { 
+          currencyCode: "EUR", 
+          amount: requestData.montant 
         },
-        customer: {
-          emailAddress: emailClient
+        customer: { 
+          emailAddress: requestData.email 
         }
       },
       hostedCheckoutSpecificInput: {
@@ -26,29 +18,22 @@ export async function onRequestPost(context) {
       }
     };
 
-    // 3. CORRECTION : On utilise votre vrai Identifiant de Clé API pour l'autorisation
-    const idCleApi = "8911BE754F77C9DAEB55";
-    const cleSecrete = context.env.CAWL_SECRET_KEY;
-
-    // 4. On appelle CAWL
-    const cawlResponse = await fetch(cawlApiUrl, {
+    const cawlResponse = await fetch("https://api.cawl.fr/v1/merchant/8911BE754F77C9DAEB55/hostedcheckouts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Basic " + btoa(idCleApi + ":" + cleSecrete) 
+        "Authorization": "Basic " + btoa("8911BE754F77C9DAEB55:" + context.env.CAWL_SECRET_KEY) 
       },
       body: JSON.stringify(cawlPayload)
     });
 
-    // Si CAWL refuse la connexion (ex: mauvaise clé ou mauvais lien), on le signale
     if (!cawlResponse.ok) {
-       const erreurCawl = await cawlResponse.text();
-       return new Response(JSON.stringify({ success: false, message: "CAWL a refusé: " + erreurCawl }), { status: 400, headers: { "Content-Type": "application/json" } });
+       const erreurTexte = await cawlResponse.text();
+       return new Response(JSON.stringify({ success: false, message: "Refus CAWL: " + erreurTexte }), { status: 400 });
     }
 
     const data = await cawlResponse.json();
 
-    // 5. CAWL nous donne le feu vert et l'URL de la page sécurisée
     return new Response(JSON.stringify({ 
       success: true, 
       checkoutId: data.hostedCheckoutId,
@@ -56,7 +41,6 @@ export async function onRequestPost(context) {
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (error) {
-    // S'il y a un gros bug, on l'attrape ici
-    return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500 });
   }
 }
