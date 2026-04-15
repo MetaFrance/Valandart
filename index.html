@@ -407,7 +407,7 @@
 
 <div class="category-bar">
     <button class="cat-btn active" onclick="filterCategory('all', this)">Tout voir</button>
-    <button class="cat-btn" onclick="filterCategory('Boucles d\'Oreilles', this)">Boucles d'Oreilles</button>
+    <button class="cat-btn" onclick="filterCategory(&quot;Boucles d'Oreilles&quot;, this)">Boucles d'Oreilles</button>
     <button class="cat-btn" onclick="filterCategory('Collier', this)">Colliers</button>
 </div>
 
@@ -447,6 +447,7 @@
             <span class="cawl-title">Résumé de la commande</span>
             <button class="cawl-close-btn" onclick="closePayment()">✕</button>
         </div>
+        
         <div class="cawl-product-recap" id="cawl-recap">
             <strong id="cawl-name">Commande globale</strong>
             <span id="cawl-price">—</span>
@@ -462,11 +463,13 @@
             <p style="font-size: 0.8rem; color: #555; text-align: center; margin-bottom: 20px; line-height: 1.5;">
                 Vous allez être redirigé vers l'environnement sécurisé de notre banque pour le paiement.
             </p>
+            
             <button class="btn-pay-custom" onclick="lancerPaiement(event)">Aller au paiement sécurisé — <span id="pay-amount">0</span> €</button>
         </div>
         <p class="cawl-secure" style="margin-top: 20px;">🔒 Solution certifiée Crédit Agricole CAWL</p>
     </div>
 </div>
+    
 <section class="legal-section" id="legal">
     <div class="image-with-text__text-item grid__item">
         <div id="ImageWithText--template--20204114968910__image_with_text_Rr8fhx" class="image-with-text__content image-with-text__content--bottom image-with-text__content--desktop-center image-with-text__content--mobile-center image-with-text__content--medium content-container gradient color-background-1">
