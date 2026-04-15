@@ -2,19 +2,25 @@ export async function onRequestPost(context) {
   try {
     const requestData = await context.request.json();
     
-    // On prépare le colis pour la banque (ultra-propre et strict)
+    // SÉCURITÉ : On force le montant à devenir un vrai nombre entier mathématique.
+    // Et on vérifie qu'il est supérieur à 0 (la banque refuse les transactions à 0€).
+    const montantEnCentimes = parseInt(requestData.montant, 10);
+    
+    if (!montantEnCentimes || montantEnCentimes <= 0) {
+        return new Response(JSON.stringify({ success: false, message: "Erreur : Le montant calculé est invalide ou égal à zéro." }), { status: 400 });
+    }
+
     const cawlPayload = {
       order: {
         amountOfMoney: { 
           currencyCode: "EUR", 
-          amount: requestData.montant 
+          amount: montantEnCentimes // Ici, on est 100% sûr d'envoyer un nombre pur
         },
         customer: { 
           emailAddress: requestData.email 
         }
       },
       hostedCheckoutSpecificInput: {
-        // Ajout de /index.html pour forcer la banque à valider l'URL
         returnUrl: "https://valandartcreations.pages.dev/index.html"
       }
     };
