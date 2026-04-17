@@ -4,12 +4,11 @@ export async function onRequestPost(context) {
     const montantEnCentimes = Math.floor(Number(requestData.montant));
     
     if (isNaN(montantEnCentimes) || montantEnCentimes <= 0) {
-        return new Response(JSON.stringify({ success: false, message: "Montant invalide" }), { status: 400 });
+      return new Response(JSON.stringify({ success: false, message: "Montant invalide" }), { status: 400 });
     }
 
-    // VOS NOUVEAUX IDENTIFIANTS
-    const merchantId = "CA131066056037"; // Votre PSPID
-    const apiKeyId = "1E9F76181E3AD18D1B46"; // Votre Identifiant de clé API
+    const merchantId = "CA131066056037";
+    const apiKeyId = "1E9F76181E3AD18D1B46";
 
     const cawlPayload = {
       order: {
@@ -29,28 +28,26 @@ export async function onRequestPost(context) {
       }
     };
 
-    // L'URL utilise maintenant le Merchant ID (PSPID)
     const cawlApiUrl = `https://api.cawl.fr/v1/${merchantId}/hostedcheckouts`;
 
     const cawlResponse = await fetch(cawlApiUrl, {
       method: "POST",
-// Remplace la partie "headers" par celle-ci
-headers: {
-    "Content-Type": "application/json",
-    // Format : API_KEY_ID:SECRET_KEY encodé en Base64
-    "Authorization": "Basic " + btoa(context.env.CAWL_API_KEY_ID + ":" + context.env.CAWL_SECRET_KEY)
-},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + btoa(context.env.CAWL_API_KEY_ID + ":" + context.env.CAWL_SECRET_KEY)
+      },
+      body: JSON.stringify(cawlPayload)   // ← manquait
+    });                                    // ← manquait
 
     if (!cawlResponse.ok) {
-       const erreurTexte = await cawlResponse.text();
-       return new Response(JSON.stringify({ 
-           success: false, 
-           message: "Refus CAWL: " + erreurTexte
-       }), { status: 400, headers: { "Content-Type": "application/json" } });
+      const erreurTexte = await cawlResponse.text();
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: "Refus CAWL: " + erreurTexte
+      }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
     const data = await cawlResponse.json();
-
     return new Response(JSON.stringify({ 
       success: true, 
       checkoutId: data.hostedCheckoutId,
