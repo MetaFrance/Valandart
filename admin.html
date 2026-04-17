@@ -58,8 +58,8 @@
     <textarea id="desc" placeholder="Description"></textarea>
     <select id="category">
         <option value="all">Catégorie...</option>
-        <option value="Bagues">Bagues</option>
-        <option value="Colliers">Colliers</option>
+        <option value="Boucles d'Oreilles">Boucles d'Oreilles</option>
+        <option value="Collier">Colliers</option>
     </select>
     <button onclick="addProduct()">Ajouter à la liste</button>
 
@@ -109,7 +109,8 @@
 
     // ACTIONS API
     async function load() {
-        const res = await fetch(API_URL);
+        // CORRECTION 4 : Ajout de { cache: "no-store" } pour forcer le rafraîchissement des données lors de la connexion à l'admin
+        const res = await fetch(API_URL, { cache: "no-store" });
         products = await res.json();
         render();
     }
