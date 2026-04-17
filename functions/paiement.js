@@ -10,7 +10,6 @@ export async function onRequestPost(context) {
     }
 
     // 2. Récupération des identifiants sécurisés dans Cloudflare (Variables d'environnement)
-    // IMPORTANT : Tu dois configurer ces 3 variables dans ton interface Cloudflare Pages
     const merchantId = context.env.CAWL_MERCHANT_ID;
     const apiKeyId = context.env.CAWL_API_KEY_ID; 
     const apiSecret = context.env.CAWL_SECRET_KEY; 
@@ -23,13 +22,14 @@ export async function onRequestPost(context) {
       }), { status: 500 });
     }
 
-    // 3. Configuration de l'URL de l'API Crédit Agricole (CAWL / Worldline)
-    const host = "payment.cawl-solutions.fr"; 
+    // 3. Configuration de l'URL de l'API Crédit Agricole (Mode Test / Preprod)
+    // ⚠️ LE JOUR OÙ TU PASSES EN PRODUCTION RÉELLE : 
+    // Enlève le ".preprod" et laisse juste "payment.cawl-solutions.fr"
+    const host = "payment.preprod.cawl-solutions.fr"; 
     const path = `/v1/${merchantId}/hostedcheckouts`;
     const cawlApiUrl = `https://${host}${path}`;
 
     // 4. Préparation de la signature cryptographique (GCS v1HMAC)
-    // Cette étape est obligatoire pour que le Crédit Agricole accepte la connexion
     const date = new Date().toUTCString(); 
     const contentType = "application/json";
     
@@ -68,7 +68,7 @@ export async function onRequestPost(context) {
         }
       },
       hostedCheckoutSpecificInput: {
-        // L'URL où le client revient après avoir payé
+        // L'URL où le client revient après avoir payé ou annulé
         returnUrl: "https://valandartcreations.pages.dev/"
       }
     };
@@ -97,11 +97,16 @@ export async function onRequestPost(context) {
     const data = await cawlResponse.json();
     
     // 9. Renvoi de l'URL de paiement au navigateur du client
-    // On ajoute "https://" devant la redirection partielle fournie par CAWL
+    // RUSTINE : On s'assure que le sous-domaine est bien présent dans la réponse de CAWL
+    let finalUrl = data.partialRedirectUrl;
+    if (finalUrl.startsWith("cawl-solutions.fr")) {
+        finalUrl = finalUrl.replace("cawl-solutions.fr", host); 
+    }
+
     return new Response(JSON.stringify({ 
       success: true, 
       checkoutId: data.hostedCheckoutId,
-      redirectUrl: "https://" + data.partialRedirectUrl 
+      redirectUrl: "https://" + finalUrl 
     }), { headers: { "Content-Type": "application/json" } });
 
   } catch (error) {
