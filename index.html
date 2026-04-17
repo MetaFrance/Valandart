@@ -847,5 +847,135 @@ function toggleAcc(header) {
 window.addEventListener('scroll', () => document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400));
 window.onload = () => { renderAll(); updateCartUI(); };
 </script>
+    <script>
+    let allProducts = [];
+    let cart = JSON.parse(localStorage.getItem('valandart_cart')) || [];
+    const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
+
+    // 1. CHARGEMENT DES PRODUITS DEPUIS CLOUDFLARE
+    async function fetchProducts() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error("Erreur API");
+            allProducts = await response.json();
+            renderAll();
+        } catch (err) {
+            console.error("Erreur:", err);
+            document.getElementById('collection').innerHTML = "<p style='text-align:center; padding:50px;'>Le catalogue est en cours de mise à jour...</p>";
+        }
+    }
+
+    function renderAll() {
+        renderGrid('grid-boucles', allProducts.filter(p => p.category === 'Boucles'));
+        renderGrid('grid-colliers', allProducts.filter(p => p.category === 'Colliers'));
+        updateCartCount();
+    }
+
+    function renderGrid(id, list) {
+        const grid = document.getElementById(id);
+        if (list.length === 0) {
+            grid.innerHTML = "<p class='empty-state'>Aucune pièce disponible dans cette catégorie.</p>";
+            return;
+        }
+        grid.innerHTML = list.map(p => `
+            <div class="product-card" onclick="openProductModal(${p.id})">
+                <div class="img-box">
+                    <img src="${p.img}" class="product-img" alt="${p.title}">
+                    <div class="card-overlay"><button class="overlay-btn">Voir détails</button></div>
+                </div>
+                <div class="prod-info">
+                    <h3 class="prod-name">${p.title}</h3>
+                    <div class="prod-footer">
+                        <span class="prod-price">${p.price} €</span>
+                        <button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 2. GESTION DU PANIER
+    function addToCart(id) {
+        const p = allProducts.find(item => item.id === id);
+        const inCart = cart.find(item => item.id === id);
+        if (inCart) inCart.qty++;
+        else cart.push({ ...p, qty: 1 });
+        
+        saveCart();
+        showToast(`"${p.title}" ajouté au panier`);
+    }
+
+    function saveCart() {
+        localStorage.setItem('valandart_cart', JSON.stringify(cart));
+        updateCartCount();
+        renderCart();
+    }
+
+    function updateCartCount() {
+        const count = cart.reduce((acc, item) => acc + item.qty, 0);
+        const badge = document.getElementById('cart-count');
+        badge.innerText = count;
+        badge.style.display = count > 0 ? 'block' : 'none';
+    }
+
+    function toggleCart() {
+        document.getElementById('cart-drawer').classList.toggle('open');
+        document.getElementById('cart-overlay').classList.toggle('active');
+        renderCart();
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cart-items-container');
+        if (cart.length === 0) {
+            container.innerHTML = "<p class='cart-empty-msg'>Votre panier est vide.</p>";
+            document.getElementById('cart-total-price').innerText = "0 €";
+            return;
+        }
+        container.innerHTML = cart.map((item, idx) => `
+            <div class="cart-item">
+                <img src="${item.img}" class="cart-item-img">
+                <div class="cart-item-details">
+                    <div class="cart-item-name">${item.title}</div>
+                    <div class="cart-item-price">${item.price} €</div>
+                    <div class="cart-qty-ctrl">
+                        <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
+                        <span class="cart-qty">${item.qty}</span>
+                        <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+        document.getElementById('cart-total-price').innerText = total + " €";
+    }
+
+    function changeQty(idx, delta) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+        saveCart();
+    }
+
+    // 3. UTILITAIRES (MODAL, ACCORDEON)
+    function toggleAcc(header) {
+        const content = header.nextElementSibling;
+        const span = header.querySelector('span');
+        content.classList.toggle('active');
+        span.textContent = content.classList.contains('active') ? '–' : '+';
+    }
+
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.innerText = msg;
+        document.getElementById('toast-container').appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    window.onload = fetchProducts;
+    window.addEventListener('scroll', () => {
+        document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400);
+    });
+</script>
 </body>
 </html>
