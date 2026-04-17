@@ -95,14 +95,51 @@
     };
     fileInput.onchange = (e) => handleFile(e.target.files[0]);
 
-    function handleFile(file) {
+function handleFile(file) {
         if (!file) return;
+        
         const reader = new FileReader();
         reader.onload = (e) => {
-            currentBase64 = e.target.result;
-            const prev = document.getElementById('preview-img');
-            prev.src = currentBase64;
-            prev.style.display = 'block';
+            // Création d'une image invisible pour la manipuler
+            const img = new Image();
+            img.onload = () => {
+                // Création d'un Canvas (zone de dessin) pour redimensionner
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800; // Taille max de l'image en pixels
+                const MAX_HEIGHT = 800;
+                let width = img.width;
+                let height = img.height;
+
+                // Calcul du nouveau ratio pour ne pas déformer l'image
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                // Application des nouvelles dimensions
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // MAGIE ICI : On convertit en JPEG avec 70% de qualité (0.7)
+                currentBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                // Affichage de l'aperçu
+                const prev = document.getElementById('preview-img');
+                prev.src = currentBase64;
+                prev.style.display = 'block';
+                
+                console.log("Image compressée avec succès !");
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
