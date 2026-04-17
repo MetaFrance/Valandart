@@ -672,15 +672,26 @@
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
 
 <script>
-const products = [
-    { id: 1, name: "Boucles d'Oreilles Cléo", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Cléo.png"], specs: ["Acier inoxydable", "Pastille motif floral ajouré et breloque mini éventail", "Longueur : 80 mm", "Largeur : 10 mm"] },
-    { id: 2, name: "Boucles d'Oreilles Violette", category: "Boucles d'Oreilles", price: 27, photos: ["Library1/Boucles d'Oreilles Violette.png"], specs: ["Acier inoxydable – Résine – Fleurs naturelles", "Longueur : 50 mm", "Diamètre : 20 mm"] },
-    { id: 3, name: "BO Apolline", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/BO Apolline.png"], specs: ["Acier inoxydable", "Longueur : 80 mm", "Clou : diamètre 10 mm"] },
-    { id: 4, name: "Boucles d'Oreilles Liza", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Liza.png"], specs: ["Acier inoxydable – Tige émaillée", "Longueur : 50 mm"] },
-    { id: 6, name: "Collier Delphine", category: "Collier", price: 28, photos: ["Library1/Collier Delphine.JPG"], specs: ["Acier inoxydable – Argile – Résine", "Longueur : 220 mm", "Pendentif : 23 mm"] },
-    { id: 7, name: "Collier Anaïs", category: "Collier", price: 31, tagline: "Une touche de nature…", photos: ["Library1/Collier Anaïs.JPG", "Library1/Collier Anaïs 2.JPG"], specs: ["Apprêt et fine chaînette en acier inoxydable doré", "Résine UV + Fleurs naturelles", "Longueur : 220 mm", "Pendentif : 45 mm × 30 mm"] },
-    { id: 8, name: "Collier Audrey", category: "Collier", price: 28, photos: ["Library1/Collier Audrey.JPG"], specs: ["Acier inoxydable – Pastille motif floral, éventail et tige émaillée", "Longueur : 220 mm", "Pendentif : 35 mm"] }
-];
+let allProducts = [];
+const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
+
+async function fetchProducts() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Erreur de chargement des produits");
+        allProducts = await response.json();
+        renderAll(); // Affiche les produits une fois reçus
+    } catch (err) {
+        console.error("Erreur API:", err);
+        // Optionnel : tu peux laisser un produit par défaut ici en cas de panne
+    }
+}
+
+// Modifie ta fonction window.onload tout à la fin du fichier :
+window.onload = () => {
+    fetchProducts(); // On lance l'appel API au chargement
+    updateCartCount();
+};
 
 let currentProduct = null; let currentPhotoIndex = 0; let cart = [];
 let montantTotalCawl = 0; // MÉMOIRE SÉCURISÉE POUR LE PRIX
