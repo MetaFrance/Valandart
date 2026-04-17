@@ -7,7 +7,7 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ success: false, message: "Montant invalide" }), { status: 400 });
     }
 
-    // Récupération des clés depuis Cloudflare
+    // Récupération des clés réelles depuis Cloudflare
     const merchantId = context.env.CAWL_MERCHANT_ID;
     const apiKeyId = context.env.CAWL_API_KEY_ID; 
     const apiSecret = context.env.CAWL_SECRET_KEY; 
@@ -19,7 +19,7 @@ export async function onRequestPost(context) {
       }), { status: 500 });
     }
 
-    // 1. ON RETIRE LE PREPROD (Environnement de production direct)
+    // URL DE PRODUCTION RÉELLE (Crédit Agricole CAWL)
     const host = "payment.cawl-solutions.fr"; 
     const path = `/v1/${merchantId}/hostedcheckouts`;
     const cawlApiUrl = `https://${host}${path}`;
@@ -27,7 +27,7 @@ export async function onRequestPost(context) {
     const date = new Date().toUTCString(); 
     const contentType = "application/json";
     
-    // 2. CORRECTION SIGNATURE : Il faut obligatoirement 2 sauts de ligne (\n\n) avant le path !
+    // Signature cryptographique requise par la banque
     const dataToSign = `POST\n${contentType}\n${date}\n\n${path}\n`;
 
     const enc = new TextEncoder();
@@ -72,7 +72,7 @@ export async function onRequestPost(context) {
     });
 
     if (!cawlResponse.ok) {
-      // 3. AFFICHAGE DE L'ERREUR RÉELLE DE LA BANQUE
+      // Affichage de l'erreur brute pour comprendre immédiatement si ça bloque
       const erreurTexte = await cawlResponse.text();
       return new Response(JSON.stringify({ 
         success: false, 
@@ -82,7 +82,7 @@ export async function onRequestPost(context) {
 
     const data = await cawlResponse.json();
     
-    // 4. RUSTINE POUR ÉVITER LA PAGE 404 (Force le sous-domaine 'payment.')
+    // RUSTINE POUR ÉVITER LA PAGE 404 (Force le sous-domaine 'payment.')
     let finalUrl = data.partialRedirectUrl;
     if (finalUrl.startsWith("cawl-solutions.fr")) {
         finalUrl = finalUrl.replace("cawl-solutions.fr", host); 
