@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Valand'art</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --cream: #F2E7D3; --anthracite: #333232; --gold: #C5A059; }
+        body { background: var(--cream); font-family: 'Cormorant Garamond', serif; color: var(--anthracite); margin: 0; }
+        
+        /* ECRAN DE CONNEXION */
+        #login-overlay { position: fixed; inset: 0; background: var(--cream); display: flex; align-items: center; justify-content: center; z-index: 999; }
+        .login-box { background: white; padding: 40px; border: 1px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+        /* DASHBOARD */
+        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border: 1px solid var(--gold); display: none; }
+        h1, h2 { color: var(--gold); text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+        
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
+        
+        /* ZONE DE DEPOT D'IMAGE */
+        #drop-zone { border: 2px dashed var(--gold); padding: 30px; text-align: center; background: #fafafa; cursor: pointer; transition: 0.3s; margin: 10px 0; }
+        #drop-zone.hover { background: var(--gold); color: white; }
+        #preview-img { max-width: 150px; display: none; margin: 10px auto; border: 1px solid var(--gold); }
+
+        button { background: var(--anthracite); color: white; border: none; padding: 15px; width: 100%; cursor: pointer; text-transform: uppercase; font-weight: 600; margin-top: 10px; }
+        button:hover { background: var(--gold); }
+        .btn-save { background: var(--gold); margin-top: 30px; font-size: 1.1em; }
+
+        .product-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+        .product-item img { width: 60px; height: 60px; object-fit: cover; margin-right: 15px; }
+        .btn-del { background: #a94442; width: auto; padding: 5px 15px; font-size: 0.8em; margin-left: auto; }
+    </style>
+</head>
+<body>
+
+<div id="login-overlay">
+    <div class="login-box">
+        <h1>Valand'art</h1>
+        <p>Espace Administration</p>
+        <input type="password" id="tokenInput" placeholder="Clé d'accès">
+        <button onclick="login()">Se connecter</button>
+    </div>
+</div>
+
+<div class="container" id="admin-dashboard">
+    <h2>Nouveau Bijou</h2>
+    <input type="text" id="title" placeholder="Titre">
+    <input type="number" id="price" placeholder="Prix">
+    
+    <div id="drop-zone">
+        Glissez l'image ici ou cliquez pour choisir
+        <img id="preview-img" src="">
+    </div>
+    <input type="file" id="file-input" hidden accept="image/*">
+    
+    <textarea id="desc" placeholder="Description"></textarea>
+    <select id="category">
+        <option value="all">Catégorie...</option>
+        <option value="Bagues">Bagues</option>
+        <option value="Colliers">Colliers</option>
+    </select>
+    <button onclick="addProduct()">Ajouter à la liste</button>
+
+    <div id="list" style="margin-top: 40px;"></div>
+    <button class="btn-save" onclick="saveToCloudflare()">Mettre à jour le site public</button>
+</div>
+
+<script>
+    const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
+    let products = [];
+    let currentBase64 = "";
+    let authToken = "";
+
+    // GESTION CONNEXION
+    function login() {
+        authToken = document.getElementById('tokenInput').value;
+        if (!authToken) return;
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('admin-dashboard').style.display = 'block';
+        load();
+    }
+
+    // GESTION IMAGE (DRAG & DROP)
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+
+    dropZone.onclick = () => fileInput.click();
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('hover'); };
+    dropZone.ondragleave = () => dropZone.classList.remove('hover');
+    dropZone.ondrop = (e) => {
+        e.preventDefault();
+        handleFile(e.dataTransfer.files[0]);
+    };
+    fileInput.onchange = (e) => handleFile(e.target.files[0]);
+
+    function handleFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            currentBase64 = e.target.result;
+            const prev = document.getElementById('preview-img');
+            prev.src = currentBase64;
+            prev.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // ACTIONS API
+    async function load() {
+        const res = await fetch(API_URL);
+        products = await res.json();
+        render();
+    }
+
+    function render() {
+        document.getElementById('list').innerHTML = "<h3>Catalogue actuel :</h3>" + products.map((p, i) => `
+            <div class="product-item">
+                <img src="${p.img}">
+                <span>${p.title} - ${p.price}€</span>
+                <button class="btn-del" onclick="removeProduct(${i})">Supprimer</button>
+            </div>
+        `).join('');
+    }
+
+    function addProduct() {
+        if (!currentBase64) return alert("Ajoute une image !");
+        products.push({
+            id: Date.now(),
+            title: document.getElementById('title').value,
+            price: parseFloat(document.getElementById('price').value),
+            img: currentBase64,
+            desc: document.getElementById('desc').value,
+            category: document.getElementById('category').value
+        });
+        currentBase64 = "";
+        document.getElementById('preview-img').style.display = 'none';
+        render();
+    }
+
+    function removeProduct(index) {
+        products.splice(index, 1);
+        render();
+    }
+
+    async function saveToCloudflare() {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + authToken 
+            },
+            body: JSON.stringify(products)
+        });
+        alert(res.ok ? "✅ Site mis à jour !" : "❌ Erreur de token.");
+    }
+</script>
+</body>
+</html>
