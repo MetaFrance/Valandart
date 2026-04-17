@@ -470,26 +470,20 @@
 </div>
 <section style="background: linear-gradient(135deg, var(--anthracite) 0%, #4a4848 100%); padding: 80px 5%; text-align: center; position: relative; overflow: hidden;">
     
-    <!-- Motif décoratif en fond -->
     <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(197,160,89,0.03) 40px, rgba(197,160,89,0.03) 41px); pointer-events: none;"></div>
     
-    <!-- Ligne dorée décorative -->
     <div style="width: 50px; height: 1px; background: var(--gold); margin: 0 auto 20px; opacity: 0.8;"></div>
     
-    <!-- Surtitre -->
     <p style="font-size: 0.68rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-light); margin-bottom: 18px; font-family: 'Montserrat', sans-serif; font-weight: 700;">
         Castelnau-d'Estrétefonds · Haute-Garonne
     </p>
     
-    <!-- Titre principal -->
     <h2 style="font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-style: italic; color: var(--cream); letter-spacing: 1px; line-height: 1.2; margin-bottom: 30px;">
         L'art de créer, <span style="color: var(--gold); font-style: normal;">du cœur aux mains</span>
     </h2>
     
-    <!-- Séparateur -->
     <div style="width: 60px; height: 1px; background: var(--gold); margin: 0 auto 35px; opacity: 0.6;"></div>
     
-    <!-- Texte principal -->
     <p style="font-family: 'Cormorant Garamond', serif; font-size: clamp(1.05rem, 2vw, 1.25rem); color: rgba(242,231,211,0.88); line-height: 1.9; max-width: 720px; margin: 0 auto 22px; font-weight: 400;">
         Valand'Art Créations, c'est l'histoire de Valérie, artisane passionnée installée à Castelnau-d'Estrétefonds, en Haute-Garonne. Chaque bijou naît entièrement de ses mains — de l'idée première au produit fini — sans intermédiaire, sans compromis.
     </p>
@@ -498,7 +492,6 @@
         Acier inoxydable, résines, fleurs naturelles, argile… Valérie sélectionne chaque matière avec soin et façonne des pièces uniques, à la fois élégantes et accessibles. Ici, pas de production en série : chaque création porte une intention, une originalité, une âme.
     </p>
     
-    <!-- 3 valeurs -->
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 860px; margin: 0 auto 40px;">
         
         <div style="flex: 1; min-width: 200px; max-width: 240px;">
@@ -521,7 +514,6 @@
         
     </div>
     
-    <!-- Ligne dorée finale -->
     <div style="width: 50px; height: 1px; background: var(--gold); margin: 0 auto; opacity: 0.4;"></div>
 
 </section>
@@ -536,7 +528,7 @@
             <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around;">
                 <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                     <h3 style="color: #444; font-size: 1.1em;">💧 Attention à l'eau</h3>
-                    <p style="font-size: 0.9em; color: #555;">Évitez l'exposition prolongée à l'eau. Retirez vos bijoux avant de vous baigner (piscine, mer) ou de prendre une douche. Le chlore et le sel sont les ennemis de l'éclat !</p>
+                    <p style="font-size: 0.9em; color: #555;">Évitez l'exposition prolongée à l'eau. Retirez vos bijoux avant de vous baigner (piscine, mer) ou de prendre une douche. Le chlore et le salt sont les ennemis de l'éclat !</p>
                 </div>
                 <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                     <h3 style="color: #444; font-size: 1.1em;">🧴 Parfums et Cosmétiques</h3>
@@ -672,29 +664,52 @@
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
 
 <script>
-let allProducts = [];
+let products = [
+    { id: 1, name: "Boucles d'Oreilles Cléo", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Cléo.png"], specs: ["Acier inoxydable", "Pastille motif floral ajouré et breloque mini éventail", "Longueur : 80 mm", "Largeur : 10 mm"] },
+    { id: 2, name: "Boucles d'Oreilles Violette", category: "Boucles d'Oreilles", price: 27, photos: ["Library1/Boucles d'Oreilles Violette.png"], specs: ["Acier inoxydable – Résine – Fleurs naturelles", "Longueur : 50 mm", "Diamètre : 20 mm"] },
+    { id: 3, name: "BO Apolline", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/BO Apolline.png"], specs: ["Acier inoxydable", "Longueur : 80 mm", "Clou : diamètre 10 mm"] },
+    { id: 4, name: "Boucles d'Oreilles Liza", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Liza.png"], specs: ["Acier inoxydable – Tige émaillée", "Longueur : 50 mm"] },
+    { id: 6, name: "Collier Delphine", category: "Collier", price: 28, photos: ["Library1/Collier Delphine.JPG"], specs: ["Acier inoxydable – Argile – Résine", "Longueur : 220 mm", "Pendentif : 23 mm"] },
+    { id: 7, name: "Collier Anaïs", category: "Collier", price: 31, tagline: "Une touche de nature…", photos: ["Library1/Collier Anaïs.JPG", "Library1/Collier Anaïs 2.JPG"], specs: ["Apprêt et fine chaînette en acier inoxydable doré", "Résine UV + Fleurs naturelles", "Longueur : 220 mm", "Pendentif : 45 mm × 30 mm"] },
+    { id: 8, name: "Collier Audrey", category: "Collier", price: 28, photos: ["Library1/Collier Audrey.JPG"], specs: ["Acier inoxydable – Pastille motif floral, éventail et tige émaillée", "Longueur : 220 mm", "Pendentif : 35 mm"] }
+];
+
+let currentProduct = null; let currentPhotoIndex = 0; let cart = [];
+let montantTotalCawl = 0; // MÉMOIRE SÉCURISÉE POUR LE PRIX
+
 const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
 
 async function fetchProducts() {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Erreur de chargement des produits");
-        allProducts = await response.json();
-        renderAll(); // Affiche les produits une fois reçus
-    } catch (err) {
-        console.error("Erreur API:", err);
-        // Optionnel : tu peux laisser un produit par défaut ici en cas de panne
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error("Erreur réseau");
+        const data = await res.json();
+        
+        if (data && data.length > 0) {
+            products = data.map(p => {
+                let mappedCat = p.category;
+                if (mappedCat === "Colliers") mappedCat = "Collier";
+                if (mappedCat === "Boucles") mappedCat = "Boucles d'Oreilles";
+
+                return {
+                    id: p.id,
+                    name: p.title || p.name,
+                    category: mappedCat,
+                    price: parseFloat(p.price),
+                    photos: p.img ? [p.img] : (p.photos || []),
+                    specs: p.desc ? [p.desc] : (p.specs || []),
+                    tagline: p.tagline || ""
+                };
+            });
+        }
+        renderAll();
+        updateCartUI();
+    } catch (e) {
+        console.error("Impossible de charger les produits Cloudflare, utilisation du catalogue local :", e);
+        renderAll();
+        updateCartUI();
     }
 }
-
-// Modifie ta fonction window.onload tout à la fin du fichier :
-window.onload = () => {
-    fetchProducts(); // On lance l'appel API au chargement
-    updateCartCount();
-};
-
-let currentProduct = null; let currentPhotoIndex = 0; let cart = [];
-let montantTotalCawl = 0; // MÉMOIRE SÉCURISÉE POUR LE PRIX
 
 function addToCart(productId) {
     const product = products.find(p => p.id === productId); if (!product) return;
@@ -740,7 +755,6 @@ function renderAll() { renderGrid('grid-boucles', products.filter(p => p.categor
 function renderGrid(gridId, items) {
     const grid = document.getElementById(gridId); if (!grid) return;
     if (items.length === 0) { grid.innerHTML = `<div class="empty-state"><i class="far fa-gem"></i><p>Aucun bijou dans cette catégorie.</p></div>`; return; }
-    // CORRECTION MAJEURE: Suppression de l'erreur d'apostrophe
     grid.innerHTML = items.map((p, idx) => `<div class="product-card" style="animation-delay: ${idx * 0.07}s" onclick="openProductModal(${p.id})"><div class="prod-badge">${p.category}</div><div class="img-box"><img src="${p.photos[0]}" class="product-img" alt="${p.name}"><div class="card-overlay"><button class="overlay-btn">Voir la fiche</button></div>${p.photos.length > 1 ? `<div class="img-dots">${p.photos.map((_, i) => `<div class="img-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}</div>` : ''}</div><div class="prod-info"><p class="prod-label">Artisanat Français</p><h3 class="prod-name">${p.name}</h3>${p.tagline ? `<p style="font-size:0.72rem; font-style:italic; color:var(--gold); margin-bottom:6px;">${p.tagline}</p>` : ''}<p class="prod-desc">${p.specs[0]}</p><div class="prod-footer"><span class="prod-price">${p.price} €</span><button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button></div></div></div>`).join('');
 }
 
@@ -845,137 +859,7 @@ function toggleAcc(header) {
 }
 
 window.addEventListener('scroll', () => document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400));
-window.onload = () => { renderAll(); updateCartUI(); };
-</script>
-    <script>
-    let allProducts = [];
-    let cart = JSON.parse(localStorage.getItem('valandart_cart')) || [];
-    const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
-
-    // 1. CHARGEMENT DES PRODUITS DEPUIS CLOUDFLARE
-    async function fetchProducts() {
-        try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error("Erreur API");
-            allProducts = await response.json();
-            renderAll();
-        } catch (err) {
-            console.error("Erreur:", err);
-            document.getElementById('collection').innerHTML = "<p style='text-align:center; padding:50px;'>Le catalogue est en cours de mise à jour...</p>";
-        }
-    }
-
-    function renderAll() {
-        renderGrid('grid-boucles', allProducts.filter(p => p.category === 'Boucles'));
-        renderGrid('grid-colliers', allProducts.filter(p => p.category === 'Colliers'));
-        updateCartCount();
-    }
-
-    function renderGrid(id, list) {
-        const grid = document.getElementById(id);
-        if (list.length === 0) {
-            grid.innerHTML = "<p class='empty-state'>Aucune pièce disponible dans cette catégorie.</p>";
-            return;
-        }
-        grid.innerHTML = list.map(p => `
-            <div class="product-card" onclick="openProductModal(${p.id})">
-                <div class="img-box">
-                    <img src="${p.img}" class="product-img" alt="${p.title}">
-                    <div class="card-overlay"><button class="overlay-btn">Voir détails</button></div>
-                </div>
-                <div class="prod-info">
-                    <h3 class="prod-name">${p.title}</h3>
-                    <div class="prod-footer">
-                        <span class="prod-price">${p.price} €</span>
-                        <button class="btn-buy" onclick="event.stopPropagation(); addToCart(${p.id})">Ajouter</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // 2. GESTION DU PANIER
-    function addToCart(id) {
-        const p = allProducts.find(item => item.id === id);
-        const inCart = cart.find(item => item.id === id);
-        if (inCart) inCart.qty++;
-        else cart.push({ ...p, qty: 1 });
-        
-        saveCart();
-        showToast(`"${p.title}" ajouté au panier`);
-    }
-
-    function saveCart() {
-        localStorage.setItem('valandart_cart', JSON.stringify(cart));
-        updateCartCount();
-        renderCart();
-    }
-
-    function updateCartCount() {
-        const count = cart.reduce((acc, item) => acc + item.qty, 0);
-        const badge = document.getElementById('cart-count');
-        badge.innerText = count;
-        badge.style.display = count > 0 ? 'block' : 'none';
-    }
-
-    function toggleCart() {
-        document.getElementById('cart-drawer').classList.toggle('open');
-        document.getElementById('cart-overlay').classList.toggle('active');
-        renderCart();
-    }
-
-    function renderCart() {
-        const container = document.getElementById('cart-items-container');
-        if (cart.length === 0) {
-            container.innerHTML = "<p class='cart-empty-msg'>Votre panier est vide.</p>";
-            document.getElementById('cart-total-price').innerText = "0 €";
-            return;
-        }
-        container.innerHTML = cart.map((item, idx) => `
-            <div class="cart-item">
-                <img src="${item.img}" class="cart-item-img">
-                <div class="cart-item-details">
-                    <div class="cart-item-name">${item.title}</div>
-                    <div class="cart-item-price">${item.price} €</div>
-                    <div class="cart-qty-ctrl">
-                        <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
-                        <span class="cart-qty">${item.qty}</span>
-                        <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        
-        const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-        document.getElementById('cart-total-price').innerText = total + " €";
-    }
-
-    function changeQty(idx, delta) {
-        cart[idx].qty += delta;
-        if (cart[idx].qty <= 0) cart.splice(idx, 1);
-        saveCart();
-    }
-
-    // 3. UTILITAIRES (MODAL, ACCORDEON)
-    function toggleAcc(header) {
-        const content = header.nextElementSibling;
-        const span = header.querySelector('span');
-        content.classList.toggle('active');
-        span.textContent = content.classList.contains('active') ? '–' : '+';
-    }
-
-    function showToast(msg) {
-        const t = document.createElement('div');
-        t.className = 'toast';
-        t.innerText = msg;
-        document.getElementById('toast-container').appendChild(t);
-        setTimeout(() => t.remove(), 3000);
-    }
-
-    window.onload = fetchProducts;
-    window.addEventListener('scroll', () => {
-        document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400);
-    });
+window.onload = () => { fetchProducts(); };
 </script>
 </body>
 </html>
