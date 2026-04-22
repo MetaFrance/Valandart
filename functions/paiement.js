@@ -7,47 +7,61 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ success: false, message: "Montant invalide" }), { status: 400 });
     }
 
-    // Récupération des clés réelles depuis Cloudflare
-    const merchantId = context.env.CAWL_MERCHANT_ID;
-    const apiKeyId = context.env.CAWL_API_KEY_ID; 
-    const apiSecret = context.env.CAWL_SECRET_KEY; 
+    // Récupération et nettoyage des clés (important si copier-coller avec espace)
+    const merchantId = context.env.CAWL_MERCHANT_ID?.trim();
+    const apiKeyId = context.env.CAWL_API_KEY_ID?.trim(); 
+    const apiSecret = context.env.CAWL_SECRET_KEY?.trim(); 
     
     if (!merchantId || !apiKeyId || !apiSecret) {
       return new Response(JSON.stringify({ 
         success: false, 
-        message: "Configuration serveur incomplète (vérifie les variables Cloudflare)." 
+        message: "Configuration serveur incomplète (clés manquantes dans Cloudflare)." 
       }), { status: 500 });
     }
 
-    // URL DE PRODUCTION RÉELLE (Crédit Agricole CAWL)
+    // Configuration Endpoint
     const host = "payment.cawl-solutions.fr"; 
     const path = `/v1/${merchantId}/hostedcheckouts`;
     const cawlApiUrl = `https://${host}${path}`;
 
+    // Formatage Date et Content-Type (STRICT)
     const date = new Date().toUTCString(); 
-    const contentType = "application/json";
+    const contentType = "application/json; charset=utf-8";
     
-    // Signature cryptographique requise par la banque
-    const dataToSign = `POST\n${contentType}\n${date}\n\n${path}\n`;
+    // CONSTRUCTION DE LA CHAÎNE À SIGNER
+    // Structure : Méthode + \n + ContentType + \n + Date + \n + Headers + \n + Path + \n
+    const dataToSign = "POST\n" +
+                       contentType + "\n" +
+                       date + "\n" +
+                       "\n" + // Ligne vide car pas de headers X-GCS personnalisés
+                       path + "\n";
 
+    // CRYPTOGRAPHIE HMAC-SHA256 (Compatible Cloudflare Workers)
     const enc = new TextEncoder();
-    const key = await crypto.subtle.importKey(
+    const keyData = enc.encode(apiSecret);
+    const dataToSignEncoded = enc.encode(dataToSign);
+
+    const cryptoKey = await crypto.subtle.importKey(
         "raw",
-        enc.encode(apiSecret),
+        keyData,
         { name: "HMAC", hash: "SHA-256" },
         false,
         ["sign"]
     );
-    const signatureBuffer = await crypto.subtle.sign("HMAC", key, enc.encode(dataToSign));
-    const signatureBase64 = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)));
 
-    const authHeader = `GCS v1HMAC:${apiKeyId}:${signatureBase64}`;
+    const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, dataToSignEncoded);
+    
+    // Encodage Base64 de la signature
+    const signature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)));
+
+    // Header d'autorisation final
+    const authHeader = `GCS v1HMAC:${apiKeyId}:${signature}`;
 
     const cawlPayload = {
       order: {
-        amountOfMoney: { 
-          currencyCode: "EUR", 
-          amount: montantEnCentimes 
+        amountOfMoney: {
+          currencyCode: "EUR",
+          amount: montantEnCentimes
         },
         customer: { 
           emailAddress: requestData.email,
@@ -72,29 +86,30 @@ export async function onRequestPost(context) {
     });
 
     if (!cawlResponse.ok) {
-      // Affichage de l'erreur brute pour comprendre immédiatement si ça bloque
-      const erreurTexte = await cawlResponse.text();
+      const erreurDétail = await cawlResponse.text();
+      console.error("Détail refus CAWL:", erreurDétail);
       return new Response(JSON.stringify({ 
         success: false, 
-        message: "Refus CAWL: " + erreurTexte
-      }), { status: 400, headers: { "Content-Type": "application/json" } });
+        message: "Erreur d'authentification ou refus banque.",
+        debug: erreurDétail 
+      }), { status: 400 });
     }
 
     const data = await cawlResponse.json();
     
-    // RUSTINE POUR ÉVITER LA PAGE 404 (Force le sous-domaine 'payment.')
-    let finalUrl = data.partialRedirectUrl;
-    if (finalUrl.startsWith("cawl-solutions.fr")) {
-        finalUrl = finalUrl.replace("cawl-solutions.fr", host); 
+    // Construction de l'URL de redirection
+    // La plateforme renvoie souvent un partialRedirectUrl
+    let redirectUrl = data.partialRedirectUrl;
+    if (redirectUrl && !redirectUrl.startsWith("http")) {
+        redirectUrl = "https://" + host + "/" + redirectUrl;
     }
 
     return new Response(JSON.stringify({ 
       success: true, 
-      checkoutId: data.hostedCheckoutId,
-      redirectUrl: "https://" + finalUrl 
+      redirectUrl: redirectUrl 
     }), { headers: { "Content-Type": "application/json" } });
 
-  } catch (error) {
-    return new Response(JSON.stringify({ success: false, message: "Erreur script: " + error.message }), { status: 500 });
+  } catch (erreur) {
+    return new Response(JSON.stringify({ success: false, message: erreur.message }), { status: 500 });
   }
 }
