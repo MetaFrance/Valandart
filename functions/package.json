@@ -1,6 +1,4 @@
 {
-  "name": "valandart-paiement",
-  "version": "1.0.0",
   "dependencies": {
     "connect-sdk-nodejs": "^3.11.0"
   }
