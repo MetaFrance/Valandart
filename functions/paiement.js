@@ -1,95 +1,59 @@
+const connectSdk = require('connect-sdk-nodejs');
+
 export async function onRequestPost(context) {
     try {
         const requestData = await context.request.json();
-        
-        // 1. Récupération et nettoyage strict des variables
-        const merchantId = context.env.CAWL_MERCHANT_ID?.trim();
-        const apiKeyId = context.env.CAWL_API_KEY_ID?.trim();
-        const apiSecret = context.env.CAWL_SECRET_KEY?.trim();
 
-        const host = "payment.cawl-solutions.fr";
-        const path = `/v1/${merchantId}/hostedcheckouts`;
-        
-        // 2. Formatage DATE et CONTENT-TYPE (C'est ici que l'encodage se joue)
-        const date = new Date().toUTCString();
-        // La doc exige charset=utf-8 pour que la signature corresponde
-        const contentType = "application/json; charset=utf-8";
+        // Configuration du SDK avec tes variables Cloudflare
+        const sdkConfig = {
+            host: "payment.cawl-solutions.fr",
+            scheme: "https",
+            port: 443,
+            apiKeyId: context.env.CAWL_API_KEY_ID.trim(),
+            secretApiKey: context.env.CAWL_SECRET_KEY.trim(),
+            integrator: "Valandart"
+        };
 
-        // 3. CONSTRUCTION DE LA CHAÎNE À SIGNER (Version SDK)
-        // L'ordre des lignes est crucial : POST, TYPE, DATE, HEADERS (vide), PATH
-        const stringToSign = "POST\n" + 
-                             contentType + "\n" + 
-                             date + "\n" + 
-                             "\n" + 
-                             path + "\n";
+        // Initialisation du client
+        const client = connectSdk.init(sdkConfig);
+        const merchantId = context.env.CAWL_MERCHANT_ID.trim();
 
-        // 4. CRÉATION DE LA SIGNATURE HMAC-SHA256
-        const encoder = new TextEncoder();
-        const keyData = encoder.encode(apiSecret);
-        const msgData = encoder.encode(stringToSign);
-
-        const cryptoKey = await crypto.subtle.importKey(
-            "raw", 
-            keyData, 
-            { name: "HMAC", hash: "SHA-256" }, 
-            false, 
-            ["sign"]
-        );
-
-        const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, msgData);
-        
-        // Conversion de la signature en Base64
-        const signature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)));
-
-        // 5. ENVOI DE LA REQUÊTE À CAWL
-        const response = await fetch(`https://${host}${path}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": contentType,
-                "Date": date,
-                "Authorization": `GCS v1HMAC:${apiKeyId}:${signature}`
-            },
-            body: JSON.stringify({
-                order: {
-                    amountOfMoney: {
-                        currencyCode: "EUR",
-                        amount: Math.floor(Number(requestData.montant))
-                    },
-                    customer: {
-                        emailAddress: requestData.email,
-                        billingAddress: { countryCode: "FR" }
-                    }
+        // Préparation du paiement
+        const body = {
+            order: {
+                amountOfMoney: {
+                    currencyCode: "EUR",
+                    amount: Math.floor(Number(requestData.montant))
                 },
-                hostedCheckoutSpecificInput: {
-                    returnUrl: "https://valandartcreations.pages.dev/"
+                customer: {
+                    emailAddress: requestData.email,
+                    billingAddress: { countryCode: "FR" }
                 }
-            })
+            },
+            hostedCheckoutSpecificInput: {
+                returnUrl: "https://valandartcreations.pages.dev/"
+            }
+        };
+
+        // Appel via le SDK (il gère la signature tout seul)
+        const response = await new Promise((resolve, reject) => {
+            client.hostedcheckouts.create(merchantId, body, null, (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+            });
         });
 
-        const data = await response.json();
-
-        // Si la banque répond une erreur, on la renvoie pour la voir dans la console
-        if (!response.ok) {
-            return new Response(JSON.stringify({ 
-                success: false, 
-                message: "Erreur signature ou clés", 
-                debug: data 
-            }), { status: response.status });
-        }
-
-        // 6. REDIRECTION VERS LA PAGE DE PAIEMENT
-        // On construit l'URL complète car partialRedirectUrl est... partiel.
-        const finalRedirectUrl = `https://${host}/${data.partialRedirectUrl}`;
-
+        // Le SDK renvoie une réponse propre
         return new Response(JSON.stringify({
             success: true,
-            redirectUrl: finalRedirectUrl
-        }));
+            redirectUrl: `https://payment.cawl-solutions.fr/${response.partialRedirectUrl}`
+        }), { headers: { "Content-Type": "application/json" } });
 
-    } catch (erreur) {
+    } catch (err) {
+        // En cas d'erreur, le SDK nous donne souvent un message précis
         return new Response(JSON.stringify({ 
             success: false, 
-            message: "Erreur technique: " + erreur.message 
+            message: "Erreur SDK : " + (err.message || "Problème d'authentification") 
         }), { status: 500 });
     }
 }
