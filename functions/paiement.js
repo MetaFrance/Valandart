@@ -30,38 +30,27 @@ export async function onRequestPost(context) {
         returnUrl: "https://valandartcreations.pages.dev/"
       }
     };
-    const bodyStr = JSON.stringify(bodyObj);   // pas d'espaces superflus
+    const bodyStr = JSON.stringify(bodyObj);
 
     // ── 2. DATE (figée UNE SEULE FOIS) ───────────────────────────────────────
-    // Format RFC 1123 strict : "Wed, 04 Jun 2025 14:23:11 GMT"
     const date = new Date().toUTCString().replace(/GMT$/, 'GMT');
-    // toUTCString() produit déjà le bon format sur V8, on s'assure juste
-    // qu'il n'y a pas de variation de fuseau
 
     // ── 3. CONTENT-TYPE ──────────────────────────────────────────────────────
     // Dans la StringToSign : SANS charset
-    // Dans le header HTTP   : avec ou sans, au choix — on reste sans pour cohérence
     const contentType = 'application/json';
 
     // ── 4. STRING TO SIGN ────────────────────────────────────────────────────
-    // Spec Worldline GCS :
+    // Format Worldline GCS :
     //   {METHOD}\n
     //   {Content-Type}\n
     //   {Date}\n
-    //   {CanonicalizedHeaders (X-GCS-* triés)}\n   ← vide ici, on n'en envoie pas
     //   {RequestURI}\n
-    //
-    // ATTENTION : chaque ligne se termine par \n, y compris la dernière
     const stringToSign = [
       method,
       contentType,
       date,
-      // Pas de header X-GCS-* custom ici → ligne vide absente
-      path            // URI sans host, sans query string
+      path
     ].join('\n') + '\n';
-    //
-    // Résultat attendu (exemple) :
-    // "POST\napplication/json\nWed, 04 Jun 2025 14:23:11 GMT\n/v1/1234/hostedcheckouts\n"
 
     // ── 5. SIGNATURE HMAC-SHA256 (Web Crypto) ────────────────────────────────
     const encoder  = new TextEncoder();
@@ -80,7 +69,6 @@ export async function onRequestPost(context) {
     const sigBase64 = btoa(String.fromCharCode(...new Uint8Array(sigBuffer)));
 
     // ── 6. HEADER Authorization ───────────────────────────────────────────────
-    // Format : GCS v1HMAC:{apiKeyId}:{signature}
     const authHeader = `GCS v1HMAC:${apiKeyId}:${sigBase64}`;
 
     // ── 7. APPEL HTTP ─────────────────────────────────────────────────────────
@@ -108,9 +96,12 @@ export async function onRequestPost(context) {
 
     const result = JSON.parse(responseText);
 
+    // ── 8. RETOUR AU CLIENT ───────────────────────────────────────────────────
+    // partialRedirectUrl contient déjà le domaine (ex: "cawl-solutions.fr/hostedcheckout/...")
+    // On préfixe uniquement avec https://
     return new Response(JSON.stringify({
       success: true,
-      redirectUrl: `https://${host}/${result.partialRedirectUrl}`
+      redirectUrl: `https://${result.partialRedirectUrl}`
     }), { headers: { 'Content-Type': 'application/json' } });
 
   } catch (err) {
