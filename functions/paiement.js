@@ -4,13 +4,13 @@ export async function onRequestPost(context) {
     try {
         const requestData = await context.request.json();
         
-        // On récupère tes variables Cloudflare
-        const merchantId = context.env.CAWL_MERCHANT_ID.trim();
-        const apiKeyId = context.env.CAWL_API_KEY_ID.trim();
-        const secretApiKey = context.env.CAWL_SECRET_KEY.trim();
+        // 1. Récupération des variables Cloudflare (nettoyées)
+        const merchantId = context.env.CAWL_MERCHANT_ID?.trim();
+        const apiKeyId = context.env.CAWL_API_KEY_ID?.trim();
+        const secretApiKey = context.env.CAWL_SECRET_KEY?.trim();
 
-        // Initialisation du SDK officiel
-        const client = connectSdk.init({
+        // 2. Configuration du SDK
+        const sdkClient = connectSdk.init({
             host: 'payment.cawl-solutions.fr',
             scheme: 'https',
             port: 443,
@@ -19,7 +19,7 @@ export async function onRequestPost(context) {
             integrator: 'Valandart'
         });
 
-        // Préparation des données de la commande
+        // 3. Préparation du paiement
         const paymentPayload = {
             order: {
                 amountOfMoney: {
@@ -36,25 +36,32 @@ export async function onRequestPost(context) {
             }
         };
 
-        // Appel à la banque via le SDK
+        // 4. Exécution via le SDK (Gestion automatique de la signature HMAC)
         const response = await new Promise((resolve, reject) => {
-            client.hostedcheckouts.create(merchantId, paymentPayload, null, (error, result) => {
-                if (error) reject(error);
-                else resolve(result);
+            sdkClient.hostedcheckouts.create(merchantId, paymentPayload, null, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
             });
         });
 
-        // Redirection vers la page de paiement sécurisée
+        // 5. Réponse vers ton site avec l'URL de redirection
         return new Response(JSON.stringify({
             success: true,
             redirectUrl: `https://payment.cawl-solutions.fr/${response.partialRedirectUrl}`
-        }), { headers: { "Content-Type": "application/json" } });
+        }), { 
+            headers: { "Content-Type": "application/json" } 
+        });
 
     } catch (err) {
-        console.error("Erreur SDK:", err);
+        // En cas d'échec, on renvoie l'erreur précise du SDK
+        console.error("Détail erreur SDK:", err);
         return new Response(JSON.stringify({ 
             success: false, 
-            message: "Erreur SDK : " + (err.message || "Authentification échouée") 
+            message: "La banque a refusé la connexion.",
+            error: err.message 
         }), { status: 500 });
     }
 }
