@@ -1,4 +1,5 @@
 // functions/api/paiement.js
+// Cloudflare Pages Function — runtime V8 Edge (Web Crypto API uniquement)
 
 export async function onRequestPost(context) {
   try {
@@ -18,7 +19,7 @@ export async function onRequestPost(context) {
       order: {
         amountOfMoney: {
           currencyCode: "EUR",
-          amount: Math.floor(Number(requestData.montant))
+          amount: Math.floor(Number(requestData.montant))  // en centimes
         },
         customer: {
           emailAddress: requestData.email,
@@ -81,15 +82,15 @@ export async function onRequestPost(context) {
     const result = JSON.parse(responseText);
     console.log("partialRedirectUrl brut:", result.partialRedirectUrl);
 
-    // ── 8. NETTOYAGE ET CONSTRUCTION DE L'URL ─────────────────────────────────
-    // CAWL retourne parfois "cawl-solutions.fr/hostedcheckout/..."
-    // On normalise pour obtenir "https://payment.cawl-solutions.fr/hostedcheckout/..."
-    let partial = result.partialRedirectUrl;
-    partial = partial.replace(/^[^/]*cawl-solutions\.fr\//, '');
+    // ── 8. CONSTRUCTION DE L'URL — formule officielle CAWL ────────────────────
+    // Doc officielle : "https://payment." + partialRedirectUrl
+    // partialRedirectUrl = "cawl-solutions.fr/hostedcheckout/PaymentMethods/Selection/xxxx"
+    // Résultat final  = "https://payment.cawl-solutions.fr/hostedcheckout/..."
+    const redirectUrl = `https://payment.${result.partialRedirectUrl}`;
 
     return new Response(JSON.stringify({
-      success:     true,
-      redirectUrl: `https://${host}/${partial}`
+      success: true,
+      redirectUrl
     }), { headers: { 'Content-Type': 'application/json' } });
 
   } catch (err) {
