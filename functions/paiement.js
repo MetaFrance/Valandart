@@ -79,16 +79,17 @@ export async function onRequestPost(context) {
     }
 
     const result = JSON.parse(responseText);
-
-    // ── 8. LOG pour déboguer le format exact de partialRedirectUrl ────────────
     console.log("partialRedirectUrl brut:", result.partialRedirectUrl);
 
-    // ── 9. CONSTRUCTION DE L'URL DE REDIRECTION ───────────────────────────────
-    // partialRedirectUrl = "hostedcheckout/PaymentMethods/Selection/xxxx"
-    // On préfixe avec le host complet
+    // ── 8. NETTOYAGE ET CONSTRUCTION DE L'URL ─────────────────────────────────
+    // CAWL retourne parfois "cawl-solutions.fr/hostedcheckout/..."
+    // On normalise pour obtenir "https://payment.cawl-solutions.fr/hostedcheckout/..."
+    let partial = result.partialRedirectUrl;
+    partial = partial.replace(/^[^/]*cawl-solutions\.fr\//, '');
+
     return new Response(JSON.stringify({
       success:     true,
-      redirectUrl: `https://${host}/${result.partialRedirectUrl}`
+      redirectUrl: `https://${host}/${partial}`
     }), { headers: { 'Content-Type': 'application/json' } });
 
   } catch (err) {
