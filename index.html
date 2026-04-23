@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* ============================================
-           VARIABLES & RESET
-        ============================================ */
+        /* Variables */
         :root {
             --cream: #F2E7D3;
             --cream-dark: #E8D9BF;
@@ -27,6 +25,7 @@
             --radius: 2px;
         }
 
+        /* Reset global */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
@@ -38,9 +37,7 @@
             overflow-x: hidden;
         }
 
-        /* ============================================
-           NAVIGATION
-        ============================================ */
+        /* Navigation */
         nav {
             background: var(--white);
             padding: 10px 5%;
@@ -91,9 +88,7 @@
             top: -10px; right: -15px; font-weight: bold; display: none;
         }
 
-        /* ============================================
-           BARRE CONTACT FIXE
-        ============================================ */
+        /* Barre contact flottante */
         .contact-bar {
             position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
             display: flex; flex-direction: column; gap: 12px; z-index: 999;
@@ -107,9 +102,7 @@
         }
         .contact-icon:hover { background: var(--gold); transform: scale(1.12) translateX(-3px); }
 
-        /* ============================================
-           HERO BANNER
-        ============================================ */
+        /* Hero */
         .hero {
             background: var(--anthracite);
             padding: 90px 5% 80px;
@@ -165,9 +158,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ============================================
-           FILTRE CATÉGORIES & RECHERCHE
-        ============================================ */
+        /* Filtres et recherche */
         .category-bar {
             display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
             padding: 25px 5% 15px; background: var(--cream); position: sticky;
@@ -184,7 +175,6 @@
         .cat-btn:hover, .cat-btn.active { background: var(--anthracite); color: var(--white); }
         .cat-btn.active { border-color: var(--gold); background: var(--gold); }
 
-        /* ── RECHERCHE ── */
         .search-wrap {
             position: relative;
             width: 100%;
@@ -213,7 +203,6 @@
         }
         .search-icon-btn:hover { color: var(--gold); }
 
-        /* Suggestions dropdown */
         .search-suggestions {
             position: absolute; top: calc(100% + 6px); left: 0; right: 0;
             background: var(--white); border: 1px solid rgba(197,160,89,0.4);
@@ -241,6 +230,7 @@
             padding: 14px 16px; font-size: 0.68rem; color: #aaa; text-align: center; letter-spacing: 1px;
         }
 
+        /* Grilles produits */
         .section-title { padding: 50px 5% 20px; max-width: 1400px; margin: 0 auto; }
         .section-title h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 600; display: flex; align-items: center; gap: 18px; color: var(--anthracite); }
         .section-title h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--gold), transparent); }
@@ -289,9 +279,7 @@
         .btn-buy { background: var(--anthracite); color: var(--white); border: none; padding: 10px 22px; font-family: 'Montserrat', sans-serif; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.62rem; letter-spacing: 1.5px; transition: var(--transition); border-radius: var(--radius); }
         .btn-buy:hover { background: var(--gold); }
 
-        /* ============================================
-           MODALS & PANIER
-        ============================================ */
+        /* Modales */
         #product-modal { display: none; position: fixed; inset: 0; background: rgba(30,28,28,0.75); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
         #product-modal.open { display: flex; }
         .modal-inner { background: var(--white); width: 100%; max-width: 900px; max-height: 92vh; overflow-y: auto; border-radius: var(--radius); display: flex; flex-direction: column; animation: modalIn 0.35s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; }
@@ -320,7 +308,7 @@
         .btn-buy-modal:hover { background: var(--gold); }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* Panier Latéral */
+        /* Panier */
         .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 4500; opacity: 0; visibility: hidden; transition: var(--transition); }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         .cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; background: var(--white); z-index: 5000; box-shadow: -5px 0 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
@@ -351,7 +339,7 @@
         @keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); } }
 
-        /* Modal Paiement */
+        /* Paiement */
         #payment-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 6000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         #payment-modal.open { display: flex; }
         .cawl-container { background: var(--white); width: 90%; max-width: 420px; padding: 35px; border-top: 4px solid var(--gold); border-radius: var(--radius); animation: modalIn 0.3s ease; }
@@ -367,9 +355,7 @@
         .btn-pay-custom:hover { background: var(--gold); }
         .cawl-secure { text-align: center; font-size: 0.58rem; color: #bbb; margin-top: 12px; letter-spacing: 1px; }
 
-        /* ============================================
-           SECTION LÉGALE
-        ============================================ */
+        /* Légales */
         .legal-section { background: var(--white); padding: 80px 5%; border-top: 1px solid rgba(197,160,89,0.25); }
         .legal-container { max-width: 1000px; margin: 0 auto; }
         .legal-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 35px; color: var(--anthracite); text-align: center; }
@@ -384,9 +370,7 @@
         .acc-content strong { color: var(--anthracite); font-weight: 700; display: block; margin-top: 20px; margin-bottom: 8px; }
         .acc-content ul { padding-left: 20px; margin-bottom: 12px; }
 
-        /* ============================================
-           FOOTER
-        ============================================ */
+        /* Footer */
         footer { background: var(--anthracite); color: rgba(255,255,255,0.7); padding: 45px 5%; text-align: center; }
         .footer-logo { height: 65px; margin-bottom: 20px; filter: brightness(0) invert(1) opacity(0.6); }
         .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -402,9 +386,7 @@
         #scroll-top.visible { opacity: 1; transform: translateY(0); }
         #scroll-top:hover { background: var(--gold); }
 
-        /* ============================================
-           RESPONSIVE
-        ============================================ */
+        /* Responsive */
         @media(max-width: 1024px) {
             .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         }
@@ -525,7 +507,6 @@
     <div class="product-grid" id="grid-bagues" style="display:none"></div>
     <div id="broches" class="section-title" style="display:none"><h2>Broches</h2><p>Créations artisanales</p></div>
     <div class="product-grid" id="grid-broches" style="display:none"></div>
-    <!-- Zone résultats de recherche -->
     <div id="search-results-section" style="display:none">
         <div class="section-title"><h2 id="search-results-title">Résultats</h2><p id="search-results-sub"></p></div>
         <div class="product-grid" id="grid-search"></div>
@@ -603,26 +584,26 @@
             <h2 style="color: #333; text-align: center; margin-bottom: 20px;">✨ Conseils d'entretien pour vos bijoux</h2>
             <p style="text-align: center; color: #666; margin-bottom: 30px;">Pour que vos créations Valandart conservent tout leur éclat au fil du temps, voici quelques gestes simples à adopter :</p>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around;">
-                <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"><h3 style="color: #444; font-size: 1.1em;">💧 Attention à l'eau</h3><p style="font-size: 0.9em; color: #555;">Évitez l'exposition prolongée à l'eau. Retirez vos bijoux avant de vous baigner (piscine, mer) ou de prendre une douche. Le chlore et le salt sont les ennemis de l'éclat !</p></div>
+                <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"><h3 style="color: #444; font-size: 1.1em;">💧 Attention à l'eau</h3><p style="font-size: 0.9em; color: #555;">Évitez l'exposition prolongée à l'eau. Retirez vos bijoux avant de vous baigner (piscine, mer) ou de prendre une douche. Le chlore et le sel sont les ennemis de l'éclat !</p></div>
                 <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"><h3 style="color: #444; font-size: 1.1em;">🧴 Parfums et Cosmétiques</h3><p style="font-size: 0.9em; color: #555;">Appliquez vos crèmes et vaporisez votre parfum avant de mettre vos bijoux. Les produits chimiques peuvent ternir ou attaquer les matériaux.</p></div>
                 <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"><h3 style="color: #444; font-size: 1.1em;">🌙 Repos nocturne</h3><p style="font-size: 0.9em; color: #555;">Pensez à retirer vos créations pour dormir afin d'éviter de les accrocher ou de les déformer accidentellement durant la nuit.</p></div>
+                <div style="flex: 1; min-width: 200px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"><h3 style="color: #444; font-size: 1.1em;">✨ Chocs & Brillance</h3><p style="font-size: 0.9em; color: #555;">Prenez garde à ne pas les entrechoquer. Pour raviver l’éclat de vos bijoux, essuyez-les avec un chiffon doux et polissez doucement les pièces en métal argenté ou bronze avec un peu de dentifrice.</p></div>
             </div>
         </section>
 
         <div class="acc-item">
             <div class="acc-header" onclick="toggleAcc(this)">📋 Mentions Légales <span>+</span></div>
             <div class="acc-content">
-                <strong>Mentions Légales</strong>
                 <strong>Article 1 – Mentions légales</strong>
-                <p>Propriétaire : Valérie LE GAC EI<br>Siège social : 1 impasse des Bordes – 31620 Castelnau d'Estrétefonds<br>Téléphone Siège : 06 63 10 41 80<br>Email pour contact : valandartcreations@gmail.com<br>Siret : 493 703 573 00029<br>Créateur : DUPUY MORGAN<br>Site Internet : MetaCore | Services informatiques<br>Tél : 07 67 29 81 02<br>Nom Commercial : MetaCore<br>Email : metacorerepair@gmail.com<br>SIRET : 993 559 780 00016<br>Siège Social : 7 rue du béarn 31270 Cugnaux<br>Hébergeur : Meta Core<br>7 rue du béarn 31270 Cugnaux<br>Responsable publication : MetaCore</p>
+                <p>Propriétaire : Valérie LE GAC VLG OFFICE MANAGER<br>Siège social : 1 impasse des Bordes – 31620 Castelnau d'Estrétefonds<br>Téléphone Siège : 06 63 10 41 80<br>Email pour contact : valandartcreations@gmail.com<br>Siret : 493 703 573 00029</p>
+                <p>Créateur : DUPUY MORGAN<br>Site Internet : MetaCore | Services informatiques<br>Tél : 07 67 29 81 02<br>Nom Commercial : MetaCore<br>Email : metacorerepair@gmail.com<br>SIRET : 993 559 780 00016</p>
+                <p>Siège Social & Hébergeur : Meta Core, 7 rue du Béarn 31270 Cugnaux<br>Responsable publication : MetaCore</p>
                 <strong>Article 2 – Accès au site</strong>
-                <p>L'accès au site et son utilisation sont réservés à un usage strictement personnel. Vous vous engagez à ne pas utiliser ce site et les informations ou données qui y figurent à des fins commerciales, politiques, publicitaires et pour toute forme de sollicitation commerciale et notamment l'envoi de courriers électroniques non sollicités.</p>
+                <p>L'accès au site et son utilisation sont réservés à un usage strictement personnel. Vous vous engagez à ne pas utiliser ce site et les informations ou données qui y figurent à des fins commerciales, politiques, publicitaires et pour toute forme de sollicitation commerciale.</p>
                 <strong>Article 3 – Contenu du site</strong>
-                <p>Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sounds, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site et plus généralement tous les éléments reproduits ou utilisés sur le site sont protégés par les lois en vigueur au titre de la propriété intellectuelle.</p>
+                <p>Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sons, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site sont protégés par les lois en vigueur au titre de la propriété intellectuelle.</p>
                 <strong>Article 14 – Loi applicable</strong>
                 <p>Les présentes conditions d'utilisation du site sont régies par la loi française et soumises à la compétence des tribunaux du siège social de l'éditeur.</p>
-                <strong>Article 15 – Contactez-nous</strong>
-                <p>Pour toute question, information sur les produits présentés sur le site, ou concernant le site lui-même, vous pouvez laisser un message à l'adresse suivante : valandartcreations@gmail.com</p>
             </div>
         </div>
 
@@ -632,13 +613,13 @@
                 <strong>Colisage</strong>
                 <p>Toutes mes créations sont importantes pour moi de la création à la réception. Chaque bijou est emballé dans une pochette en tissu.</p>
                 <strong>Article 1. Objet</strong>
-                <p>Les présentes Conditions Générales de Vente s'appliquent à toutes les commandes réalisées par un consommateur s'agissant des produits proposés sur le site internet par VALAND'ART CREATIONS – Siret : 493 703 573 00029 – 1 IMPASSE DES BORDES – 31620 CASTELNAU-D'ESTRETEFONDS.</p>
+                <p>Les présentes Conditions Générales de Vente s'appliquent à toutes les commandes réalisées par un consommateur s'agissant des produits proposés sur le site internet par VALAND'ART CREATIONS – Siret : 493 703 573 00029.</p>
                 <strong>Article 7. Droit de rétractation</strong>
-                <p>Le Client dispose d'un délai de quinze (15) jours après la réception de la commande pour exercer son droit de rétractation et retourner le ou les produits, en notifiant à VALAND'ART CRÉATIONS sa décision par email à : valandartcreations@gmail.com</p>
+                <p>Le Client dispose d'un délai de quatorze (14) jours après la réception de la commande pour exercer son droit de rétractation et retourner le ou les produits, en notifiant à VALAND'ART CRÉATIONS sa décision par email à : valandartcreations@gmail.com</p>
                 <strong>Article 8. Garantie</strong>
                 <p>Les bijoux VALAND'ART CRÉATIONS sont fabriqués manuellement. L'imperfection d'un bijou fait main n'est pas une erreur ; elle est une signature. Si le client constate une erreur de notre part lors de l'envoi de sa commande ou s'il reçoit un produit défectueux, VALAND'ART CRÉATIONS trouvera toujours une solution satisfaisante.</p>
                 <strong>Article 9. Service Après-Vente</strong>
-                <p>Le service après-vente se tient à votre entière disposition du lundi au vendredi de 9h30 à 12h par mail à valandartcreations@gmail.com</p>
+                <p>Le service après-vente se tient à votre entière disposition du lundi au vendredi de 10h à 18h par mail à valandartcreations@gmail.com</p>
             </div>
         </div>
 
@@ -646,11 +627,13 @@
             <div class="acc-header" onclick="toggleAcc(this)">🍪 Politique relative aux cookies <span>+</span></div>
             <div class="acc-content">
                 <strong>Mentions légales : Politique relative aux cookies</strong>
-                <p>Cette politique de cookies a été mise à jour pour la dernière fois le 8 mars 2023 et s'applique aux citoyens et aux résidents permanents légaux de l'Espace Économique Européen et de la Suisse.</p>
+                <p>Cette politique de cookies s'applique aux citoyens et aux résidents permanents légaux de l'Espace Économique Européen et de la Suisse.</p>
                 <strong>1. Introduction</strong>
-                <p>Notre site web, Valand'art Créations | Bijouterie d'Art utilise des cookies et autres technologies liées. Des cookies sont également placés par des tierces parties que nous avons engagées.</p>
-                <strong>10. Coordonnées</strong>
-                <p>Valand'Art Créations – Castelnau-d'Estrétefonds 31620 – France<br>E-mail : valandartcreations@gmail.com – Tél : 06 63 10 41 80</p>
+                <p>Notre site web, Valand'art Créations | Bijouterie d'Art utilise des cookies et autres technologies liées (cookies fonctionnels, scripts, balises). Les informations qui y sont stockées peuvent être renvoyées à nos serveurs lors d'une visite ultérieure pour le bon fonctionnement du site.</p>
+                <strong>2. Vos droits</strong>
+                <p>Vous avez le droit d'accéder à vos données personnelles, de les faire corriger, supprimer ou transférer. Pour toute demande, merci de nous contacter via l'adresse mentionnée ci-dessous.</p>
+                <strong>3. Coordonnées</strong>
+                <p>Valand'Art Créations – 1 Impasse des Bordes, 31620 Castelnau-d'Estrétefonds – France<br>E-mail : valandartcreations@gmail.com – Tél : 06 63 10 41 80</p>
             </div>
         </div>
     </div>
@@ -671,9 +654,7 @@
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Haut de page"><i class="fas fa-chevron-up"></i></button>
 
 <script>
-/* =============================================
-   DONNÉES PRODUITS (fallback local)
-============================================= */
+// Données produits locales (secours)
 let products = [
     { id: 1, name: "Boucles d'Oreilles Cléo", category: "Boucles d'Oreilles", price: 23, photos: ["Library1/Boucles d'Oreilles Cléo.png"], specs: ["Acier inoxydable", "Pastille motif floral ajouré et breloque mini éventail", "Longueur : 80 mm", "Largeur : 10 mm"] },
     { id: 2, name: "Boucles d'Oreilles Violette", category: "Boucles d'Oreilles", price: 27, photos: ["Library1/Boucles d'Oreilles Violette.png"], specs: ["Acier inoxydable – Résine – Fleurs naturelles", "Longueur : 50 mm", "Diamètre : 20 mm"] },
@@ -691,9 +672,7 @@ let searchActive = false;
 
 const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
 
-/* =============================================
-   CHARGEMENT API
-============================================= */
+// Chargement API
 async function fetchProducts() {
     try {
         const res = await fetch(API_URL, { cache: "no-store" });
@@ -718,37 +697,27 @@ async function fetchProducts() {
         renderAll();
         updateCartUI();
     } catch(e) {
-        console.error("Fallback catalogue local :", e);
+        console.error("Erreur API - Chargement du catalogue local :", e);
         renderAll();
         updateCartUI();
     }
 }
 
-/* =============================================
-   RECHERCHE INTELLIGENTE / CORRECTIVE
-============================================= */
-
-// Dictionnaire de correction phonétique/orthographe
+// Recherche
 const corrections = {
-    // Boucles
     "boucle": "Boucles d'Oreilles", "boucls": "Boucles d'Oreilles", "bouces": "Boucles d'Oreilles",
     "oreille": "Boucles d'Oreilles", "oreil": "Boucles d'Oreilles", "oreilles": "Boucles d'Oreilles",
     "bo": "Boucles d'Oreilles", "earring": "Boucles d'Oreilles",
-    // Colliers
     "colier": "Collier", "collie": "Collier", "collier": "Collier", "colliers": "Collier",
     "coliers": "Collier", "colie": "Collier", "necklace": "Collier",
-    // Bracelets
     "brocelet": "Bracelet", "braclet": "Bracelet", "braselet": "Bracelet",
     "bracelet": "Bracelet", "bracelets": "Bracelet", "braclet": "Bracelet",
-    // Bagues
     "bag": "Bague", "bagu": "Bague", "bague": "Bague", "bagues": "Bague",
     "bages": "Bague", "bage": "Bague", "ring": "Bague",
-    // Broches
     "broch": "Broche", "broches": "Broche", "broche": "Broche",
     "brosh": "Broche", "broshe": "Broche", "brooch": "Broche"
 };
 
-// Distance de Levenshtein
 function levenshtein(a, b) {
     const m = a.length, n = b.length;
     const dp = Array.from({length: m+1}, (_, i) => Array.from({length: n+1}, (_, j) => i === 0 ? j : j === 0 ? i : 0));
@@ -757,17 +726,13 @@ function levenshtein(a, b) {
     return dp[m][n];
 }
 
-// Cherche une correction de catégorie pour un terme
 function findCategoryCorrection(term) {
     const t = term.toLowerCase().trim();
     if (!t || t.length < 2) return null;
-    // Correspondance exacte dans le dico
     if (corrections[t]) return corrections[t];
-    // Correspondance partielle (le terme est contenu dans une clé ou inversement)
     for (const [key, val] of Object.entries(corrections)) {
         if (key.includes(t) || t.includes(key)) return val;
     }
-    // Correspondance Levenshtein (tolérance selon longueur)
     let best = null, bestDist = Infinity;
     for (const [key, val] of Object.entries(corrections)) {
         const d = levenshtein(t, key);
@@ -777,7 +742,6 @@ function findCategoryCorrection(term) {
     return best;
 }
 
-// Recherche dans les produits (nom + catégorie + specs)
 function searchProducts(query) {
     const q = query.toLowerCase().trim();
     if (!q) return { results: [], correction: null };
@@ -792,23 +756,19 @@ function searchProducts(query) {
     };
 }
 
-// Recherche intelligente : d'abord exacte, puis corrective
 function smartSearch(query) {
     const q = query.trim();
     if (!q) return { results: [], correction: null, correctedCat: null };
 
-    // Recherche directe
     const direct = searchProducts(q);
     if (direct.results.length > 0) return { results: direct.results, correction: null, correctedCat: null };
 
-    // Tentative de correction de catégorie
     const correctedCat = findCategoryCorrection(q);
     if (correctedCat) {
         const bycat = products.filter(p => p.category && p.category.toLowerCase().includes(correctedCat.toLowerCase().split(' ')[0].toLowerCase()));
         if (bycat.length > 0) return { results: bycat, correction: q, correctedCat };
     }
 
-    // Levenshtein sur les noms de produits
     const fuzzy = products.filter(p => {
         const name = (p.name || '').toLowerCase();
         const words = name.split(/\s+/);
@@ -842,7 +802,6 @@ function applySearch(val) {
     const { results, correction, correctedCat } = smartSearch(val);
     searchActive = true;
 
-    // Masquer toutes les sections normales
     hideAllSections();
     const searchSection = document.getElementById('search-results-section');
     const titleEl = document.getElementById('search-results-title');
@@ -928,9 +887,7 @@ function onSearchKey(e) {
     if (e.key === 'Escape') clearSearch();
 }
 
-/* =============================================
-   SECTIONS VISIBILITÉ
-============================================= */
+// Visibilité des sections
 const SECTION_MAP = {
     "Boucles d'Oreilles": { gridId: 'grid-boucles', titleId: 'boucles' },
     "Collier":            { gridId: 'grid-colliers', titleId: 'colliers' },
@@ -950,10 +907,9 @@ function hideAllSections() {
 
 function showAllSections() {
     Object.values(SECTION_MAP).forEach(({ gridId, titleId }) => {
-        const g = document.getElementById(gridId), t = document.getElementById(titleId);
-        // N'afficher que si la catégorie a des produits
         const cat = Object.keys(SECTION_MAP).find(k => SECTION_MAP[k].gridId === gridId);
         const hasProd = products.some(p => p.category === cat);
+        const g = document.getElementById(gridId), t = document.getElementById(titleId);
         if (g) g.style.display = hasProd ? '' : 'none';
         if (t) t.style.display = hasProd ? '' : 'none';
     });
@@ -969,9 +925,7 @@ function renderByCurrent() {
     }
 }
 
-/* =============================================
-   RENDU GRILLES
-============================================= */
+// Rendu du catalogue
 function renderAll() {
     Object.entries(SECTION_MAP).forEach(([cat, { gridId, titleId }]) => {
         const items = products.filter(p => p.category === cat);
@@ -1015,15 +969,12 @@ function renderGrid(gridId, items) {
         </div>`).join('');
 }
 
-/* =============================================
-   FILTRE CATÉGORIES
-============================================= */
+// Filtre catégories
 function filterCategory(cat, btn) {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     currentFilter = cat;
 
-    // Effacer recherche si active
     if (searchActive) {
         searchActive = false;
         document.getElementById('search-input').value = '';
@@ -1060,9 +1011,7 @@ function filterCategory(cat, btn) {
     });
 }
 
-/* =============================================
-   PANIER
-============================================= */
+// Actions Panier
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
@@ -1080,7 +1029,10 @@ function updateCartQty(productId, delta) {
     updateCartUI();
 }
 
-function removeFromCart(productId) { cart = cart.filter(i => i.id !== productId); updateCartUI(); }
+function removeFromCart(productId) { 
+    cart = cart.filter(i => i.id !== productId); 
+    updateCartUI(); 
+}
 
 function updateCartUI() {
     const container = document.getElementById('cart-items-container');
@@ -1091,7 +1043,10 @@ function updateCartUI() {
     badge.textContent = totalItems;
     badge.style.display = totalItems > 0 ? 'block' : 'none';
     totalEl.textContent = totalPrice + ' €';
-    if (cart.length === 0) { container.innerHTML = '<p class="cart-empty-msg">Votre panier est vide.</p>'; return; }
+    if (cart.length === 0) { 
+        container.innerHTML = '<p class="cart-empty-msg">Votre panier est vide.</p>'; 
+        return; 
+    }
     container.innerHTML = cart.map(item => `
         <div class="cart-item">
             <img src="${item.photos && item.photos[0] ? item.photos[0] : ''}" class="cart-item-img" alt="${item.name}">
@@ -1112,8 +1067,15 @@ function toggleCart() {
     const drawer = document.getElementById('cart-drawer');
     const overlay = document.getElementById('cart-overlay');
     const isOpen = drawer.classList.contains('open');
-    if (isOpen) { drawer.classList.remove('open'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
-    else { drawer.classList.add('open'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    if (isOpen) { 
+        drawer.classList.remove('open'); 
+        overlay.classList.remove('active'); 
+        document.body.style.overflow = ''; 
+    } else { 
+        drawer.classList.add('open'); 
+        overlay.classList.add('active'); 
+        document.body.style.overflow = 'hidden'; 
+    }
 }
 
 function checkoutCart() {
@@ -1123,21 +1085,20 @@ function checkoutCart() {
     openPayment(null, totalPrice);
 }
 
-/* =============================================
-   TOAST
-============================================= */
+// Notifications (Toasts)
 function showToast(message) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
     container.appendChild(toast);
-    setTimeout(() => { toast.style.animation = 'toastOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 2500);
+    setTimeout(() => { 
+        toast.style.animation = 'toastOut 0.3s forwards'; 
+        setTimeout(() => toast.remove(), 300); 
+    }, 2500);
 }
 
-/* =============================================
-   MODAL PRODUIT
-============================================= */
+// Affichage Modal Produit
 function openProductModal(productId) {
     const p = products.find(x => x.id === productId);
     if (!p) return;
@@ -1152,7 +1113,10 @@ function openProductModal(productId) {
     document.body.style.overflow = 'hidden';
 }
 
-function closeProductModal() { document.getElementById('product-modal').classList.remove('open'); document.body.style.overflow = ''; }
+function closeProductModal() { 
+    document.getElementById('product-modal').classList.remove('open'); 
+    document.body.style.overflow = ''; 
+}
 document.getElementById('product-modal').addEventListener('click', function(e) { if (e.target === this) closeProductModal(); });
 
 function updateGallery() {
@@ -1165,12 +1129,17 @@ function updateGallery() {
     if (photos.length > 1) {
         prev.classList.toggle('hidden', currentPhotoIndex === 0);
         next.classList.toggle('hidden', currentPhotoIndex === photos.length - 1);
-    } else { prev.classList.add('hidden'); next.classList.add('hidden'); }
+    } else { 
+        prev.classList.add('hidden'); 
+        next.classList.add('hidden'); 
+    }
     const thumbsContainer = document.getElementById('modal-thumbs');
     if (photos.length > 1) {
         thumbsContainer.innerHTML = photos.map((src, i) => `<img src="${src}" class="modal-thumb ${i === currentPhotoIndex ? 'active' : ''}" onclick="setGalleryPhoto(${i})">`).join('');
         thumbsContainer.style.display = 'flex';
-    } else { thumbsContainer.style.display = 'none'; }
+    } else { 
+        thumbsContainer.style.display = 'none'; 
+    }
 }
 
 function changeGalleryPhoto(dir) {
@@ -1187,9 +1156,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeProductModal();
 });
 
-/* =============================================
-   PAIEMENT
-============================================= */
+// Tunnel de paiement
 function openPayment(product, cartTotal = 0) {
     const name = product ? product.name : (cart.length > 1 ? 'Commande globale (' + cart.length + ' articles)' : (cart[0] ? cart[0].name : 'Commande'));
     const price = product ? product.price : cartTotal;
@@ -1202,14 +1169,20 @@ function openPayment(product, cartTotal = 0) {
     document.body.style.overflow = 'hidden';
 }
 
-function closePayment() { document.getElementById('payment-modal').classList.remove('open'); document.body.style.overflow = ''; }
+function closePayment() { 
+    document.getElementById('payment-modal').classList.remove('open'); 
+    document.body.style.overflow = ''; 
+}
 document.getElementById('payment-modal').addEventListener('click', function(e) { if (e.target === this) closePayment(); });
 
 async function lancerPaiement(event) {
     if (event) event.preventDefault();
     const montantTotalEnCentimes = Math.round(montantTotalCawl * 100);
     const emailClient = document.getElementById('client-email').value;
-    if (!emailClient || !emailClient.includes('@')) { alert("Veuillez entrer une adresse email valide pour recevoir votre confirmation."); return; }
+    if (!emailClient || !emailClient.includes('@')) { 
+        alert("Veuillez entrer une adresse email valide pour recevoir votre confirmation."); 
+        return; 
+    }
     const boutonPaiement = document.querySelector(".btn-pay-custom");
     boutonPaiement.innerText = "Redirection sécurisée...";
     boutonPaiement.disabled = true;
@@ -1235,24 +1208,25 @@ async function lancerPaiement(event) {
     }
 }
 
-/* =============================================
-   ACCORDÉON LÉGAL
-============================================= */
+// Accordéons légaux
 function toggleAcc(header) {
-    const content = header.nextElementSibling, span = header.querySelector('span'), isOpen = content.classList.contains('active');
+    const content = header.nextElementSibling;
+    const span = header.querySelector('span');
+    const isOpen = content.classList.contains('active');
+    
     document.querySelectorAll('.acc-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.acc-header span').forEach(s => s.textContent = '+');
-    if (!isOpen) { content.classList.add('active'); span.textContent = '–'; }
+    
+    if (!isOpen) { 
+        content.classList.add('active'); 
+        span.textContent = '–'; 
+    }
 }
 
-/* =============================================
-   SCROLL TOP
-============================================= */
+// Interface (Bouton retour en haut)
 window.addEventListener('scroll', () => document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400));
 
-/* =============================================
-   INIT
-============================================= */
+// Initialisation globale
 window.onload = () => { fetchProducts(); };
 </script>
 </body>
