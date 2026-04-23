@@ -4,195 +4,1238 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Valand'art</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --cream: #F2E7D3; --anthracite: #333232; --gold: #C5A059; }
-        body { background: var(--cream); font-family: 'Cormorant Garamond', serif; color: var(--anthracite); margin: 0; }
-        
-        /* ECRAN DE CONNEXION */
-        #login-overlay { position: fixed; inset: 0; background: var(--cream); display: flex; align-items: center; justify-content: center; z-index: 999; }
-        .login-box { background: white; padding: 40px; border: 1px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        :root {
+            --cream: #F2E7D3;
+            --cream-dark: #e8d9bc;
+            --anthracite: #333232;
+            --anthracite-light: #4a4848;
+            --gold: #C5A059;
+            --gold-light: #d4b478;
+            --gold-dark: #a8843a;
+            --white: #ffffff;
+            --error: #c0392b;
+            --success: #2d6a4f;
+            --shadow: 0 20px 60px rgba(51,50,50,0.12);
+        }
 
-        /* DASHBOARD */
-        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border: 1px solid var(--gold); display: none; }
-        h1, h2 { color: var(--gold); text-transform: uppercase; letter-spacing: 2px; text-align: center; }
-        
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
-        
-        /* ZONE DE DEPOT D'IMAGE */
-        #drop-zone { border: 2px dashed var(--gold); padding: 30px; text-align: center; background: #fafafa; cursor: pointer; transition: 0.3s; margin: 10px 0; }
-        #drop-zone.hover { background: var(--gold); color: white; }
-        #preview-img { max-width: 150px; display: none; margin: 10px auto; border: 1px solid var(--gold); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        button { background: var(--anthracite); color: white; border: none; padding: 15px; width: 100%; cursor: pointer; text-transform: uppercase; font-weight: 600; margin-top: 10px; }
-        button:hover { background: var(--gold); }
-        .btn-save { background: var(--gold); margin-top: 30px; font-size: 1.1em; }
+        body {
+            background: var(--cream);
+            font-family: 'Raleway', sans-serif;
+            color: var(--anthracite);
+            min-height: 100vh;
+        }
 
-        .product-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-        .product-item img { width: 60px; height: 60px; object-fit: cover; margin-right: 15px; }
-        .btn-del { background: #a94442; width: auto; padding: 5px 15px; font-size: 0.8em; margin-left: auto; }
+        /* ─── OVERLAY LOGIN ─────────────────────────────────────────── */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--anthracite);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .login-bg-decor {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .login-bg-decor::before,
+        .login-bg-decor::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.04;
+            background: var(--gold);
+        }
+        .login-bg-decor::before { width: 600px; height: 600px; top: -200px; right: -150px; }
+        .login-bg-decor::after  { width: 400px; height: 400px; bottom: -150px; left: -100px; }
+
+        .login-diamond {
+            position: absolute;
+            width: 300px; height: 300px;
+            border: 1px solid rgba(197,160,89,0.08);
+            transform: rotate(45deg);
+            animation: spinSlow 20s linear infinite;
+        }
+        .login-diamond:nth-child(2) { width: 500px; height: 500px; animation-duration: 30s; animation-direction: reverse; }
+        .login-diamond:nth-child(3) { width: 700px; height: 700px; animation-duration: 45s; }
+
+        @keyframes spinSlow { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+
+        .login-box {
+            position: relative;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(197,160,89,0.3);
+            padding: 56px 48px;
+            width: 420px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 0.8s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4em;
+            font-weight: 300;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .login-subtitle {
+            font-size: 0.72em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 40px;
+        }
+
+        .login-divider {
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+            margin: 0 auto 36px;
+            opacity: 0.5;
+        }
+
+        .login-input-wrap {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .login-input-wrap input {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(197,160,89,0.2);
+            color: white;
+            padding: 16px 20px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            outline: none;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .login-input-wrap input::placeholder { color: rgba(255,255,255,0.25); letter-spacing: 2px; }
+        .login-input-wrap input:focus { border-color: var(--gold); background: rgba(197,160,89,0.06); }
+
+        /* Shake animation pour erreur */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 50%, 90% { transform: translateX(-8px); }
+            30%, 70% { transform: translateX(8px); }
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0); }
+            50% { box-shadow: 0 0 0 8px rgba(192,57,43,0.2); }
+        }
+
+        .login-input-wrap input.error {
+            border-color: var(--error) !important;
+            animation: shake 0.5s ease;
+        }
+
+        .login-error-msg {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(192,57,43,0.12);
+            border: 1px solid rgba(192,57,43,0.35);
+            color: #e74c3c;
+            padding: 12px 16px;
+            font-size: 0.78em;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.3s ease;
+            text-align: left;
+        }
+
+        .login-error-msg.visible { display: flex; }
+
+        .error-icon {
+            font-size: 1.1em;
+            flex-shrink: 0;
+        }
+
+        .attempts-bar {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-bottom: 20px;
+            height: 3px;
+        }
+
+        .attempt-dot {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            transition: background 0.4s ease;
+        }
+        .attempt-dot.used { background: var(--error); }
+
+        .login-btn {
+            width: 100%;
+            background: var(--gold);
+            color: var(--anthracite);
+            border: none;
+            padding: 16px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .login-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .login-btn:active { transform: translateY(0); }
+        .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ─── DASHBOARD ─────────────────────────────────────────────── */
+        #admin-dashboard { display: none; }
+
+        .top-bar {
+            background: var(--anthracite);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+        }
+
+        .top-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5em;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .top-badge {
+            font-size: 0.65em;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(197,160,89,0.3);
+            color: rgba(255,255,255,0.6);
+            padding: 8px 20px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.7em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* Colonne gauche : formulaire */
+        .panel-left {
+            background: var(--white);
+            border-right: 1px solid var(--cream-dark);
+            padding: 36px 32px;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .panel-right {
+            background: var(--cream);
+            padding: 36px 32px;
+            overflow-y: auto;
+        }
+
+        .section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--anthracite);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .section-meta {
+            font-size: 0.72em;
+            letter-spacing: 1px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .form-field {
+            margin-bottom: 16px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 0.68em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 6px;
+        }
+
+        .form-field input,
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #e0d5c4;
+            background: var(--cream);
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9em;
+            color: var(--anthracite);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-field input:focus,
+        .form-field textarea:focus,
+        .form-field select:focus { border-color: var(--gold); background: white; }
+
+        .form-field textarea { resize: vertical; min-height: 90px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* Zone d'images multiples */
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .image-slot {
+            aspect-ratio: 1;
+            border: 1px dashed #c8b89a;
+            background: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+
+        .image-slot:hover { border-color: var(--gold); background: rgba(197,160,89,0.06); }
+
+        .image-slot.filled { border-style: solid; border-color: var(--gold); }
+
+        .image-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-slot .slot-add {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #bba880;
+            font-size: 0.6em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .slot-add-icon { font-size: 1.8em; line-height: 1; }
+
+        .image-slot .slot-remove {
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(51,50,50,0.8);
+            color: white;
+            border: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.75em;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .image-slot.filled:hover .slot-remove { display: flex; }
+        .image-slot .slot-badge {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            background: var(--gold);
+            color: white;
+            font-size: 0.5em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 2px 5px;
+        }
+
+        /* Drop zone principale */
+        #drop-zone {
+            border: 2px dashed var(--gold);
+            padding: 20px;
+            text-align: center;
+            background: rgba(197,160,89,0.03);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8em;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        #drop-zone.hover { background: rgba(197,160,89,0.1); border-color: var(--gold-dark); color: var(--gold); }
+
+        /* Boutons */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .btn-primary { background: var(--anthracite); color: white; }
+        .btn-primary:hover { background: var(--anthracite-light); }
+        .btn-gold { background: var(--gold); color: var(--anthracite); margin-top: 8px; }
+        .btn-gold:hover { background: var(--gold-light); }
+        .btn-cancel { background: transparent; color: #999; border: 1px solid #e0d5c4; margin-top: 6px; }
+        .btn-cancel:hover { border-color: #aaa; color: var(--anthracite); }
+
+        /* ─── PANNEAU DROIT : CATALOGUE ──────────────────────────────── */
+        .catalogue-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .catalogue-stats {
+            font-size: 0.7em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+        .search-bar input {
+            padding: 10px 16px 10px 36px;
+            border: 1px solid #d5c9b4;
+            background: white;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8em;
+            outline: none;
+            width: 220px;
+            transition: border-color 0.2s;
+        }
+        .search-bar input:focus { border-color: var(--gold); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 0.9em; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e8ddd0;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-2px); }
+
+        .product-card.editing {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(197,160,89,0.3), 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-img-wrap {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: var(--cream);
+        }
+
+        .card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .product-card:hover .card-img-wrap img { transform: scale(1.04); }
+
+        .card-img-nav {
+            display: none;
+            position: absolute;
+            inset: 0;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+        .card-img-wrap:hover .card-img-nav { display: flex; }
+
+        .img-nav-btn {
+            background: rgba(0,0,0,0.45);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .img-nav-btn:hover { background: rgba(0,0,0,0.7); }
+
+        .img-counter {
+            position: absolute;
+            bottom: 6px;
+            right: 8px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 0.6em;
+            padding: 2px 6px;
+            letter-spacing: 1px;
+            display: none;
+        }
+
+        .card-body { padding: 14px; }
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .card-price { color: var(--gold); font-size: 0.85em; font-weight: 600; }
+        .card-cat { font-size: 0.6em; letter-spacing: 1px; text-transform: uppercase; color: #bbb; }
+
+        .card-actions { display: flex; gap: 6px; }
+        .card-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.65em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .card-btn-edit { background: var(--cream); color: var(--anthracite); border: 1px solid var(--cream-dark); }
+        .card-btn-edit:hover { background: var(--gold); color: white; border-color: var(--gold); }
+        .card-btn-del { background: transparent; color: #c0392b; border: 1px solid rgba(192,57,43,0.2); }
+        .card-btn-del:hover { background: #c0392b; color: white; }
+
+        /* ─── TOASTS ────────────────────────────────────────────────── */
+        #toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--anthracite);
+            color: white;
+            padding: 14px 20px;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 260px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            animation: slideInRight 0.4s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .toast.success { border-left: 3px solid #2ecc71; }
+        .toast.error   { border-left: 3px solid var(--error); }
+        .toast.info    { border-left: 3px solid var(--gold); }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to   { opacity: 0; transform: translateX(40px); }
+        }
+
+        /* ─── SAVE BAR ──────────────────────────────────────────────── */
+        .save-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--anthracite);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+            border-top: 2px solid var(--gold);
+        }
+        .save-bar.visible { transform: translateY(0); }
+
+        .save-bar-msg { color: rgba(255,255,255,0.7); font-size: 0.8em; letter-spacing: 1px; }
+        .save-bar-msg span { color: var(--gold); font-weight: 600; }
+
+        .save-bar-btn {
+            background: var(--gold);
+            color: var(--anthracite);
+            border: none;
+            padding: 12px 36px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .save-bar-btn:hover { background: var(--gold-light); }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #bbb;
+        }
+        .empty-icon { font-size: 3em; margin-bottom: 12px; opacity: 0.4; }
+        .empty-text { font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Scrollbar custom */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 2px; }
+
+        /* ─── RESPONSIVE ───────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .panel-left { position: static; height: auto; }
+        }
+        @media (max-width: 480px) {
+            .login-box { width: 90%; padding: 40px 28px; }
+            .top-bar { padding: 0 20px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════
+     OVERLAY DE CONNEXION
+════════════════════════════════════════════ -->
 <div id="login-overlay">
+    <div class="login-bg-decor">
+        <div class="login-diamond"></div>
+        <div class="login-diamond"></div>
+        <div class="login-diamond"></div>
+    </div>
     <div class="login-box">
-        <h1>Valand'art</h1>
-        <p>Espace Administration</p>
-        <input type="password" id="tokenInput" placeholder="Clé d'accès">
-        <button onclick="login()">Se connecter</button>
+        <div class="login-logo">Valand'art</div>
+        <div class="login-divider"></div>
+        <div class="login-subtitle">Espace Administration</div>
+
+        <div class="attempts-bar" id="attempts-bar">
+            <div class="attempt-dot" id="dot-0"></div>
+            <div class="attempt-dot" id="dot-1"></div>
+            <div class="attempt-dot" id="dot-2"></div>
+        </div>
+
+        <div class="login-input-wrap">
+            <input type="password" id="tokenInput" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')login()">
+        </div>
+
+        <div class="login-error-msg" id="login-error">
+            <span class="error-icon">⛒</span>
+            <span id="error-text">Clé d'accès incorrecte. Veuillez réessayer.</span>
+        </div>
+
+        <button class="login-btn" id="login-btn" onclick="login()">Accéder</button>
     </div>
 </div>
 
-<div class="container" id="admin-dashboard">
-    <h2>Nouveau Bijou</h2>
-    <input type="text" id="title" placeholder="Titre">
-    <input type="number" id="price" placeholder="Prix">
-    
-    <div id="drop-zone">
-        Glissez l'image ici ou cliquez pour choisir
-        <img id="preview-img" src="">
-    </div>
-    <input type="file" id="file-input" hidden accept="image/*">
-    
-    <textarea id="desc" placeholder="Description"></textarea>
-    <select id="category">
-        <option value="all">Catégorie...</option>
-        <option value="Boucles d'Oreilles">Boucles d'Oreilles</option>
-        <option value="Collier">Colliers</option>
-    </select>
-    <button onclick="addProduct()">Ajouter à la liste</button>
+<!-- ═══════════════════════════════════════════
+     DASHBOARD
+════════════════════════════════════════════ -->
+<div id="admin-dashboard">
 
-    <div id="list" style="margin-top: 40px;"></div>
-    <button class="btn-save" onclick="saveToCloudflare()">Mettre à jour le site public</button>
+    <div class="top-bar">
+        <div>
+            <div class="top-logo">Valand'art</div>
+            <div class="top-badge">Administration</div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    </div>
+
+    <div class="dashboard-layout">
+
+        <!-- ─ Panneau gauche : formulaire ─ -->
+        <div class="panel-left">
+            <div class="section-label" id="form-title-label">Nouveau Bijou</div>
+            <div class="section-meta" id="form-subtitle">Remplissez les informations du produit</div>
+
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Titre *</label>
+                    <input type="text" id="title" placeholder="Nom du bijou">
+                </div>
+                <div class="form-field">
+                    <label>Prix (€) *</label>
+                    <input type="number" id="price" placeholder="0.00" step="0.01">
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label>Catégorie</label>
+                <select id="category">
+                    <option value="">Choisir...</option>
+                    <option value="Boucles d'Oreilles">Boucles d'Oreilles</option>
+                    <option value="Collier">Colliers</option>
+                    <option value="Bracelet">Bracelets</option>
+                    <option value="Bague">Bagues</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Description</label>
+                <textarea id="desc" placeholder="Décrivez le bijou, ses matériaux, son histoire..."></textarea>
+            </div>
+
+            <div class="form-field">
+                <label>Images (jusqu'à 4) *</label>
+                <div id="drop-zone" ondragover="event.preventDefault();this.classList.add('hover')" ondragleave="this.classList.remove('hover')" ondrop="handleDrop(event)">
+                    ↑ Glissez des images ici ou cliquez sur un emplacement
+                </div>
+                <div class="images-grid" id="images-grid">
+                    <!-- Générés par JS -->
+                </div>
+                <input type="file" id="file-input" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
+            </div>
+
+            <button class="btn btn-primary" onclick="submitForm()">
+                <span id="btn-icon">＋</span>
+                <span id="btn-label">Ajouter au catalogue</span>
+            </button>
+            <button class="btn btn-cancel" id="btn-cancel" style="display:none" onclick="cancelEdit()">Annuler la modification</button>
+        </div>
+
+        <!-- ─ Panneau droit : catalogue ─ -->
+        <div class="panel-right">
+            <div class="catalogue-header">
+                <div>
+                    <div class="section-label">Catalogue</div>
+                    <div class="section-meta" id="catalogue-stats">0 bijou</div>
+                </div>
+                <div class="search-bar">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" id="search-input" placeholder="Rechercher..." oninput="render()">
+                </div>
+            </div>
+            <div class="products-grid" id="products-grid"></div>
+        </div>
+
+    </div>
 </div>
+
+<!-- Save bar -->
+<div class="save-bar" id="save-bar">
+    <div class="save-bar-msg">Des modifications sont en attente — <span id="pending-count">0 produit(s)</span> modifié(s)</div>
+    <button class="save-bar-btn" onclick="saveToCloudflare()" id="save-btn">Publier sur le site →</button>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
 
 <script>
     const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
     let products = [];
-    let currentBase64 = "";
+    let currentImages = []; // Array de base64 (max 4)
     let authToken = "";
+    let editingIndex = -1;
+    let pendingChanges = false;
+    let loginAttempts = 0;
+    const MAX_ATTEMPTS = 3;
 
-    // GESTION CONNEXION
+    // ═══════════════════════════════════════
+    // AUTHENTIFICATION
+    // ═══════════════════════════════════════
+
     function login() {
-        authToken = document.getElementById('tokenInput').value;
-        if (!authToken) return;
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('admin-dashboard').style.display = 'block';
-        load();
+        const input = document.getElementById('tokenInput');
+        const token = input.value.trim();
+        if (!token) { shakeInput(); return; }
+
+        authToken = token;
+        document.getElementById('login-btn').disabled = true;
+
+        // Simuler une vérif (la vraie se fait côté API)
+        // On tente de charger les données avec ce token
+        verifyToken(token);
     }
 
-    // GESTION IMAGE (DRAG & DROP)
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
+    async function verifyToken(token) {
+        try {
+            const res = await fetch(API_URL, { cache: "no-store" });
+            if (res.ok) {
+                // Token accepté (pour la lecture, pas d'auth)
+                // On vérifiera vraiment à l'écriture
+                authToken = token;
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                products = await res.json();
+                render();
+                showToast('Bienvenue dans votre espace administration', 'info');
+            } else {
+                loginFailed();
+            }
+        } catch {
+            loginFailed();
+        }
+    }
 
-    dropZone.onclick = () => fileInput.click();
-    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('hover'); };
-    dropZone.ondragleave = () => dropZone.classList.remove('hover');
-    dropZone.ondrop = (e) => {
+    function loginFailed() {
+        loginAttempts++;
+        const input = document.getElementById('tokenInput');
+        const errorEl = document.getElementById('login-error');
+        const btn = document.getElementById('login-btn');
+
+        // Marquer les tentatives
+        for (let i = 0; i < loginAttempts && i < MAX_ATTEMPTS; i++) {
+            document.getElementById(`dot-${i}`).classList.add('used');
+        }
+
+        shakeInput();
+        input.classList.add('error');
+        setTimeout(() => input.classList.remove('error'), 600);
+
+        const remaining = MAX_ATTEMPTS - loginAttempts;
+        document.getElementById('error-text').textContent =
+            remaining > 0
+                ? `Clé d'accès incorrecte. ${remaining} tentative(s) restante(s).`
+                : "Accès temporairement bloqué. Rechargez la page.";
+
+        errorEl.classList.add('visible');
+        btn.disabled = false;
+
+        if (loginAttempts >= MAX_ATTEMPTS) {
+            btn.disabled = true;
+            input.disabled = true;
+            document.getElementById('error-text').textContent = "⛔ Accès bloqué après 3 tentatives. Rechargez la page.";
+        }
+    }
+
+    function shakeInput() {
+        const input = document.getElementById('tokenInput');
+        input.style.animation = 'none';
+        void input.offsetWidth;
+        input.style.animation = '';
+        input.classList.add('error');
+        setTimeout(() => input.classList.remove('error'), 600);
+    }
+
+    function logout() {
+        if (pendingChanges && !confirm("Vous avez des modifications non publiées. Quitter quand même ?")) return;
+        authToken = "";
+        loginAttempts = 0;
+        pendingChanges = false;
+        document.getElementById('login-overlay').style.display = 'flex';
+        document.getElementById('admin-dashboard').style.display = 'none';
+        document.getElementById('tokenInput').value = '';
+        document.getElementById('login-error').classList.remove('visible');
+        document.querySelectorAll('.attempt-dot').forEach(d => d.classList.remove('used'));
+        document.getElementById('login-btn').disabled = false;
+        document.getElementById('tokenInput').disabled = false;
+        document.getElementById('save-bar').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════
+    // GESTION DES IMAGES MULTIPLES
+    // ═══════════════════════════════════════
+
+    function renderImageSlots() {
+        const grid = document.getElementById('images-grid');
+        grid.innerHTML = '';
+        for (let i = 0; i < 4; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'image-slot' + (currentImages[i] ? ' filled' : '');
+            slot.dataset.index = i;
+
+            if (currentImages[i]) {
+                slot.innerHTML = `
+                    <img src="${currentImages[i]}" alt="Image ${i+1}">
+                    <button class="slot-remove" onclick="removeImage(${i})">✕</button>
+                    ${i === 0 ? '<div class="slot-badge">Principale</div>' : ''}
+                `;
+            } else {
+                slot.innerHTML = `<div class="slot-add"><span class="slot-add-icon">+</span><span>${i === 0 ? 'Principale' : `Photo ${i+1}`}</span></div>`;
+                slot.onclick = () => { document.getElementById('file-input').click(); };
+            }
+            grid.appendChild(slot);
+        }
+
+        // Drop zone aussi
+        document.getElementById('drop-zone').ondrop = handleDrop;
+    }
+
+    function handleDrop(e) {
         e.preventDefault();
-        handleFile(e.dataTransfer.files[0]);
-    };
-    fileInput.onchange = (e) => handleFile(e.target.files[0]);
+        document.getElementById('drop-zone').classList.remove('hover');
+        handleFiles(e.dataTransfer.files);
+    }
 
-function handleFile(file) {
-        if (!file) return;
-        
+    function handleFiles(files) {
+        const remaining = 4 - currentImages.length;
+        const toProcess = Math.min(files.length, remaining);
+        if (toProcess === 0) { showToast('Maximum 4 images atteint', 'error'); return; }
+
+        Array.from(files).slice(0, toProcess).forEach(file => {
+            compressImage(file, (base64) => {
+                if (currentImages.length < 4) {
+                    currentImages.push(base64);
+                    renderImageSlots();
+                }
+            });
+        });
+    }
+
+    function compressImage(file, callback) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            // Création d'une image invisible pour la manipuler
             const img = new Image();
             img.onload = () => {
-                // Création d'un Canvas (zone de dessin) pour redimensionner
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 800; // Taille max de l'image en pixels
-                const MAX_HEIGHT = 800;
-                let width = img.width;
-                let height = img.height;
-
-                // Calcul du nouveau ratio pour ne pas déformer l'image
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-
-                // Application des nouvelles dimensions
+                const MAX = 800;
+                let { width, height } = img;
+                if (width > height) { if (width > MAX) { height *= MAX/width; width = MAX; } }
+                else { if (height > MAX) { width *= MAX/height; height = MAX; } }
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-
-                // MAGIE ICI : On convertit en JPEG avec 70% de qualité (0.7)
-                currentBase64 = canvas.toDataURL('image/jpeg', 0.7);
-
-                // Affichage de l'aperçu
-                const prev = document.getElementById('preview-img');
-                prev.src = currentBase64;
-                prev.style.display = 'block';
-                
-                console.log("Image compressée avec succès !");
+                callback(canvas.toDataURL('image/jpeg', 0.72));
             };
             img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
 
-    // ACTIONS API
-    async function load() {
-        // CORRECTION 4 : Ajout de { cache: "no-store" } pour forcer le rafraîchissement des données lors de la connexion à l'admin
-        const res = await fetch(API_URL, { cache: "no-store" });
-        products = await res.json();
-        render();
+    function removeImage(index) {
+        currentImages.splice(index, 1);
+        renderImageSlots();
     }
 
-    function render() {
-        document.getElementById('list').innerHTML = "<h3>Catalogue actuel :</h3>" + products.map((p, i) => `
-            <div class="product-item">
-                <img src="${p.img}">
-                <span>${p.title} - ${p.price}€</span>
-                <button class="btn-del" onclick="removeProduct(${i})">Supprimer</button>
-            </div>
-        `).join('');
-    }
+    // ═══════════════════════════════════════
+    // FORMULAIRE : AJOUTER / MODIFIER
+    // ═══════════════════════════════════════
 
-    function addProduct() {
-        if (!currentBase64) return alert("Ajoute une image !");
-        products.push({
-            id: Date.now(),
-            title: document.getElementById('title').value,
-            price: parseFloat(document.getElementById('price').value),
-            img: currentBase64,
+    function submitForm() {
+        const title = document.getElementById('title').value.trim();
+        const price = parseFloat(document.getElementById('price').value);
+        if (!title) { showToast('Titre requis', 'error'); return; }
+        if (!price || price <= 0) { showToast('Prix invalide', 'error'); return; }
+        if (currentImages.length === 0) { showToast('Au moins une image requise', 'error'); return; }
+
+        const product = {
+            id: editingIndex >= 0 ? products[editingIndex].id : Date.now(),
+            title,
+            price,
+            img: currentImages[0],           // Compat ancienne API
+            images: [...currentImages],        // Nouvelles images multiples
             desc: document.getElementById('desc').value,
             category: document.getElementById('category').value
-        });
-        currentBase64 = "";
-        document.getElementById('preview-img').style.display = 'none';
+        };
+
+        if (editingIndex >= 0) {
+            products[editingIndex] = product;
+            showToast(`"${title}" modifié avec succès`, 'success');
+            cancelEdit();
+        } else {
+            products.unshift(product);
+            showToast(`"${title}" ajouté au catalogue`, 'success');
+            resetForm();
+        }
+
+        markPendingChanges();
         render();
+    }
+
+    function startEdit(index) {
+        editingIndex = index;
+        const p = products[index];
+
+        document.getElementById('title').value = p.title;
+        document.getElementById('price').value = p.price;
+        document.getElementById('desc').value = p.desc || '';
+        document.getElementById('category').value = p.category || '';
+
+        currentImages = p.images ? [...p.images] : (p.img ? [p.img] : []);
+        renderImageSlots();
+
+        document.getElementById('form-title-label').textContent = 'Modifier le bijou';
+        document.getElementById('form-subtitle').textContent = `Édition de "${p.title}"`;
+        document.getElementById('btn-icon').textContent = '✎';
+        document.getElementById('btn-label').textContent = 'Enregistrer les modifications';
+        document.getElementById('btn-cancel').style.display = 'flex';
+
+        document.querySelector('.panel-left').scrollIntoView({ behavior: 'smooth' });
+        render(); // Pour afficher le highlight
+    }
+
+    function cancelEdit() {
+        editingIndex = -1;
+        resetForm();
+        render();
+    }
+
+    function resetForm() {
+        document.getElementById('title').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('desc').value = '';
+        document.getElementById('category').value = '';
+        currentImages = [];
+        renderImageSlots();
+        document.getElementById('form-title-label').textContent = 'Nouveau Bijou';
+        document.getElementById('form-subtitle').textContent = 'Remplissez les informations du produit';
+        document.getElementById('btn-icon').textContent = '＋';
+        document.getElementById('btn-label').textContent = 'Ajouter au catalogue';
+        document.getElementById('btn-cancel').style.display = 'none';
     }
 
     function removeProduct(index) {
+        if (!confirm(`Supprimer "${products[index].title}" ?`)) return;
+        const name = products[index].title;
         products.splice(index, 1);
+        if (editingIndex === index) cancelEdit();
+        markPendingChanges();
         render();
+        showToast(`"${name}" supprimé`, 'info');
+    }
+
+    // ═══════════════════════════════════════
+    // AFFICHAGE DU CATALOGUE
+    // ═══════════════════════════════════════
+
+    function render() {
+        const query = (document.getElementById('search-input')?.value || '').toLowerCase();
+        const filtered = products.filter(p =>
+            p.title.toLowerCase().includes(query) ||
+            (p.category || '').toLowerCase().includes(query)
+        );
+
+        const count = products.length;
+        document.getElementById('catalogue-stats').textContent =
+            `${count} bijou${count > 1 ? 'x' : ''} au catalogue`;
+
+        const grid = document.getElementById('products-grid');
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="empty-state">
+                <div class="empty-icon">◇</div>
+                <div class="empty-text">${query ? 'Aucun résultat pour cette recherche' : 'Aucun bijou dans le catalogue'}</div>
+            </div>`;
+            return;
+        }
+
+        // Trouver l'index réel dans products[] pour chaque produit filtré
+        grid.innerHTML = filtered.map((p) => {
+            const realIndex = products.indexOf(p);
+            const imgs = p.images || (p.img ? [p.img] : []);
+            const isEditing = editingIndex === realIndex;
+            const imgCount = imgs.length;
+
+            return `<div class="product-card ${isEditing ? 'editing' : ''}">
+                <div class="card-img-wrap" id="img-wrap-${realIndex}">
+                    <img src="${imgs[0] || ''}" id="card-img-${realIndex}" alt="${p.title}">
+                    ${imgCount > 1 ? `
+                    <div class="card-img-nav">
+                        <button class="img-nav-btn" onclick="prevImg(${realIndex})">‹</button>
+                        <button class="img-nav-btn" onclick="nextImg(${realIndex})">›</button>
+                    </div>
+                    <div class="img-counter" id="img-counter-${realIndex}" style="display:block">1 / ${imgCount}</div>` : ''}
+                </div>
+                <div class="card-body">
+                    <div class="card-title">${p.title}</div>
+                    <div class="card-meta">
+                        <span class="card-price">${p.price?.toFixed ? p.price.toFixed(2) : p.price} €</span>
+                        <span class="card-cat">${p.category || '—'}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-btn card-btn-edit" onclick="startEdit(${realIndex})">${isEditing ? '✎ En cours…' : '✎ Modifier'}</button>
+                        <button class="card-btn card-btn-del" onclick="removeProduct(${realIndex})">✕</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Init des compteurs d'images
+        products.forEach((_, i) => { imageCounters[i] = imageCounters[i] || 0; });
+    }
+
+    // Navigation images dans les cartes
+    const imageCounters = {};
+
+    function nextImg(index) {
+        const p = products[index];
+        const imgs = p.images || [p.img];
+        imageCounters[index] = ((imageCounters[index] || 0) + 1) % imgs.length;
+        updateCardImg(index, imgs);
+    }
+
+    function prevImg(index) {
+        const p = products[index];
+        const imgs = p.images || [p.img];
+        imageCounters[index] = ((imageCounters[index] || 0) - 1 + imgs.length) % imgs.length;
+        updateCardImg(index, imgs);
+    }
+
+    function updateCardImg(index, imgs) {
+        const i = imageCounters[index] || 0;
+        const imgEl = document.getElementById(`card-img-${index}`);
+        const counter = document.getElementById(`img-counter-${index}`);
+        if (imgEl) imgEl.src = imgs[i];
+        if (counter) counter.textContent = `${i+1} / ${imgs.length}`;
+    }
+
+    // ═══════════════════════════════════════
+    // SAUVEGARDE CLOUDFLARE
+    // ═══════════════════════════════════════
+
+    function markPendingChanges() {
+        pendingChanges = true;
+        document.getElementById('pending-count').textContent = `${products.length} produit(s)`;
+        document.getElementById('save-bar').classList.add('visible');
     }
 
     async function saveToCloudflare() {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + authToken 
-            },
-            body: JSON.stringify(products)
-        });
-        alert(res.ok ? "✅ Site mis à jour !" : "❌ Erreur de token.");
+        const btn = document.getElementById('save-btn');
+        btn.innerHTML = '<span class="spinner"></span> Publication…';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken
+                },
+                body: JSON.stringify(products)
+            });
+
+            if (res.ok) {
+                pendingChanges = false;
+                document.getElementById('save-bar').classList.remove('visible');
+                showToast('Site mis à jour avec succès ✓', 'success');
+            } else {
+                showToast('Erreur de token — accès refusé', 'error');
+            }
+        } catch {
+            showToast('Erreur réseau. Vérifiez votre connexion.', 'error');
+        }
+
+        btn.textContent = 'Publier sur le site →';
+        btn.disabled = false;
     }
+
+    // ═══════════════════════════════════════
+    // TOASTS
+    // ═══════════════════════════════════════
+
+    function showToast(msg, type = 'info') {
+        const icons = { success: '✓', error: '✕', info: '◆' };
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'slideOutRight 0.4s ease forwards';
+            setTimeout(() => toast.remove(), 400);
+        }, 3500);
+    }
+
+    // ═══════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════
+    renderImageSlots();
 </script>
 </body>
 </html>
