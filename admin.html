@@ -134,16 +134,10 @@
         .login-input-wrap input::placeholder { color: rgba(255,255,255,0.25); letter-spacing: 2px; }
         .login-input-wrap input:focus { border-color: var(--gold); background: rgba(197,160,89,0.06); }
 
-        /* Shake animation pour erreur */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             10%, 50%, 90% { transform: translateX(-8px); }
             30%, 70% { transform: translateX(8px); }
-        }
-
-        @keyframes pulseRed {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0); }
-            50% { box-shadow: 0 0 0 8px rgba(192,57,43,0.2); }
         }
 
         .login-input-wrap input.error {
@@ -168,11 +162,7 @@
         }
 
         .login-error-msg.visible { display: flex; }
-
-        .error-icon {
-            font-size: 1.1em;
-            flex-shrink: 0;
-        }
+        .error-icon { font-size: 1.1em; flex-shrink: 0; }
 
         .attempts-bar {
             display: flex;
@@ -208,7 +198,7 @@
         .login-btn:active { transform: translateY(0); }
         .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* ─── DASHBOARD ─────────────────────────────────────────────── */
+        /* ─── TOP BAR ───────────────────────────────────────────────── */
         #admin-dashboard { display: none; }
 
         .top-bar {
@@ -240,6 +230,12 @@
             text-transform: uppercase;
         }
 
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
         .logout-btn {
             background: transparent;
             border: 1px solid rgba(197,160,89,0.3);
@@ -254,21 +250,46 @@
         }
         .logout-btn:hover { border-color: var(--gold); color: var(--gold); }
 
+        /* ─── TABS ──────────────────────────────────────────────────── */
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--cream-dark);
+            background: var(--white);
+            padding: 0 32px;
+        }
+
+        .admin-tab {
+            padding: 14px 24px;
+            font-size: 0.7em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            color: #999;
+            border: none;
+            background: transparent;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s;
+            font-family: 'Raleway', sans-serif;
+        }
+        .admin-tab:hover { color: var(--anthracite); }
+        .admin-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+        /* ─── LAYOUT ────────────────────────────────────────────────── */
         .dashboard-layout {
             display: grid;
             grid-template-columns: 420px 1fr;
             gap: 0;
-            min-height: calc(100vh - 64px);
+            min-height: calc(100vh - 112px);
         }
 
-        /* Colonne gauche : formulaire */
         .panel-left {
             background: var(--white);
             border-right: 1px solid var(--cream-dark);
             padding: 36px 32px;
             position: sticky;
-            top: 64px;
-            height: calc(100vh - 64px);
+            top: 112px;
+            height: calc(100vh - 112px);
             overflow-y: auto;
         }
 
@@ -278,6 +299,227 @@
             overflow-y: auto;
         }
 
+        /* ─── SECTION CATEGORIES ────────────────────────────────────── */
+        #cat-panel { display: none; padding: 36px 40px; }
+        #cat-panel.active { display: block; }
+        #products-panel { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 112px); }
+        #products-panel.hidden { display: none; }
+
+        .cat-management {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .cat-section-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .cat-section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8em;
+            font-weight: 600;
+            color: var(--anthracite);
+            letter-spacing: 2px;
+        }
+
+        .cat-section-sub {
+            font-size: 0.68em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
+        /* Add category form */
+        .cat-add-form {
+            background: var(--white);
+            border: 1px solid var(--cream-dark);
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .cat-add-title {
+            font-size: 0.7em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        .cat-add-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .cat-add-row input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1px solid #e0d5c4;
+            background: var(--cream);
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.88em;
+            color: var(--anthracite);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .cat-add-row input:focus { border-color: var(--gold); background: white; }
+
+        .cat-add-btn {
+            padding: 11px 22px;
+            background: var(--gold);
+            color: var(--anthracite);
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.7em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .cat-add-btn:hover { background: var(--gold-light); }
+
+        /* Category list */
+        .cat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cat-item {
+            background: var(--white);
+            border: 1px solid var(--cream-dark);
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s;
+        }
+        .cat-item:hover { border-color: rgba(197,160,89,0.4); box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+        .cat-item.editing { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(197,160,89,0.2); }
+
+        .cat-drag-handle {
+            color: #ccc;
+            cursor: grab;
+            font-size: 1.1em;
+            flex-shrink: 0;
+            user-select: none;
+        }
+        .cat-drag-handle:active { cursor: grabbing; }
+
+        .cat-item-info { flex: 1; min-width: 0; }
+        .cat-item-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--anthracite);
+        }
+        .cat-item-count {
+            font-size: 0.62em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #bbb;
+            margin-top: 2px;
+        }
+
+        .cat-item-edit-area {
+            display: none;
+            flex: 1;
+            gap: 8px;
+        }
+        .cat-item.editing .cat-item-info { display: none; }
+        .cat-item.editing .cat-item-edit-area { display: flex; align-items: center; }
+
+        .cat-edit-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e0d5c4;
+            background: var(--cream);
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.88em;
+            color: var(--anthracite);
+            outline: none;
+        }
+        .cat-edit-input:focus { border-color: var(--gold); background: white; }
+
+        .cat-edit-confirm {
+            padding: 8px 14px;
+            background: var(--success);
+            color: white;
+            border: none;
+            font-size: 0.75em;
+            cursor: pointer;
+            font-family: 'Raleway', sans-serif;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .cat-edit-confirm:hover { opacity: 0.85; }
+
+        .cat-edit-cancel {
+            padding: 8px 14px;
+            background: transparent;
+            color: #999;
+            border: 1px solid #ddd;
+            font-size: 0.75em;
+            cursor: pointer;
+            font-family: 'Raleway', sans-serif;
+            transition: all 0.2s;
+        }
+        .cat-edit-cancel:hover { border-color: #aaa; color: var(--anthracite); }
+
+        .cat-item-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .cat-action-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e0d5c4;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            transition: all 0.2s;
+        }
+        .cat-action-btn.edit:hover { background: var(--gold); border-color: var(--gold); color: white; }
+        .cat-action-btn.delete:hover { background: var(--error); border-color: var(--error); color: white; }
+        .cat-item.editing .cat-item-actions { display: none; }
+
+        .cat-empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #bbb;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--white);
+            border: 1px dashed #e0d5c4;
+        }
+
+        .cat-warning {
+            background: rgba(192,57,43,0.06);
+            border: 1px solid rgba(192,57,43,0.2);
+            padding: 12px 16px;
+            font-size: 0.75em;
+            color: var(--error);
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+            margin-top: 10px;
+            display: none;
+        }
+        .cat-warning.visible { display: block; }
+
+        /* ─── FORM (produit) ────────────────────────────────────────── */
         .section-label {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.4em;
@@ -298,9 +540,7 @@
             border-bottom: 1px solid var(--cream-dark);
         }
 
-        .form-field {
-            margin-bottom: 16px;
-        }
+        .form-field { margin-bottom: 16px; }
 
         .form-field label {
             display: block;
@@ -327,12 +567,11 @@
         .form-field input:focus,
         .form-field textarea:focus,
         .form-field select:focus { border-color: var(--gold); background: white; }
-
         .form-field textarea { resize: vertical; min-height: 90px; }
 
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        /* Zone d'images multiples */
+        /* ─── IMAGES MULTIPLES ──────────────────────────────────────── */
         .images-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -354,7 +593,6 @@
         }
 
         .image-slot:hover { border-color: var(--gold); background: rgba(197,160,89,0.06); }
-
         .image-slot.filled { border-style: solid; border-color: var(--gold); }
 
         .image-slot img {
@@ -395,6 +633,7 @@
             z-index: 2;
         }
         .image-slot.filled:hover .slot-remove { display: flex; }
+
         .image-slot .slot-badge {
             position: absolute;
             bottom: 4px;
@@ -407,7 +646,6 @@
             padding: 2px 5px;
         }
 
-        /* Drop zone principale */
         #drop-zone {
             border: 2px dashed var(--gold);
             padding: 20px;
@@ -422,7 +660,7 @@
         }
         #drop-zone.hover { background: rgba(197,160,89,0.1); border-color: var(--gold-dark); color: var(--gold); }
 
-        /* Boutons */
+        /* ─── BOUTONS ───────────────────────────────────────────────── */
         .btn {
             display: flex;
             align-items: center;
@@ -446,7 +684,7 @@
         .btn-cancel { background: transparent; color: #999; border: 1px solid #e0d5c4; margin-top: 6px; }
         .btn-cancel:hover { border-color: #aaa; color: var(--anthracite); }
 
-        /* ─── PANNEAU DROIT : CATALOGUE ──────────────────────────────── */
+        /* ─── CATALOGUE ─────────────────────────────────────────────── */
         .catalogue-header {
             display: flex;
             align-items: flex-end;
@@ -463,9 +701,14 @@
             color: #999;
         }
 
-        .search-bar {
-            position: relative;
+        .catalogue-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
         }
+
+        .search-bar { position: relative; }
         .search-bar input {
             padding: 10px 16px 10px 36px;
             border: 1px solid #d5c9b4;
@@ -478,6 +721,30 @@
         }
         .search-bar input:focus { border-color: var(--gold); }
         .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 0.9em; }
+
+        /* Filtres catégorie dans le catalogue */
+        .cat-filters {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .cat-filter-btn {
+            padding: 6px 14px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.62em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            border: 1px solid #d5c9b4;
+            background: white;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cat-filter-btn:hover { border-color: var(--gold); color: var(--anthracite); }
+        .cat-filter-btn.active { background: var(--gold); border-color: var(--gold); color: white; }
 
         .products-grid {
             display: grid;
@@ -494,7 +761,6 @@
         }
 
         .product-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-2px); }
-
         .product-card.editing {
             border-color: var(--gold);
             box-shadow: 0 0 0 2px rgba(197,160,89,0.3), 0 8px 30px rgba(0,0,0,0.1);
@@ -554,6 +820,17 @@
             display: none;
         }
 
+        .card-img-count-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(51,50,50,0.7);
+            color: white;
+            font-size: 0.55em;
+            padding: 3px 7px;
+            letter-spacing: 1px;
+        }
+
         .card-body { padding: 14px; }
         .card-title {
             font-family: 'Cormorant Garamond', serif;
@@ -587,13 +864,13 @@
         }
         .card-btn-edit { background: var(--cream); color: var(--anthracite); border: 1px solid var(--cream-dark); }
         .card-btn-edit:hover { background: var(--gold); color: white; border-color: var(--gold); }
-        .card-btn-del { background: transparent; color: #c0392b; border: 1px solid rgba(192,57,43,0.2); }
+        .card-btn-del { background: transparent; color: #c0392b; border: 1px solid rgba(192,57,43,0.2); max-width: 40px; flex: none; }
         .card-btn-del:hover { background: #c0392b; color: white; }
 
         /* ─── TOASTS ────────────────────────────────────────────────── */
         #toast-container {
             position: fixed;
-            bottom: 30px;
+            bottom: 80px;
             right: 30px;
             z-index: 9999;
             display: flex;
@@ -617,6 +894,7 @@
         .toast.success { border-left: 3px solid #2ecc71; }
         .toast.error   { border-left: 3px solid var(--error); }
         .toast.info    { border-left: 3px solid var(--gold); }
+        .toast.warning { border-left: 3px solid #e67e22; }
 
         @keyframes slideInRight {
             from { opacity: 0; transform: translateX(40px); }
@@ -643,8 +921,28 @@
         }
         .save-bar.visible { transform: translateY(0); }
 
+        .save-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
         .save-bar-msg { color: rgba(255,255,255,0.7); font-size: 0.8em; letter-spacing: 1px; }
         .save-bar-msg span { color: var(--gold); font-weight: 600; }
+
+        .save-bar-discard {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.4);
+            padding: 8px 16px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.65em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .save-bar-discard:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.7); }
 
         .save-bar-btn {
             background: var(--gold);
@@ -661,7 +959,6 @@
         }
         .save-bar-btn:hover { background: var(--gold-light); }
 
-        /* Loading spinner */
         .spinner {
             display: inline-block;
             width: 14px;
@@ -682,27 +979,101 @@
         .empty-icon { font-size: 3em; margin-bottom: 12px; opacity: 0.4; }
         .empty-text { font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* Scrollbar custom */
+        /* ─── MODAL CONFIRMATION ────────────────────────────────────── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(51,50,50,0.65);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-backdrop.open { display: flex; }
+
+        .confirm-modal {
+            background: var(--white);
+            border-top: 3px solid var(--error);
+            padding: 32px 36px;
+            width: 100%;
+            max-width: 440px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .confirm-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .confirm-body {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .confirm-body strong { color: var(--anthracite); }
+
+        .confirm-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .confirm-btn-cancel {
+            padding: 10px 22px;
+            background: transparent;
+            border: 1px solid #ddd;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.72em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #888;
+        }
+        .confirm-btn-cancel:hover { border-color: #aaa; color: var(--anthracite); }
+
+        .confirm-btn-ok {
+            padding: 10px 22px;
+            background: var(--error);
+            color: white;
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.72em;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .confirm-btn-ok:hover { opacity: 0.85; }
+
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 2px; }
 
-        /* ─── RESPONSIVE ───────────────────────────────────────────── */
+        /* ─── RESPONSIVE ────────────────────────────────────────────── */
         @media (max-width: 900px) {
+            #products-panel { grid-template-columns: 1fr; }
+            .panel-left { position: static; height: auto; top: 0; }
             .dashboard-layout { grid-template-columns: 1fr; }
-            .panel-left { position: static; height: auto; }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .login-box { width: 90%; padding: 40px 28px; }
             .top-bar { padding: 0 20px; }
+            #cat-panel { padding: 24px 20px; }
+            .cat-add-row { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     OVERLAY DE CONNEXION
-════════════════════════════════════════════ -->
+<!-- ═══ LOGIN OVERLAY ═══════════════════════════════════════════ -->
 <div id="login-overlay">
     <div class="login-bg-decor">
         <div class="login-diamond"></div>
@@ -733,22 +1104,30 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     DASHBOARD
-════════════════════════════════════════════ -->
+<!-- ═══ DASHBOARD ════════════════════════════════════════════════ -->
 <div id="admin-dashboard">
 
+    <!-- Top bar -->
     <div class="top-bar">
         <div>
             <div class="top-logo">Valand'art</div>
             <div class="top-badge">Administration</div>
         </div>
-        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        <div class="top-right">
+            <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        </div>
     </div>
 
-    <div class="dashboard-layout">
+    <!-- Onglets -->
+    <div class="admin-tabs">
+        <button class="admin-tab active" id="tab-products" onclick="switchTab('products')">&#9678; Produits</button>
+        <button class="admin-tab" id="tab-categories" onclick="switchTab('categories')">&#9670; Catégories</button>
+    </div>
 
-        <!-- ─ Panneau gauche : formulaire ─ -->
+    <!-- ─── PANNEAU PRODUITS ─────────────────────────────────── -->
+    <div id="products-panel">
+
+        <!-- Colonne gauche : formulaire -->
         <div class="panel-left">
             <div class="section-label" id="form-title-label">Nouveau Bijou</div>
             <div class="section-meta" id="form-subtitle">Remplissez les informations du produit</div>
@@ -760,7 +1139,7 @@
                 </div>
                 <div class="form-field">
                     <label>Prix (€) *</label>
-                    <input type="number" id="price" placeholder="0.00" step="0.01">
+                    <input type="number" id="price" placeholder="0.00" step="0.01" min="0">
                 </div>
             </div>
 
@@ -768,10 +1147,6 @@
                 <label>Catégorie</label>
                 <select id="category">
                     <option value="">Choisir...</option>
-                    <option value="Boucles d'Oreilles">Boucles d'Oreilles</option>
-                    <option value="Collier">Colliers</option>
-                    <option value="Bracelet">Bracelets</option>
-                    <option value="Bague">Bagues</option>
                 </select>
             </div>
 
@@ -782,12 +1157,14 @@
 
             <div class="form-field">
                 <label>Images (jusqu'à 4) *</label>
-                <div id="drop-zone" ondragover="event.preventDefault();this.classList.add('hover')" ondragleave="this.classList.remove('hover')" ondrop="handleDrop(event)">
-                    ↑ Glissez des images ici ou cliquez sur un emplacement
+                <div id="drop-zone"
+                     ondragover="event.preventDefault();this.classList.add('hover')"
+                     ondragleave="this.classList.remove('hover')"
+                     ondrop="handleDrop(event)"
+                     onclick="document.getElementById('file-input').click()">
+                    ↑ Glissez des images ici ou cliquez pour sélectionner
                 </div>
-                <div class="images-grid" id="images-grid">
-                    <!-- Générés par JS -->
-                </div>
+                <div class="images-grid" id="images-grid"></div>
                 <input type="file" id="file-input" hidden accept="image/*" multiple onchange="handleFiles(this.files)">
             </div>
 
@@ -798,27 +1175,79 @@
             <button class="btn btn-cancel" id="btn-cancel" style="display:none" onclick="cancelEdit()">Annuler la modification</button>
         </div>
 
-        <!-- ─ Panneau droit : catalogue ─ -->
+        <!-- Colonne droite : catalogue -->
         <div class="panel-right">
             <div class="catalogue-header">
                 <div>
                     <div class="section-label">Catalogue</div>
-                    <div class="section-meta" id="catalogue-stats">0 bijou</div>
+                    <div class="catalogue-stats" id="catalogue-stats">0 bijou</div>
                 </div>
-                <div class="search-bar">
-                    <span class="search-icon">⌕</span>
-                    <input type="text" id="search-input" placeholder="Rechercher..." oninput="render()">
+                <div class="catalogue-controls">
+                    <div class="search-bar">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" id="search-input" placeholder="Rechercher..." oninput="render()">
+                    </div>
                 </div>
             </div>
+
+            <!-- Filtres catégories -->
+            <div class="cat-filters" id="cat-filters">
+                <button class="cat-filter-btn active" data-cat="all" onclick="setCatFilter('all', this)">Tout</button>
+                <!-- Générés dynamiquement -->
+            </div>
+
             <div class="products-grid" id="products-grid"></div>
         </div>
 
+    </div><!-- /products-panel -->
+
+    <!-- ─── PANNEAU CATÉGORIES ───────────────────────────────── -->
+    <div id="cat-panel">
+        <div class="cat-management">
+
+            <div class="cat-section-header">
+                <div>
+                    <div class="cat-section-title">Gestion des Catégories</div>
+                    <div class="cat-section-sub">Ajouter, renommer ou supprimer les catégories du catalogue</div>
+                </div>
+            </div>
+
+            <!-- Formulaire ajout -->
+            <div class="cat-add-form">
+                <div class="cat-add-title">Ajouter une nouvelle catégorie</div>
+                <div class="cat-add-row">
+                    <input type="text" id="new-cat-input" placeholder="Nom de la catégorie (ex: Broches)" maxlength="60"
+                           onkeydown="if(event.key==='Enter')addCategory()">
+                    <button class="cat-add-btn" onclick="addCategory()">＋ Ajouter</button>
+                </div>
+            </div>
+
+            <!-- Liste des catégories -->
+            <div class="cat-list" id="cat-list"></div>
+
+        </div>
+    </div>
+
+</div><!-- /admin-dashboard -->
+
+<!-- Modal confirmation suppression catégorie -->
+<div class="modal-backdrop" id="confirm-modal">
+    <div class="confirm-modal">
+        <div class="confirm-title" id="confirm-title">Confirmer la suppression</div>
+        <div class="confirm-body" id="confirm-body">Êtes-vous sûr ?</div>
+        <div class="confirm-actions">
+            <button class="confirm-btn-cancel" onclick="closeConfirm()">Annuler</button>
+            <button class="confirm-btn-ok" id="confirm-ok-btn">Supprimer</button>
+        </div>
     </div>
 </div>
 
 <!-- Save bar -->
 <div class="save-bar" id="save-bar">
-    <div class="save-bar-msg">Des modifications sont en attente — <span id="pending-count">0 produit(s)</span> modifié(s)</div>
+    <div class="save-bar-left">
+        <div class="save-bar-msg">Modifications en attente — <span id="pending-count">0 produit(s)</span></div>
+        <button class="save-bar-discard" onclick="discardChanges()">Annuler</button>
+    </div>
     <button class="save-bar-btn" onclick="saveToCloudflare()" id="save-btn">Publier sur le site →</button>
 </div>
 
@@ -827,13 +1256,17 @@
 
 <script>
     const API_URL = "https://valandart-api.morgandupuy03.workers.dev/products";
+
     let products = [];
-    let currentImages = []; // Array de base64 (max 4)
+    let categories = [];       // Liste des catégories [{name, slug}]
+    let currentImages = [];    // Base64, max 4
     let authToken = "";
     let editingIndex = -1;
     let pendingChanges = false;
     let loginAttempts = 0;
     const MAX_ATTEMPTS = 3;
+    let currentCatFilter = 'all';
+    let confirmCallback = null;
 
     // ═══════════════════════════════════════
     // AUTHENTIFICATION
@@ -843,12 +1276,8 @@
         const input = document.getElementById('tokenInput');
         const token = input.value.trim();
         if (!token) { shakeInput(); return; }
-
         authToken = token;
         document.getElementById('login-btn').disabled = true;
-
-        // Simuler une vérif (la vraie se fait côté API)
-        // On tente de charger les données avec ce token
         verifyToken(token);
     }
 
@@ -856,12 +1285,16 @@
         try {
             const res = await fetch(API_URL, { cache: "no-store" });
             if (res.ok) {
-                // Token accepté (pour la lecture, pas d'auth)
-                // On vérifiera vraiment à l'écriture
                 authToken = token;
                 document.getElementById('login-overlay').style.display = 'none';
                 document.getElementById('admin-dashboard').style.display = 'block';
-                products = await res.json();
+                const data = await res.json();
+                products = Array.isArray(data) ? data : [];
+                initCategories();
+                renderCatSelect();
+                renderCatFilters();
+                renderCatList();
+                renderImageSlots();
                 render();
                 showToast('Bienvenue dans votre espace administration', 'info');
             } else {
@@ -878,7 +1311,6 @@
         const errorEl = document.getElementById('login-error');
         const btn = document.getElementById('login-btn');
 
-        // Marquer les tentatives
         for (let i = 0; i < loginAttempts && i < MAX_ATTEMPTS; i++) {
             document.getElementById(`dot-${i}`).classList.add('used');
         }
@@ -894,10 +1326,9 @@
                 : "Accès temporairement bloqué. Rechargez la page.";
 
         errorEl.classList.add('visible');
-        btn.disabled = false;
+        btn.disabled = loginAttempts >= MAX_ATTEMPTS;
 
         if (loginAttempts >= MAX_ATTEMPTS) {
-            btn.disabled = true;
             input.disabled = true;
             document.getElementById('error-text').textContent = "⛔ Accès bloqué après 3 tentatives. Rechargez la page.";
         }
@@ -928,7 +1359,208 @@
     }
 
     // ═══════════════════════════════════════
-    // GESTION DES IMAGES MULTIPLES
+    // TABS
+    // ═══════════════════════════════════════
+
+    function switchTab(tab) {
+        document.getElementById('tab-products').classList.toggle('active', tab === 'products');
+        document.getElementById('tab-categories').classList.toggle('active', tab === 'categories');
+        document.getElementById('products-panel').classList.toggle('hidden', tab !== 'products');
+        document.getElementById('cat-panel').classList.toggle('active', tab === 'categories');
+    }
+
+    // ═══════════════════════════════════════
+    // GESTION DES CATÉGORIES
+    // ═══════════════════════════════════════
+
+    // Catégories par défaut si aucune dans les produits
+    const DEFAULT_CATEGORIES = [
+        "Boucles d'Oreilles",
+        "Collier",
+        "Bracelet",
+        "Bague",
+        "Broche"
+    ];
+
+    function initCategories() {
+        // Extraire les catégories déjà présentes dans les produits
+        const fromProducts = [...new Set(
+            products.map(p => p.category || p.cat || '').filter(Boolean)
+        )];
+
+        // Fusionner avec les defaults, conserver l'ordre : defaults d'abord, puis nouvelles
+        const merged = [...DEFAULT_CATEGORIES];
+        fromProducts.forEach(c => {
+            if (!merged.includes(c)) merged.push(c);
+        });
+
+        categories = merged;
+    }
+
+    function categoryProductCount(catName) {
+        return products.filter(p => (p.category || '') === catName).length;
+    }
+
+    function addCategory() {
+        const input = document.getElementById('new-cat-input');
+        const name = input.value.trim();
+        if (!name) { showToast('Nom de catégorie requis', 'error'); return; }
+        if (categories.some(c => c.toLowerCase() === name.toLowerCase())) {
+            showToast('Cette catégorie existe déjà', 'warning');
+            return;
+        }
+        categories.push(name);
+        input.value = '';
+        renderCatSelect();
+        renderCatFilters();
+        renderCatList();
+        markPendingChanges();
+        showToast(`Catégorie "${name}" ajoutée`, 'success');
+    }
+
+    function startEditCategory(idx) {
+        // Fermer tout autre edit en cours
+        document.querySelectorAll('.cat-item.editing').forEach(el => el.classList.remove('editing'));
+        const item = document.getElementById(`cat-item-${idx}`);
+        if (item) {
+            item.classList.add('editing');
+            const editInput = item.querySelector('.cat-edit-input');
+            editInput.value = categories[idx];
+            editInput.focus();
+            editInput.select();
+        }
+    }
+
+    function confirmEditCategory(idx) {
+        const item = document.getElementById(`cat-item-${idx}`);
+        if (!item) return;
+        const input = item.querySelector('.cat-edit-input');
+        const newName = input.value.trim();
+        if (!newName) { showToast('Le nom ne peut pas être vide', 'error'); return; }
+        if (categories.some((c, i) => i !== idx && c.toLowerCase() === newName.toLowerCase())) {
+            showToast('Une catégorie avec ce nom existe déjà', 'warning');
+            return;
+        }
+
+        const oldName = categories[idx];
+        if (oldName === newName) { cancelEditCategory(idx); return; }
+
+        // Renommer dans tous les produits
+        const affected = products.filter(p => (p.category || '') === oldName).length;
+        categories[idx] = newName;
+        products.forEach(p => { if ((p.category || '') === oldName) p.category = newName; });
+
+        renderCatSelect();
+        renderCatFilters();
+        renderCatList();
+        render();
+        markPendingChanges();
+
+        const msg = affected > 0
+            ? `Catégorie renommée → "${newName}" (${affected} produit(s) mis à jour)`
+            : `Catégorie renommée → "${newName}"`;
+        showToast(msg, 'success');
+    }
+
+    function cancelEditCategory(idx) {
+        const item = document.getElementById(`cat-item-${idx}`);
+        if (item) item.classList.remove('editing');
+    }
+
+    function deleteCategory(idx) {
+        const catName = categories[idx];
+        const count = categoryProductCount(catName);
+
+        let bodyHtml = `Voulez-vous vraiment supprimer la catégorie <strong>"${catName}"</strong> ?`;
+        if (count > 0) {
+            bodyHtml += `<br><br>⚠️ <strong>${count} produit(s)</strong> sont dans cette catégorie. Ils seront déplacés vers "Sans catégorie".`;
+        }
+
+        openConfirm(
+            'Supprimer la catégorie',
+            bodyHtml,
+            () => {
+                // Retirer des produits
+                if (count > 0) {
+                    products.forEach(p => { if ((p.category || '') === catName) p.category = ''; });
+                }
+                categories.splice(idx, 1);
+                renderCatSelect();
+                renderCatFilters();
+                renderCatList();
+                render();
+                markPendingChanges();
+                showToast(`Catégorie "${catName}" supprimée`, 'info');
+            }
+        );
+    }
+
+    function renderCatList() {
+        const list = document.getElementById('cat-list');
+        if (categories.length === 0) {
+            list.innerHTML = '<div class="cat-empty-state">Aucune catégorie configurée</div>';
+            return;
+        }
+
+        list.innerHTML = categories.map((cat, idx) => {
+            const count = categoryProductCount(cat);
+            return `
+            <div class="cat-item" id="cat-item-${idx}">
+                <span class="cat-drag-handle" title="Réorganiser">⠿</span>
+                <div class="cat-item-info">
+                    <div class="cat-item-name">${cat}</div>
+                    <div class="cat-item-count">${count} produit${count !== 1 ? 's' : ''}</div>
+                </div>
+                <div class="cat-item-edit-area">
+                    <input type="text" class="cat-edit-input" value="${cat}" maxlength="60"
+                           onkeydown="if(event.key==='Enter')confirmEditCategory(${idx}); if(event.key==='Escape')cancelEditCategory(${idx})">
+                    <button class="cat-edit-confirm" onclick="confirmEditCategory(${idx})">✓ Enregistrer</button>
+                    <button class="cat-edit-cancel" onclick="cancelEditCategory(${idx})">Annuler</button>
+                </div>
+                <div class="cat-item-actions">
+                    <button class="cat-action-btn edit" onclick="startEditCategory(${idx})" title="Renommer">✎</button>
+                    <button class="cat-action-btn delete" onclick="deleteCategory(${idx})" title="Supprimer">✕</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderCatSelect() {
+        const sel = document.getElementById('category');
+        const current = sel.value;
+        sel.innerHTML = '<option value="">Choisir...</option>';
+        categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            if (cat === current) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    }
+
+    function renderCatFilters() {
+        const container = document.getElementById('cat-filters');
+        container.innerHTML = `<button class="cat-filter-btn ${currentCatFilter === 'all' ? 'active' : ''}" data-cat="all" onclick="setCatFilter('all', this)">Tout</button>`;
+        categories.forEach(cat => {
+            const count = categoryProductCount(cat);
+            const btn = document.createElement('button');
+            btn.className = 'cat-filter-btn' + (currentCatFilter === cat ? ' active' : '');
+            btn.dataset.cat = cat;
+            btn.onclick = function() { setCatFilter(cat, this); };
+            btn.textContent = `${cat} (${count})`;
+            container.appendChild(btn);
+        });
+    }
+
+    function setCatFilter(cat, btn) {
+        currentCatFilter = cat;
+        document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        render();
+    }
+
+    // ═══════════════════════════════════════
+    // IMAGES MULTIPLES
     // ═══════════════════════════════════════
 
     function renderImageSlots() {
@@ -942,7 +1574,7 @@
             if (currentImages[i]) {
                 slot.innerHTML = `
                     <img src="${currentImages[i]}" alt="Image ${i+1}">
-                    <button class="slot-remove" onclick="removeImage(${i})">✕</button>
+                    <button class="slot-remove" onclick="event.stopPropagation(); removeImage(${i})">✕</button>
                     ${i === 0 ? '<div class="slot-badge">Principale</div>' : ''}
                 `;
             } else {
@@ -951,9 +1583,6 @@
             }
             grid.appendChild(slot);
         }
-
-        // Drop zone aussi
-        document.getElementById('drop-zone').ondrop = handleDrop;
     }
 
     function handleDrop(e) {
@@ -967,7 +1596,11 @@
         const toProcess = Math.min(files.length, remaining);
         if (toProcess === 0) { showToast('Maximum 4 images atteint', 'error'); return; }
 
+        // Réinitialiser le file input pour permettre re-sélection du même fichier
+        document.getElementById('file-input').value = '';
+
         Array.from(files).slice(0, toProcess).forEach(file => {
+            if (!file.type.startsWith('image/')) { showToast(`"${file.name}" n'est pas une image`, 'error'); return; }
             compressImage(file, (base64) => {
                 if (currentImages.length < 4) {
                     currentImages.push(base64);
@@ -983,15 +1616,15 @@
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const MAX = 800;
+                const MAX = 900;
                 let { width, height } = img;
-                if (width > height) { if (width > MAX) { height *= MAX/width; width = MAX; } }
-                else { if (height > MAX) { width *= MAX/height; height = MAX; } }
+                if (width > height) { if (width > MAX) { height = Math.round(height * MAX / width); width = MAX; } }
+                else { if (height > MAX) { width = Math.round(width * MAX / height); height = MAX; } }
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                callback(canvas.toDataURL('image/jpeg', 0.72));
+                callback(canvas.toDataURL('image/jpeg', 0.78));
             };
             img.src = e.target.result;
         };
@@ -1004,24 +1637,27 @@
     }
 
     // ═══════════════════════════════════════
-    // FORMULAIRE : AJOUTER / MODIFIER
+    // FORMULAIRE PRODUIT
     // ═══════════════════════════════════════
 
     function submitForm() {
         const title = document.getElementById('title').value.trim();
-        const price = parseFloat(document.getElementById('price').value);
-        if (!title) { showToast('Titre requis', 'error'); return; }
-        if (!price || price <= 0) { showToast('Prix invalide', 'error'); return; }
-        if (currentImages.length === 0) { showToast('Au moins une image requise', 'error'); return; }
+        const priceRaw = document.getElementById('price').value;
+        const price = parseFloat(priceRaw);
+        if (!title) { showToast('Le titre est requis', 'error'); return; }
+        if (!priceRaw || isNaN(price) || price <= 0) { showToast('Prix invalide', 'error'); return; }
+        if (currentImages.length === 0) { showToast('Au moins une image est requise', 'error'); return; }
+
+        const catVal = document.getElementById('category').value;
 
         const product = {
             id: editingIndex >= 0 ? products[editingIndex].id : Date.now(),
             title,
             price,
-            img: currentImages[0],           // Compat ancienne API
-            images: [...currentImages],        // Nouvelles images multiples
-            desc: document.getElementById('desc').value,
-            category: document.getElementById('category').value
+            img: currentImages[0],
+            images: [...currentImages],
+            desc: document.getElementById('desc').value.trim(),
+            category: catVal
         };
 
         if (editingIndex >= 0) {
@@ -1035,6 +1671,7 @@
         }
 
         markPendingChanges();
+        renderCatFilters();
         render();
     }
 
@@ -1042,12 +1679,16 @@
         editingIndex = index;
         const p = products[index];
 
-        document.getElementById('title').value = p.title;
-        document.getElementById('price').value = p.price;
+        document.getElementById('title').value = p.title || '';
+        document.getElementById('price').value = p.price || '';
         document.getElementById('desc').value = p.desc || '';
-        document.getElementById('category').value = p.category || '';
 
-        currentImages = p.images ? [...p.images] : (p.img ? [p.img] : []);
+        // Mettre à jour le select catégorie
+        renderCatSelect();
+        const sel = document.getElementById('category');
+        sel.value = p.category || '';
+
+        currentImages = p.images && p.images.length ? [...p.images] : (p.img ? [p.img] : []);
         renderImageSlots();
 
         document.getElementById('form-title-label').textContent = 'Modifier le bijou';
@@ -1057,7 +1698,7 @@
         document.getElementById('btn-cancel').style.display = 'flex';
 
         document.querySelector('.panel-left').scrollIntoView({ behavior: 'smooth' });
-        render(); // Pour afficher le highlight
+        render();
     }
 
     function cancelEdit() {
@@ -1081,88 +1722,102 @@
     }
 
     function removeProduct(index) {
-        if (!confirm(`Supprimer "${products[index].title}" ?`)) return;
         const name = products[index].title;
-        products.splice(index, 1);
-        if (editingIndex === index) cancelEdit();
-        markPendingChanges();
-        render();
-        showToast(`"${name}" supprimé`, 'info');
+        openConfirm(
+            'Supprimer le produit',
+            `Voulez-vous vraiment supprimer <strong>"${name}"</strong> ? Cette action est irréversible.`,
+            () => {
+                if (editingIndex === index) cancelEdit();
+                else if (editingIndex > index) editingIndex--;
+                products.splice(index, 1);
+                markPendingChanges();
+                renderCatFilters();
+                render();
+                showToast(`"${name}" supprimé`, 'info');
+            }
+        );
     }
 
     // ═══════════════════════════════════════
-    // AFFICHAGE DU CATALOGUE
+    // RENDU CATALOGUE
     // ═══════════════════════════════════════
 
+    const imageCounters = {};
+
     function render() {
-        const query = (document.getElementById('search-input')?.value || '').toLowerCase();
-        const filtered = products.filter(p =>
-            p.title.toLowerCase().includes(query) ||
-            (p.category || '').toLowerCase().includes(query)
-        );
+        const query = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+
+        let filtered = products.filter(p => {
+            const matchSearch = !query ||
+                (p.title || '').toLowerCase().includes(query) ||
+                (p.category || '').toLowerCase().includes(query) ||
+                (p.desc || '').toLowerCase().includes(query);
+            const matchCat = currentCatFilter === 'all' || (p.category || '') === currentCatFilter;
+            return matchSearch && matchCat;
+        });
 
         const count = products.length;
         document.getElementById('catalogue-stats').textContent =
-            `${count} bijou${count > 1 ? 'x' : ''} au catalogue`;
+            `${count} bijou${count > 1 ? 'x' : ''} au catalogue${filtered.length !== count ? ` — ${filtered.length} affiché${filtered.length > 1 ? 's' : ''}` : ''}`;
 
         const grid = document.getElementById('products-grid');
 
         if (filtered.length === 0) {
             grid.innerHTML = `<div class="empty-state">
                 <div class="empty-icon">◇</div>
-                <div class="empty-text">${query ? 'Aucun résultat pour cette recherche' : 'Aucun bijou dans le catalogue'}</div>
+                <div class="empty-text">${query || currentCatFilter !== 'all' ? 'Aucun résultat' : 'Aucun bijou dans le catalogue'}</div>
             </div>`;
             return;
         }
 
-        // Trouver l'index réel dans products[] pour chaque produit filtré
         grid.innerHTML = filtered.map((p) => {
             const realIndex = products.indexOf(p);
-            const imgs = p.images || (p.img ? [p.img] : []);
+            const imgs = p.images && p.images.length ? p.images : (p.img ? [p.img] : []);
             const isEditing = editingIndex === realIndex;
             const imgCount = imgs.length;
 
             return `<div class="product-card ${isEditing ? 'editing' : ''}">
                 <div class="card-img-wrap" id="img-wrap-${realIndex}">
-                    <img src="${imgs[0] || ''}" id="card-img-${realIndex}" alt="${p.title}">
+                    ${imgs[0] ? `<img src="${imgs[0]}" id="card-img-${realIndex}" alt="${p.title}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:2em;">◇</div>`}
                     ${imgCount > 1 ? `
                     <div class="card-img-nav">
-                        <button class="img-nav-btn" onclick="prevImg(${realIndex})">‹</button>
-                        <button class="img-nav-btn" onclick="nextImg(${realIndex})">›</button>
+                        <button class="img-nav-btn" onclick="event.stopPropagation();prevImg(${realIndex})">‹</button>
+                        <button class="img-nav-btn" onclick="event.stopPropagation();nextImg(${realIndex})">›</button>
                     </div>
-                    <div class="img-counter" id="img-counter-${realIndex}" style="display:block">1 / ${imgCount}</div>` : ''}
+                    <div class="img-counter" id="img-counter-${realIndex}" style="display:block">1 / ${imgCount}</div>
+                    <div class="card-img-count-badge">${imgCount} photos</div>` : ''}
                 </div>
                 <div class="card-body">
-                    <div class="card-title">${p.title}</div>
+                    <div class="card-title" title="${p.title}">${p.title}</div>
                     <div class="card-meta">
-                        <span class="card-price">${p.price?.toFixed ? p.price.toFixed(2) : p.price} €</span>
+                        <span class="card-price">${typeof p.price === 'number' ? p.price.toFixed(2) : p.price} €</span>
                         <span class="card-cat">${p.category || '—'}</span>
                     </div>
                     <div class="card-actions">
                         <button class="card-btn card-btn-edit" onclick="startEdit(${realIndex})">${isEditing ? '✎ En cours…' : '✎ Modifier'}</button>
-                        <button class="card-btn card-btn-del" onclick="removeProduct(${realIndex})">✕</button>
+                        <button class="card-btn card-btn-del" onclick="removeProduct(${realIndex})" title="Supprimer">✕</button>
                     </div>
                 </div>
             </div>`;
         }).join('');
 
-        // Init des compteurs d'images
-        products.forEach((_, i) => { imageCounters[i] = imageCounters[i] || 0; });
+        // Réinitialiser les compteurs d'images pour les cartes affichées
+        filtered.forEach(p => {
+            const realIndex = products.indexOf(p);
+            if (imageCounters[realIndex] === undefined) imageCounters[realIndex] = 0;
+        });
     }
-
-    // Navigation images dans les cartes
-    const imageCounters = {};
 
     function nextImg(index) {
         const p = products[index];
-        const imgs = p.images || [p.img];
+        const imgs = p.images && p.images.length ? p.images : (p.img ? [p.img] : []);
         imageCounters[index] = ((imageCounters[index] || 0) + 1) % imgs.length;
         updateCardImg(index, imgs);
     }
 
     function prevImg(index) {
         const p = products[index];
-        const imgs = p.images || [p.img];
+        const imgs = p.images && p.images.length ? p.images : (p.img ? [p.img] : []);
         imageCounters[index] = ((imageCounters[index] || 0) - 1 + imgs.length) % imgs.length;
         updateCardImg(index, imgs);
     }
@@ -1176,6 +1831,31 @@
     }
 
     // ═══════════════════════════════════════
+    // MODAL CONFIRMATION
+    // ═══════════════════════════════════════
+
+    function openConfirm(title, body, onConfirm) {
+        confirmCallback = onConfirm;
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-body').innerHTML = body;
+        document.getElementById('confirm-modal').classList.add('open');
+    }
+
+    function closeConfirm() {
+        document.getElementById('confirm-modal').classList.remove('open');
+        confirmCallback = null;
+    }
+
+    document.getElementById('confirm-ok-btn').onclick = () => {
+        if (confirmCallback) confirmCallback();
+        closeConfirm();
+    };
+
+    document.getElementById('confirm-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeConfirm();
+    });
+
+    // ═══════════════════════════════════════
     // SAUVEGARDE CLOUDFLARE
     // ═══════════════════════════════════════
 
@@ -1183,6 +1863,26 @@
         pendingChanges = true;
         document.getElementById('pending-count').textContent = `${products.length} produit(s)`;
         document.getElementById('save-bar').classList.add('visible');
+    }
+
+    function discardChanges() {
+        if (!confirm("Annuler toutes les modifications non publiées ?")) return;
+        pendingChanges = false;
+        document.getElementById('save-bar').classList.remove('visible');
+        // Recharger depuis l'API
+        fetch(API_URL, { cache: "no-store" })
+            .then(r => r.json())
+            .then(data => {
+                products = Array.isArray(data) ? data : [];
+                initCategories();
+                renderCatSelect();
+                renderCatFilters();
+                renderCatList();
+                cancelEdit();
+                render();
+                showToast('Modifications annulées — données rechargées', 'info');
+            })
+            .catch(() => showToast('Impossible de recharger les données', 'error'));
     }
 
     async function saveToCloudflare() {
@@ -1220,11 +1920,11 @@
     // ═══════════════════════════════════════
 
     function showToast(msg, type = 'info') {
-        const icons = { success: '✓', error: '✕', info: '◆' };
+        const icons = { success: '✓', error: '✕', info: '◆', warning: '⚠' };
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+        toast.innerHTML = `<span>${icons[type] || '◆'}</span> ${msg}`;
         container.appendChild(toast);
         setTimeout(() => {
             toast.style.animation = 'slideOutRight 0.4s ease forwards';
